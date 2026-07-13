@@ -78,7 +78,7 @@
             color: var(--accent);
             font-size: 1.8rem;
             margin-top: 10px;
-            text-transform: uppercase;
+            text-transform: lowercase;
             letter-spacing: 2px;
         }
 
@@ -110,6 +110,19 @@
             color: var(--dos-cyan);
             margin-right: 10px;
             white-space: nowrap;
+        }
+
+        .prompt-user {
+            color: var(--dos-green);
+            font-weight: bold;
+        }
+
+        .prompt-dir {
+            color: #5fafff;
+        }
+
+        .prompt-char {
+            color: var(--text-primary);
         }
 
         .search-input {
@@ -312,17 +325,19 @@
     <div class="terminal-container">
         <header>
             <div class="bios-line">
-                <span>SMFORD BIOS V4.20</span>
-                <span>RAM: 640KB BASE / 16384KB EXT</span>
+                <span>smford@mainframe:~$ neofetch</span>
+                <span>OS: Debian GNU/Linux / Kernel: 6.1.0</span>
             </div>
-            <h1>SMFORD.GITHUB.IO</h1>
+            <h1>smford.github.io</h1>
             <p class="sys-summary">System Profile: Woodworking Software Engineer & Hardware Prototyper</p>
         </header>
 
         <!-- Interactive Input Line / Filter -->
         <div class="control-panel">
             <div class="search-wrapper">
-                <span class="prompt-label" id="dir-prompt">C:\PROJECTS&gt; dir /f</span>
+                <span class="prompt-label" id="dir-prompt">
+                    <span class="prompt-user">smford@mainframe</span><span class="prompt-char">:</span><span class="prompt-dir">~/projects</span><span class="prompt-char">$</span>
+                </span>
                 <input type="text" id="terminal-search" class="search-input" placeholder="Type query or command (e.g. 'help')..." autocomplete="off" autofocus>
                 <span class="cursor"></span>
             </div>
@@ -333,20 +348,20 @@
             </div>
         </div>
 
-        <!-- Output Grid Grid Cards -->
+        <!-- Output Grid Cards -->
         <div class="project-grid" id="catalog-grid">
             <!-- Dynamic Injection JavaScript Target -->
         </div>
 
         <!-- Terminal Subsystem Log Console -->
         <div class="terminal-log" id="console-output">
-            <div class="log-entry">SYSTEM: Boot successfully completed.</div>
-            <div class="log-entry">SYSTEM: Type 'help' into the system line to access active DOS terminal modules.</div>
-            <div class="log-entry cmd">C:\PROJECTS&gt; dir /f --loaded</div>
+            <div class="log-entry">SYSTEM: Linux terminal initialized successfully.</div>
+            <div class="log-entry">SYSTEM: Type 'help' to access terminal modules and directory variables.</div>
+            <div class="log-entry cmd">smford@mainframe:~/projects$ ls -la</div>
         </div>
 
         <footer>
-            <p>Executed via Vanilla Core Engine. Maintained by <a href="https://github.com/smford" target="_blank" rel="noopener noreferrer">smford</a>.</p>
+            <p>Executed via Bash Shell Engine. Maintained by <a href="https://github.com/smford" target="_blank" rel="noopener noreferrer">smford</a>.</p>
         </footer>
     </div>
 
@@ -390,7 +405,7 @@
             );
 
             if (matches.length === 0) {
-                grid.innerHTML = `<div style="grid-column: 1/-1; color: var(--dos-amber); padding: 20px; text-align: center; border: 1px dashed var(--dos-amber);">ERROR 404: No file vectors match the criteria.</div>`;
+                grid.innerHTML = `<div style="grid-column: 1/-1; color: var(--dos-amber); padding: 20px; text-align: center; border: 1px dashed var(--dos-amber);">bash: no matches found: ${filterText}</div>`;
                 return;
             }
 
@@ -433,7 +448,7 @@
                 root.style.setProperty('--accent', 'var(--dos-cyan)');
                 root.style.setProperty('--border-style', '2px solid var(--dos-cyan)');
             }
-            writeToConsole(`SYSTEM: Palette changed to mode [${color.toUpperCase()}].`);
+            writeToConsole(`SYSTEM: Terminal interface palette updated to [${color.toUpperCase()}].`);
         }
 
         // Live terminal terminal log execution simulator
@@ -459,33 +474,34 @@
                 const commandRaw = searchInput.value;
                 const command = commandRaw.trim().toLowerCase();
                 
-                writeToConsole(`${promptLabel.textContent} ${commandRaw}`, true);
+                // Write prompt and executed command to standard terminal console history
+                writeToConsole(`smford@mainframe:~/projects$ ${commandRaw}`, true);
 
                 if (command === 'help') {
-                    writeToConsole("AVAILABLE COMMANDS:\n 'dir' - Reset/list all items\n 'cls' - Wipe terminal logs\n 'wood' - Isolate woodworking tools\n 'sys' - Isolate embedded systems\n 'stl' - Isolate 3D print assets", false);
-                } else if (command === 'cls') {
+                    writeToConsole("AVAILABLE COMMANDS:\n 'ls' or 'dir'   - Reset/list directory nodes\n 'clear' or 'cls' - Wipe shell history\n 'wood'           - Filter by woodworking\n 'sys'            - Filter by embedded systems\n 'stl'            - Filter by 3D print resources", false);
+                } else if (command === 'cls' || command === 'clear') {
                     customConsole.innerHTML = "";
-                    writeToConsole("Terminal logs wiped clear.", false);
-                } else if (command === 'dir') {
+                    writeToConsole("Shell environment buffer cleared.", false);
+                } else if (command === 'dir' || command === 'ls') {
                     buildGrid("");
-                    writeToConsole(`Directory catalog refreshed. Found ${repoDatabase.length} files.`, false);
+                    writeToConsole(`Directory listings loaded. ${repoDatabase.length} files detected.`, false);
                 } else if (command === 'wood') {
                     searchInput.value = "woodworking";
                     buildGrid("woodworking");
-                    writeToConsole("Filtering active subdirectories to: [Woodworking]", false);
+                    writeToConsole("Environment filtered to matches: [Woodworking]", false);
                 } else if (command === 'sys') {
                     searchInput.value = "embedded";
                     buildGrid("embedded");
-                    writeToConsole("Filtering active subdirectories to: [Embedded]", false);
+                    writeToConsole("Environment filtered to matches: [Embedded]", false);
                 } else if (command === 'stl') {
                     searchInput.value = "stl";
                     buildGrid("stl");
-                    writeToConsole("Filtering active subdirectories to: [.STL Models]", false);
+                    writeToConsole("Environment filtered to matches: [3D Model Assets]", false);
                 } else {
-                    writeToConsole(`Parsing filter routine for structural lookup match: "${commandRaw}"`, false);
+                    writeToConsole(`Query parsed: "${commandRaw}"`, false);
                 }
                 
-                if (command === 'cls') {
+                if (command === 'cls' || command === 'clear') {
                     searchInput.value = "";
                 }
             }
