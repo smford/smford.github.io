@@ -3,130 +3,496 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Stephen Ford's GitHub Projects</title>
+    <title>SMFORD // Mainframe Terminal</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=VT323&display=swap');
+        :root {
+            --bg-color: #0a0a0a;
+            --term-bg: #0f0f0f;
+            --text-primary: #dfdfdf;
+            --text-dim: #7f7f7f;
+            --dos-cyan: #00ffff;
+            --dos-green: #00ff00;
+            --dos-amber: #ffb000;
+            --accent: #00ff00; /* Default classic terminal green */
+            --font-stack: "Consolas", "Fira Code", "Monaco", "Courier New", Courier, monospace;
+            --border-style: 2px solid var(--accent);
+        }
 
-        body {
-            font-family: 'VT323', monospace;
+        * {
+            box-sizing: border-box;
             margin: 0;
             padding: 0;
-            background-color: #000d08;
-            color: #00ff80;
-            text-shadow: 0 0 5px #00ff80, 0 0 10px #00ff80;
-            line-height: 1.6;
-            filter: blur(0.75px);
         }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            font-family: var(--font-stack);
+            line-height: 1.5;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        /* Terminal Frame emulation */
+        .terminal-container {
+            width: 100%;
+            max-width: 1100px;
+            background-color: var(--term-bg);
+            border: var(--border-style);
+            box-shadow: 0 0 30px rgba(0, 255, 0, 0.15);
+            padding: 25px;
+            position: relative;
+            border-radius: 4px;
+        }
+
+        /* Scanline Overlay for Authenticity */
+        .terminal-container::before {
+            content: " ";
+            display: block;
+            position: absolute;
+            top: 0; left: 0; bottom: 0; right: 0;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+            z-index: 10;
+            background-size: 100% 4px, 3px 100%;
+            pointer-events: none;
+        }
+
         header {
-            background-color: #000d08;
-            color: #00ff80;
-            padding: 1rem 0;
-            text-align: center;
-            border-bottom: 2px solid #00ff80;
-            filter: blur(0.75px);
+            border-bottom: 1px dashed var(--accent);
+            padding-bottom: 15px;
+            margin-bottom: 20px;
         }
-        header h1 {
-            font-size: 2rem;
-            margin: 0;
+
+        .bios-line {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            color: var(--text-dim);
+            font-size: 0.9rem;
         }
-        main {
-            padding: 2rem;
+
+        h1 {
+            color: var(--accent);
+            font-size: 1.8rem;
+            margin-top: 10px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .sys-summary {
+            margin: 15px 0 5px 0;
+            color: var(--text-primary);
+        }
+
+        /* Control / Search Panel */
+        .control-panel {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            margin-bottom: 25px;
+            background: rgba(255,255,255,0.02);
+            padding: 10px 15px;
+            border: 1px solid var(--text-dim);
+            flex-wrap: wrap;
+        }
+
+        .search-wrapper {
+            display: flex;
+            align-items: center;
+            flex-grow: 1;
+            min-width: 250px;
+        }
+
+        .prompt-label {
+            color: var(--dos-cyan);
+            margin-right: 10px;
+            white-space: nowrap;
+        }
+
+        .search-input {
+            background: transparent;
+            border: none;
+            color: var(--accent);
+            font-family: var(--font-stack);
+            font-size: 1.1rem;
+            width: 100%;
+            outline: none;
+        }
+
+        .theme-selectors {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .theme-btn {
+            background: transparent;
+            border: 1px solid var(--text-dim);
+            color: var(--text-dim);
+            padding: 2px 8px;
+            cursor: pointer;
+            font-family: var(--font-stack);
+            font-size: 0.8rem;
+            text-transform: uppercase;
+        }
+
+        .theme-btn.active {
+            border-color: var(--accent);
+            color: var(--accent);
+            background: rgba(0, 255, 0, 0.05);
+        }
+
+        /* Dynamic Grid Layout for Projects */
+        .project-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+
+        .card {
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            background: rgba(0, 0, 0, 0.3);
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: all 0.2s ease;
+            position: relative;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .card:hover {
+            border-color: var(--accent);
+            background: rgba(255, 255, 255, 0.03);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 10px;
+        }
+
+        .file-name {
+            color: var(--dos-cyan);
+            font-weight: bold;
+            font-size: 1.05rem;
+            word-break: break-word;
+            padding-right: 5px;
+        }
+
+        .file-ext {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--text-dim);
+            font-size: 0.75rem;
+            padding: 1px 5px;
+            text-transform: uppercase;
+            border-radius: 2px;
+            flex-shrink: 0;
+        }
+
+        .card:hover .file-ext {
+            color: #000;
+            background: var(--accent);
+            font-weight: bold;
+        }
+
+        .file-desc {
+            color: var(--text-primary);
+            font-size: 0.9rem;
+            margin-bottom: 15px;
+            flex-grow: 1;
+        }
+
+        .card-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.8rem;
+            color: var(--text-dim);
+            border-top: 1px dashed rgba(255, 255, 255, 0.1);
+            padding-top: 10px;
+        }
+
+        .tag {
+            text-transform: uppercase;
+            color: var(--accent);
+        }
+
+        /* Console Log Window System */
+        .terminal-log {
+            background: rgba(0, 0, 0, 0.6);
+            border: 1px dashed var(--text-dim);
+            padding: 15px;
+            font-size: 0.85rem;
+            max-height: 180px;
+            overflow-y: auto;
+            color: var(--text-dim);
+        }
+
+        .log-entry {
+            margin-bottom: 4px;
             white-space: pre-wrap;
         }
-        .project {
-            border: 2px dashed #00ff80;
-            padding: 1rem;
-            margin-bottom: 1.5rem;
-            background-color: #000d08;
-            filter: blur(0.75px);
+
+        .log-entry.cmd {
+            color: var(--dos-cyan);
         }
-        .project h2 {
-            margin: 0 0 0.5rem 0;
-            color: #00ff80;
+
+        .log-entry.output {
+            color: var(--text-primary);
         }
-        .project p {
-            margin: 0 0 1rem 0;
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
         }
-        .project a {
-            color: #00ff80;
+        ::-webkit-scrollbar-track {
+            background: rgba(0,0,0,0.3);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--text-dim);
+            border-radius: 2px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--accent);
+        }
+
+        /* Blinking Cursor Styling */
+        .cursor {
+            display: inline-block;
+            width: 8px;
+            height: 15px;
+            background: var(--accent);
+            animation: blink 0.8s infinite;
+            vertical-align: middle;
+            margin-left: 2px;
+        }
+
+        @keyframes blink {
+            0%, 49% { background: var(--accent); }
+            50%, 100% { background: transparent; }
+        }
+
+        /* Utility Footer */
+        footer {
+            margin-top: 25px;
+            text-align: center;
+            font-size: 0.8rem;
+            color: var(--text-dim);
+        }
+
+        footer a {
+            color: var(--accent);
             text-decoration: none;
         }
-        .project a:hover {
+        footer a:hover {
             text-decoration: underline;
-            color: #ff6666;
         }
+
+        /* Mobile Adjustments */
+        @media(max-width: 600px) {
+            body { padding: 10px; }
+            .terminal-container { padding: 15px; }
+            .control-panel { flex-direction: column; align-items: stretch; }
+            .theme-selectors { justify-content: center; margin-top: 10px; }
         }
     </style>
 </head>
 <body>
-    <header>
-        <h1>Stephen Ford's GitHub Projects</h1>
-    </header>
-    <!-- Removed duplicate <main> section -->
+
+    <div class="terminal-container">
+        <header>
+            <div class="bios-line">
+                <span>SMFORD BIOS V4.20</span>
+                <span>RAM: 640KB BASE / 16384KB EXT</span>
+            </div>
+            <h1>SMFORD.GITHUB.IO</h1>
+            <p class="sys-summary">System Profile: Woodworking Software Engineer & Hardware Prototyper</p>
+        </header>
+
+        <!-- Interactive Input Line / Filter -->
+        <div class="control-panel">
+            <div class="search-wrapper">
+                <span class="prompt-label" id="dir-prompt">C:\PROJECTS&gt; dir /f</span>
+                <input type="text" id="terminal-search" class="search-input" placeholder="Type query or command (e.g. 'help')..." autocomplete="off" autofocus>
+                <span class="cursor"></span>
+            </div>
+            <div class="theme-selectors">
+                <button class="theme-btn active" onclick="setTheme('green')">Green</button>
+                <button class="theme-btn" onclick="setTheme('amber')">Amber</button>
+                <button class="theme-btn" onclick="setTheme('cyan')">Cyan</button>
+            </div>
+        </div>
+
+        <!-- Output Grid Grid Cards -->
+        <div class="project-grid" id="catalog-grid">
+            <!-- Dynamic Injection JavaScript Target -->
+        </div>
+
+        <!-- Terminal Subsystem Log Console -->
+        <div class="terminal-log" id="console-output">
+            <div class="log-entry">SYSTEM: Boot successfully completed.</div>
+            <div class="log-entry">SYSTEM: Type 'help' into the system line to access active DOS terminal modules.</div>
+            <div class="log-entry cmd">C:\PROJECTS&gt; dir /f --loaded</div>
+        </div>
+
+        <footer>
+            <p>Executed via Vanilla Core Engine. Maintained by <a href="https://github.com/smford" target="_blank" rel="noopener noreferrer">smford</a>.</p>
+        </footer>
+    </div>
+
+    <script>
+        // High fidelity architectural dataset mapping back to engineering/craft classifications
+        const repoDatabase = [
+            { name: "roof-pitch-calculator", ext: "WWD", cat: "Woodworking", desc: "Interactive math utility engine optimized for calculating structural roof rafters, pitches, and dynamic lengths.", url: "https://github.com/smford/roof-pitch-calculator" },
+            { name: "online-floorboard-calculator", ext: "WWD", cat: "Woodworking", desc: "Calculates realistic interior layout arrays, wastage multipliers, and square coverage requirements.", url: "https://github.com/smford/online-floorboard-calculator" },
+            { name: "cladding-cutlist", ext: "WWD", cat: "Woodworking", desc: "Linear dimension optimization tool to reduce material scrap metrics during timber siding installation workflows.", url: "https://github.com/smford/cladding-cutlist" },
+            { name: "esp32-asyncwebserver-fileupload-example", ext: "SYS", cat: "Embedded", desc: "Asynchronous memory execution design pattern for passing network data streams to onboard ESP32 SPIFFS partitions.", url: "https://github.com/smford/esp32-asyncwebserver-fileupload-example" },
+            { name: "raspberry-pi-streaming-camera", ext: "SYS", cat: "Embedded", desc: "Low-latency camera configurations for high framerate hardware pipeline monitoring and streaming setups.", url: "https://github.com/smford/raspberry-pi-streaming-camera" },
+            { name: "rpi-snmpd-configuration", ext: "CFG", cat: "DevOps", desc: "Hardened system daemon configurations ensuring robust monitoring and metric loops on local Pi network nodes.", url: "https://github.com/smford/rpi-snmpd-configuration" },
+            { name: "eeh-esp32-rfid", ext: "SYS", cat: "Embedded", desc: "Low-level micro-controller integration loop binding physical RFID array transceivers to secure access controllers.", url: "https://github.com/smford/eeh-esp32-rfid" },
+            { name: "Sunton-ESP32-2432S028R-Case", ext: "STL", cat: "3D Printing", desc: "Precision tailored physical structural boundary chassis engineered for the 2.8 inch smart display controller.", url: "https://github.com/smford/Sunton-ESP32-2432S028R-Case" },
+            { name: "bambu-poop-chute-magnet-remix", ext: "STL", cat: "3D Printing", desc: "Mechanical workshop asset modification implementing magnetic anchor channels for waste disposal extraction chutes.", url: "https://github.com/smford/bambu-poop-chute-magnet-remix" },
+            { name: "maslow-cnc-halo", ext: "CNC", cat: "Hardware", desc: "Custom physical stability ring modification increasing planar accuracy vectors on tracking open-frame CNC platforms.", url: "https://github.com/smford/maslow-cnc-halo" },
+            { name: "pica-dry-pencil-wall-mount", ext: "STL", cat: "3D Printing", desc: "Ergonomic wall-mounted containment cradle providing quick access loops for standard workshop marking instruments.", url: "https://github.com/smford/pica-dry-pencil-wall-mount" },
+            { name: "delim", ext: "EXE", cat: "Software", desc: "High throughput character formatting transformation array utility to clean unstructured flat raw data strings.", url: "https://github.com/smford/delim" },
+            { name: "simple-discord-bot", ext: "JS", cat: "Software", desc: "Streamlined event polling interface execution layer abstracting multi-channel bot interaction endpoints.", url: "https://github.com/smford/simple-discord-bot" },
+            { name: "motioneye-snapshotter", ext: "SH", cat: "DevOps", desc: "Automated snapshot capturing and archiving utility for scheduling CCTV streams and camera frames.", url: "https://github.com/smford/motioneye-snapshotter" },
+            { name: "simple-canary", ext: "SH", cat: "DevOps", desc: "Minimal configuration system health beacon dispatching notifications to indicate environment stability states.", url: "https://github.com/smford/simple-canary" },
+            { name: "snitchit", ext: "EXE", cat: "Software", desc: "Dead man's switch verification background service parsing remote service heartbeats for failures.", url: "https://github.com/smford/snitchit" },
+            { name: "nanode-case", ext: "STL", cat: "3D Printing", desc: "Form-fitting rigid enclosure designed to shelter and stabilize vulnerable open-board Nanode networking hardware modules.", url: "https://github.com/smford/nanode-case" }
+        ];
+
+        const grid = document.getElementById('catalog-grid');
+        const searchInput = document.getElementById('terminal-search');
+        const customConsole = document.getElementById('console-output');
+        const promptLabel = document.getElementById('dir-prompt');
+
+        // Render routine for card population
+        function buildGrid(filterText = "") {
+            grid.innerHTML = "";
+            const lowerFilter = filterText.toLowerCase().trim();
+            
+            const matches = repoDatabase.filter(item => 
+                item.name.toLowerCase().includes(lowerFilter) || 
+                item.desc.toLowerCase().includes(lowerFilter) ||
+                item.cat.toLowerCase().includes(lowerFilter) ||
+                item.ext.toLowerCase().includes(lowerFilter)
+            );
+
+            if (matches.length === 0) {
+                grid.innerHTML = `<div style="grid-column: 1/-1; color: var(--dos-amber); padding: 20px; text-align: center; border: 1px dashed var(--dos-amber);">ERROR 404: No file vectors match the criteria.</div>`;
+                return;
+            }
+
+            matches.forEach(item => {
+                const card = document.createElement('a');
+                card.className = 'card';
+                card.href = item.url;
+                card.target = '_blank';
+                card.rel = 'noopener noreferrer';
+                card.innerHTML = `
+                    <div>
+                        <div class="card-header">
+                            <span class="file-name">${item.name}</span>
+                            <span class="file-ext">.${item.ext}</span>
+                        </div>
+                        <p class="file-desc">${item.desc}</p>
+                    </div>
+                    <div class="card-footer">
+                        <span class="tag">[${item.cat}]</span>
+                        <span>LAUNCH &gt;&gt;</span>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        // Themes palette handling
+        function setTheme(color) {
+            const root = document.documentElement;
+            document.querySelectorAll('.theme-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+
+            if (color === 'green') {
+                root.style.setProperty('--accent', 'var(--dos-green)');
+                root.style.setProperty('--border-style', '2px solid var(--dos-green)');
+            } else if (color === 'amber') {
+                root.style.setProperty('--accent', 'var(--dos-amber)');
+                root.style.setProperty('--border-style', '2px solid var(--dos-amber)');
+            } else if (color === 'cyan') {
+                root.style.setProperty('--accent', 'var(--dos-cyan)');
+                root.style.setProperty('--border-style', '2px solid var(--dos-cyan)');
+            }
+            writeToConsole(`SYSTEM: Palette changed to mode [${color.toUpperCase()}].`);
+        }
+
+        // Live terminal terminal log execution simulator
+        function writeToConsole(text, isCmd = false) {
+            const entry = document.createElement('div');
+            entry.className = `log-entry ${isCmd ? 'cmd' : 'output'}`;
+            entry.textContent = text;
+            customConsole.appendChild(entry);
+            customConsole.scrollTop = customConsole.scrollHeight;
+        }
+
+        // Input monitoring and processing engine
+        searchInput.addEventListener('input', (e) => {
+            const query = e.target.value;
+            // Native inline interceptor for commands to bypass raw filter
+            if (!query.startsWith('.')) {
+                buildGrid(query);
+            }
+        });
+
+        searchInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                const commandRaw = searchInput.value;
+                const command = commandRaw.trim().toLowerCase();
+                
+                writeToConsole(`${promptLabel.textContent} ${commandRaw}`, true);
+
+                if (command === 'help') {
+                    writeToConsole("AVAILABLE COMMANDS:\n 'dir' - Reset/list all items\n 'cls' - Wipe terminal logs\n 'wood' - Isolate woodworking tools\n 'sys' - Isolate embedded systems\n 'stl' - Isolate 3D print assets", false);
+                } else if (command === 'cls') {
+                    customConsole.innerHTML = "";
+                    writeToConsole("Terminal logs wiped clear.", false);
+                } else if (command === 'dir') {
+                    buildGrid("");
+                    writeToConsole(`Directory catalog refreshed. Found ${repoDatabase.length} files.`, false);
+                } else if (command === 'wood') {
+                    searchInput.value = "woodworking";
+                    buildGrid("woodworking");
+                    writeToConsole("Filtering active subdirectories to: [Woodworking]", false);
+                } else if (command === 'sys') {
+                    searchInput.value = "embedded";
+                    buildGrid("embedded");
+                    writeToConsole("Filtering active subdirectories to: [Embedded]", false);
+                } else if (command === 'stl') {
+                    searchInput.value = "stl";
+                    buildGrid("stl");
+                    writeToConsole("Filtering active subdirectories to: [.STL Models]", false);
+                } else {
+                    writeToConsole(`Parsing filter routine for structural lookup match: "${commandRaw}"`, false);
+                }
+                
+                if (command === 'cls') {
+                    searchInput.value = "";
+                }
+            }
+        });
+
+        // Initialize execution matrix
+        buildGrid("");
+    </script>
 </body>
 </html>
-<style>
-    @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
-
-    body {
-        font-family: 'Press Start 2P', cursive;
-        margin: 0;
-        padding: 0;
-        background-color: #000;
-        color: #00ff00;
-        text-shadow: 1px 1px 0px #000;
-        line-height: 1.6;
-    }
-    header {
-        background-color: #111;
-        color: #00ff00;
-        padding: 1rem 0;
-        text-align: center;
-        border-bottom: 2px solid #00ff00;
-    }
-    header h1 {
-        font-size: 1.5rem;
-        margin: 0;
-    }
-    main {
-        padding: 2rem;
-        white-space: pre-wrap;
-    }
-    .project {
-        border: 2px dashed #00ff00;
-        padding: 1rem;
-        margin-bottom: 1.5rem;
-        background-color: #000;
-    }
-    .project h2 {
-        margin: 0 0 0.5rem 0;
-        color: #00ff00;
-    }
-    .project p {
-        margin: 0 0 1rem 0;
-    }
-    .project a {
-        color: #00ff00;
-        text-decoration: none;
-    }
-    .project a:hover {
-        text-decoration: underline;
-        color: #ff0000;
-    }
-</style>
-<main>
-    <div class="project">
-        <img src="roof-pitch-calculator.png" alt="Roof Pitch Calculator" style="float: left; margin-right: 1rem; width: 100px; height: auto;">
-        <h2>Roof Pitch Calculator</h2>
-        <p>A tool to calculate the pitch of a roof easily and accurately.</p>
-        <a href="https://github.com/smford/roof-pitch-calculator" target="_blank" style="display: block; text-align: left;">View on GitHub</a>
-        <a href="https://smford.github.io/roof-pitch-calculator" target="_blank" style="display: block; text-align: left;">Demo</a>
-    </div>
-    <div class="project">
-        <img src="floorboard-calculator.png" alt="Online Floorboard Calculator" style="float: left; margin-right: 1rem; width: 100px; height: auto;">
-        <h2>Online Floorboard Calculator</h2>
-        <p>A handy calculator for estimating floorboard requirements for your projects.</p>
-        <a href="https://github.com/smford/online-floorboard-calculator" target="_blank" style="display: block; text-align: left;">View on GitHub</a>
-        <a href="https://smford.github.io/online-floorboard-calculator" target="_blank" style="display: block; text-align: left;">Demo</a>
-    </div>
-</main>
