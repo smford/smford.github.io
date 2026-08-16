@@ -130,7 +130,10 @@
       letter-spacing: 1px;
       transition: all 0.2s;
     }
-    .boot-skip-btn:hover { background: var(--accent-danger); color: #fff; }
+    .boot-skip-btn:hover {
+      background: var(--accent-danger);
+      color: #fff;
+    }
 
     .boot-log-container {
       flex: 1;
@@ -150,10 +153,24 @@
       word-break: break-all;
     }
 
-    .tag-ok { color: var(--accent-green); font-weight: bold; }
-    .tag-info { color: var(--accent-secondary); font-weight: bold; }
-    .tag-warn { color: var(--accent-primary); font-weight: bold; }
-    .tag-stage { color: #fff; font-weight: bold; background: rgba(0, 240, 255, 0.15); padding: 0 0.3rem; }
+    .tag-ok {
+      color: var(--accent-green);
+      font-weight: bold;
+    }
+    .tag-info {
+      color: var(--accent-secondary);
+      font-weight: bold;
+    }
+    .tag-warn {
+      color: var(--accent-primary);
+      font-weight: bold;
+    }
+    .tag-stage {
+      color: #fff;
+      font-weight: bold;
+      background: rgba(0, 240, 255, 0.15);
+      padding: 0 0.3rem;
+    }
 
     .boot-footer {
       border-top: 1px dashed rgba(0, 240, 255, 0.3);
@@ -167,6 +184,7 @@
       height: 12px;
       background: rgba(255, 255, 255, 0.08);
       border: 1px solid rgba(0, 240, 255, 0.3);
+      position: relative;
       overflow: hidden;
     }
 
@@ -515,8 +533,14 @@
       word-break: break-all;
     }
 
-    .vim-line { min-height: 1.4em; }
-    .vim-tilde { color: #0088cc; opacity: 0.6; }
+    .vim-line {
+      min-height: 1.4em;
+    }
+
+    .vim-tilde {
+      color: #0088cc;
+      opacity: 0.6;
+    }
 
     .vim-cursor-normal {
       background: var(--accent-primary);
@@ -613,7 +637,7 @@
     /* Cards Grid */
     .cards-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
       gap: 1.5rem;
       margin-bottom: 2.5rem;
     }
@@ -662,13 +686,6 @@
     }
 
     .card-tag { color: var(--accent-primary); font-weight: bold; letter-spacing: 1px; }
-
-    .card-stars {
-      color: var(--accent-primary);
-      display: inline-flex;
-      align-items: center;
-      gap: 0.25rem;
-    }
 
     .card-title {
       font-family: var(--font-display);
@@ -899,7 +916,9 @@
       <button class="boot-skip-btn" onclick="skipBoot()">[ESC] BYPASS_BOOT</button>
     </div>
 
-    <div class="boot-log-container" id="bootLogList"></div>
+    <div class="boot-log-container" id="bootLogList">
+      <!-- Boot logs stream here via JavaScript -->
+    </div>
 
     <div class="boot-footer">
       <div class="boot-progress-bar-wrap">
@@ -937,10 +956,10 @@
         <span>[01]</span> OVERVIEW_HUD
       </button>
       <button class="hud-tab" data-tab="logs" onclick="switchTab('logs')">
-        <span>[02]</span> BUILD_LOGS <span class="tab-badge" id="logBadgeCount">5</span>
+        <span>[02]</span> BUILD_LOGS <span class="tab-badge" id="logBadgeCount">4</span>
       </button>
       <button class="hud-tab" data-tab="firmware" onclick="switchTab('firmware')">
-        <span>[03]</span> FIRMWARE_DECK <span class="tab-badge" id="repoBadgeCount">10</span>
+        <span>[03]</span> FIRMWARE_DECK
       </button>
       <button class="hud-tab" data-tab="operator" onclick="switchTab('operator')">
         <span>[04]</span> OPERATOR_STACK
@@ -964,12 +983,12 @@
             <span class="telemetry-val">6.1.0-DEBIAN</span>
           </div>
           <div class="telemetry-row">
-            <span class="telemetry-label">REPOSITORIES:</span>
-            <span class="telemetry-val">10 DEPLOYED</span>
+            <span class="telemetry-label">STACK INTEGRITY:</span>
+            <span class="telemetry-val">99.8%</span>
           </div>
           <div class="telemetry-row">
             <span class="telemetry-label">ACTIVE CYBERWARE:</span>
-            <span class="telemetry-val">ESP32 / PI / CAD</span>
+            <span class="telemetry-val">ESP32 / PI</span>
           </div>
           <div class="telemetry-row">
             <span class="telemetry-label">SECURITY ICE:</span>
@@ -993,7 +1012,7 @@
         <!-- Normal Terminal Body -->
         <div class="term-body" id="termBody">
           <div class="term-output">SYSTEM: Neural Debian Kernel 6.1.0 loaded.
-SYSTEM: Type 'help', 'projects', 'vim bio.txt', or click chips below.
+SYSTEM: Type 'help', 'vim bio.txt', or click chips below.
 smford@mainframe:~/projects$ ls -la</div>
         </div>
 
@@ -1022,8 +1041,7 @@ smford@mainframe:~/projects$ ls -la</div>
         <div class="quick-chips" id="quickChips">
           <span style="font-size: 0.75rem; color: var(--text-muted); align-self: center;">Quick Exec:</span>
           <button class="chip-btn" onclick="execCommand('help')">help</button>
-          <button class="chip-btn" onclick="execCommand('projects')">projects</button>
-          <button class="chip-btn" onclick="execCommand('cd firmware')">cd firmware</button>
+          <button class="chip-btn" onclick="execCommand('vim bio.txt')">vim bio.txt</button>
           <button class="chip-btn" onclick="execCommand('vim hardware.ino')">vim hardware.ino</button>
           <button class="chip-btn" onclick="execCommand('ls')">ls</button>
           <button class="chip-btn" onclick="execCommand('reboot')">reboot</button>
@@ -1033,7 +1051,7 @@ smford@mainframe:~/projects$ ls -la</div>
         <!-- Terminal Command Input Line -->
         <div class="term-input-line" id="termInputLine">
           <span class="term-prompt">smford@mainframe:~$</span>
-          <input type="text" id="termInput" class="term-input" placeholder="enter command (e.g. 'projects', 'vim bio.txt', 'reboot')..." autocomplete="off" spellcheck="false" />
+          <input type="text" id="termInput" class="term-input" placeholder="enter command (e.g. 'vim bio.txt', 'reboot')..." autocomplete="off" spellcheck="false" />
         </div>
       </section>
 
@@ -1097,23 +1115,82 @@ smford@mainframe:~/projects$ ls -la</div>
       <div class="cards-grid" id="buildLogsGrid"></div>
     </section>
 
-    <!-- ================= TAB 3: FIRMWARE DECK (ALL REPOSITORIES) ================= -->
+    <!-- ================= TAB 3: FIRMWARE DECK ================= -->
     <section id="tab-firmware" class="tab-pane">
       <div class="section-head">
-        <h2 class="section-title">// GITHUB REPOSITORY REGISTRY (10 NODES)</h2>
+        <h2 class="section-title">// DEPLOYED REPOSITORIES & FIRMWARE</h2>
         <div class="section-line"></div>
       </div>
 
-      <div class="filter-bar">
-        <button class="filter-btn active" onclick="filterRepos('all', this)">ALL REPOSITORIES (10)</button>
-        <button class="filter-btn" onclick="filterRepos('Embedded', this)">EMBEDDED & ESP32</button>
-        <button class="filter-btn" onclick="filterRepos('RaspberryPi', this)">RASPBERRY PI & LINUX</button>
-        <button class="filter-btn" onclick="filterRepos('Networking', this)">NETWORKING & APIS</button>
-        <button class="filter-btn" onclick="filterRepos('3DPrinting', this)">3D PRINTING & CAD</button>
-      </div>
+      <div class="cards-grid">
+        <div class="card">
+          <div>
+            <div class="card-meta">
+              <span class="card-tag">FIRMWARE / ASYNC</span>
+              <span>REPO #01</span>
+            </div>
+            <h3 class="card-title">ESP32 Async Web File Uploader</h3>
+            <p class="card-body">Asynchronous web server for ESP32 enabling drag-and-drop SPIFFS filesystem uploads with real-time browser progress telemetry.</p>
+            <div class="card-tech">
+              <span class="tech-pill">C++</span>
+              <span class="tech-pill">ESP32</span>
+              <span class="tech-pill">SPIFFS</span>
+              <span class="tech-pill">WebSockets</span>
+            </div>
+          </div>
+          <a href="https://github.com/smford/esp32-asyncwebserver-fileupload-example" target="_blank" class="action-btn">EXECUTE PROTOCOL &rarr;</a>
+        </div>
 
-      <div class="cards-grid" id="reposGrid">
-        <!-- Rendered via JavaScript from REPOSITORIES array -->
+        <div class="card">
+          <div>
+            <div class="card-meta">
+              <span class="card-tag">SURVEILLANCE API</span>
+              <span>REPO #02</span>
+            </div>
+            <h3 class="card-title">MotionEye Snapshotter API</h3>
+            <p class="card-body">Event-driven microservice triggering instant, timestamped camera captures from external door switches and IoT alarms.</p>
+            <div class="card-tech">
+              <span class="tech-pill">Golang</span>
+              <span class="tech-pill">Docker</span>
+              <span class="tech-pill">REST API</span>
+            </div>
+          </div>
+          <a href="https://github.com/smford/motioneye-snapshotter" target="_blank" class="action-btn">EXECUTE PROTOCOL &rarr;</a>
+        </div>
+
+        <div class="card">
+          <div>
+            <div class="card-meta">
+              <span class="card-tag">NETWORK TELEMETRY</span>
+              <span>REPO #03</span>
+            </div>
+            <h3 class="card-title">MikroTik RouterOS DHCP Tool</h3>
+            <p class="card-body">Asynchronous CLI utility built in Go to poll, parse, and monitor active DHCP lease bindings and IP mappings across RouterOS infrastructure.</p>
+            <div class="card-tech">
+              <span class="tech-pill">Go</span>
+              <span class="tech-pill">RouterOS</span>
+              <span class="tech-pill">Networking</span>
+            </div>
+          </div>
+          <a href="https://github.com/smford/dhcp-routeros-tool" target="_blank" class="action-btn">EXECUTE PROTOCOL &rarr;</a>
+        </div>
+
+        <div class="card">
+          <div>
+            <div class="card-meta">
+              <span class="card-tag">SYSTEMS / LINUX</span>
+              <span>REPO #04</span>
+            </div>
+            <h3 class="card-title">Debian Auto-Provisioner</h3>
+            <p class="card-body">Idempotent Bash shell infrastructure scripts automating headless Debian deployments, secure SSH tunnels, and container daemons.</p>
+            <div class="card-tech">
+              <span class="tech-pill">Bash</span>
+              <span class="tech-pill">Debian</span>
+              <span class="tech-pill">Systemd</span>
+            </div>
+          </div>
+          <a href="https://github.com/smford" target="_blank" class="action-btn">EXECUTE PROTOCOL &rarr;</a>
+        </div>
       </div>
     </section>
 
@@ -1217,23 +1294,21 @@ smford@mainframe:~/projects$ ls -la</div>
   <script>
     /* ================= SYSTEM BOOT SEQUENCE ENGINE ================= */
     const BOOT_STEPS = [
-      { text: "ROM CHECK: 0x00000000 -> 0x7FFFFFFF OK [32768MB ECC RAM VERIFIED]", type: "stage", delay: 70 },
-      { text: "[  OK  ] Initialized Xtensa LX6 Dual-Core SMP processor @ 240MHz", type: "ok", delay: 60 },
-      { text: "[ INFO ] Loading Linux 6.1.0-debian-smford (x86_64/arm64 unified ABI)", type: "info", delay: 70 },
-      { text: "[  OK  ] Mounted Virtual File System (/dev/vfs) with LittleFS & SPIFFS hooks", type: "ok", delay: 50 },
-      { text: "[  OK  ] Loaded smford/esp32-asyncwebserver-fileupload-example (104★ / 30 Forks)", type: "ok", delay: 70 },
-      { text: "[  OK  ] Initialized smford/raspberry-pi-streaming-camera RTSP pipeline (83★ / 5 Forks)", type: "ok", delay: 70 },
-      { text: "[ INFO ] Calibrating 13.56MHz RC522 SPI RFID reader bus on GPIO_05/18/23", type: "info", delay: 80 },
-      { text: "[  OK  ] Safety interlock relay isolation armed: smford/eeh-esp32-rfid", type: "ok", delay: 60 },
-      { text: "[  OK  ] Mounted SNMP daemon configuration: smford/rpi-snmpd-configuration", type: "ok", delay: 60 },
-      { text: "[ INFO ] Polling MikroTik RouterOS v7 DHCP leases via smford/dhcp-routeros-tool", type: "info", delay: 80 },
-      { text: "[  OK  ] Mounted Sunton ESP32 touchscreen display CAD: smford/Sunton-ESP32-2432S028R-Case", type: "ok", delay: 60 },
-      { text: "[  OK  ] Initialized temperature telemetry regulator: smford/esp32-temp-monitor", type: "ok", delay: 60 },
-      { text: "[  OK  ] Starting event-driven surveillance API daemon: smford/motioneye-snapshotter", type: "ok", delay: 70 },
-      { text: "[ WARN ] Unrestricted ICE bypass active for local operator 'smford'", type: "warn", delay: 50 },
-      { text: "[  OK  ] Started Bash Shell Netrunner Terminal daemon (TTY1)", type: "ok", delay: 60 },
-      { text: "[  OK  ] Loaded Vim 9.0 Neural modal editor simulator", type: "ok", delay: 50 },
-      { text: "SYSTEM: Neural link handshaking complete. Launching Cyberdeck HUD...", type: "stage", delay: 100 }
+      { text: "ROM CHECK: 0x00000000 -> 0x7FFFFFFF OK [32768MB ECC RAM VERIFIED]", type: "stage", delay: 80 },
+      { text: "[  OK  ] Initialized Xtensa LX6 Dual-Core SMP processor @ 240MHz", type: "ok", delay: 70 },
+      { text: "[ INFO ] Loading Linux 6.1.0-debian-smford (x86_64/arm64 unified ABI)", type: "info", delay: 90 },
+      { text: "[  OK  ] Mounted Virtual File System (/dev/vfs) with LittleFS & SPIFFS hooks", type: "ok", delay: 60 },
+      { text: "[  OK  ] Initialized Cortical Stack telemetry subsystem (Needlecast Protocol)", type: "ok", delay: 80 },
+      { text: "[ INFO ] Calibrating 13.56MHz RC522 SPI RFID reader bus on GPIO_05/18/23", type: "info", delay: 100 },
+      { text: "[  OK  ] Safety interlock relay isolation armed (Active-Low Contactor)", type: "ok", delay: 70 },
+      { text: "[  OK  ] Starting v4l2rtspserver laser-cam monitoring pipeline (1080p @ 25fps)", type: "ok", delay: 90 },
+      { text: "[ INFO ] Polling MikroTik RouterOS v7 DHCP leases via TLS secure gateway", type: "info", delay: 110 },
+      { text: "[  OK  ] Ubiquiti UniFi Gigabit PoE network backbone verified (10.0.0.1/24)", type: "ok", delay: 80 },
+      { text: "[ WARN ] Unrestricted ICE bypass active for local operator 'smford'", type: "warn", delay: 70 },
+      { text: "[  OK  ] Mounted Sunton ESP32 touchscreen display drivers (ST7789 / Parallel SPI)", type: "ok", delay: 80 },
+      { text: "[  OK  ] Started Bash Shell Netrunner Terminal daemon (TTY1)", type: "ok", delay: 90 },
+      { text: "[  OK  ] Loaded Vim 9.0 Neural modal editor simulator", type: "ok", delay: 60 },
+      { text: "SYSTEM: Neural link handshaking complete. Launching Cyberdeck HUD...", type: "stage", delay: 120 }
     ];
 
     let bootAborted = false;
@@ -1290,7 +1365,7 @@ smford@mainframe:~/projects$ ls -la</div>
 
           bootTimeout = setTimeout(() => {
             finishBoot();
-          }, 300);
+          }, 350);
         }
       }
 
@@ -1316,6 +1391,7 @@ smford@mainframe:~/projects$ ls -la</div>
       finishBoot();
     }
 
+    // Keyboard listener for [ESC] or [Space] to skip boot screen
     window.addEventListener('keydown', (e) => {
       const overlay = document.getElementById('bootOverlay');
       if (overlay && overlay.style.display !== 'none' && !overlay.classList.contains('shutoff')) {
@@ -1325,106 +1401,12 @@ smford@mainframe:~/projects$ ls -la</div>
       }
     });
 
-    /* ================= ALL GITHUB REPOSITORIES DATA ================= */
-    const REPOSITORIES = [
-      {
-        name: "esp32-asyncwebserver-fileupload-example",
-        category: "Embedded",
-        stars: 104,
-        forks: 30,
-        desc: "High-performance asynchronous web server for ESP32 demonstrating drag-and-drop SPIFFS filesystem uploads with real-time browser progress bar telemetry.",
-        tech: ["C++", "ESP32", "SPIFFS", "AsyncWebServer", "WebSockets"],
-        url: "https://github.com/smford/esp32-asyncwebserver-fileupload-example"
-      },
-      {
-        name: "raspberry-pi-streaming-camera",
-        category: "RaspberryPi",
-        stars: 83,
-        forks: 5,
-        desc: "Ultra-low latency RTSP camera feed on Raspberry Pi Zero W with hardware video flip (v4l2rtspserver + Nginx) for real-time laser cutter enclosure monitoring.",
-        tech: ["Raspbian", "v4l2rtspserver", "Nginx", "Laser CNC", "MIPI-CSI"],
-        url: "https://github.com/smford/raspberry-pi-streaming-camera"
-      },
-      {
-        name: "rpi-snmpd-configuration",
-        category: "RaspberryPi",
-        stars: 14,
-        forks: 1,
-        desc: "Production SNMP daemon configuration for Raspberry Pi exposing hardware CPU core temperatures, system health, and Linux OS telemetry over network monitoring.",
-        tech: ["SNMP", "Raspberry Pi", "Linux Sysadmin", "Bash"],
-        url: "https://github.com/smford/rpi-snmpd-configuration"
-      },
-      {
-        name: "eeh-esp32-rfid",
-        category: "Embedded",
-        stars: 11,
-        forks: 0,
-        desc: "Industrial RFID access control and safety interlock system built for East Essex Hackspace to restrict unauthorized power to 3kW workshop tools.",
-        tech: ["Embedded C++", "ESP32", "RC522 RFID", "Hardware Relays"],
-        url: "https://github.com/smford/eeh-esp32-rfid"
-      },
-      {
-        name: "Sunton-ESP32-2432S028R-Case",
-        category: "3DPrinting",
-        stars: 11,
-        forks: 0,
-        desc: "Custom parametric 3D printable enclosure remix for the Sunton ESP32 2.8\" LCD + touch controller, optimized for M3 socket screws and heat-set inserts.",
-        tech: ["3D Printing", "Bambu Lab", "PLA-CF", "CAD Remix", "ESP32-CYD"],
-        url: "https://github.com/smford/Sunton-ESP32-2432S028R-Case"
-      },
-      {
-        name: "bambu-poop-chute-magnet-remix",
-        category: "3DPrinting",
-        stars: 4,
-        forks: 0,
-        desc: "Magnetic snap-lock purge chute remix for Bambu Lab 3D printers, featuring recessed neodymium magnet slots for quick filament purge removal.",
-        tech: ["3D Printing", "Bambu Lab", "Neodymium Magnets", "CAD"],
-        url: "https://github.com/smford/bambu-poop-chute-magnet-remix"
-      },
-      {
-        name: "esp32-temp-monitor",
-        category: "Embedded",
-        stars: 2,
-        forks: 0,
-        desc: "ESP32 temperature regulation system with web UI, DS18B20 multi-probes, relay switching, and Pushover alerts (used for tortoise hibernation control).",
-        tech: ["C++", "ESP32", "DS18B20", "Pushover API", "Webserver"],
-        url: "https://github.com/smford/esp32-temp-monitor"
-      },
-      {
-        name: "motioneye-snapshotter",
-        category: "Networking",
-        stars: 1,
-        forks: 0,
-        desc: "Event-driven Go microservice providing a REST API to trigger instant, timestamped camera snapshot captures from MotionEye upon IoT sensor triggers.",
-        tech: ["Golang", "Docker", "REST API", "MotionEye", "IoT"],
-        url: "https://github.com/smford/motioneye-snapshotter"
-      },
-      {
-        name: "dhcp-routeros-tool",
-        category: "Networking",
-        stars: 1,
-        forks: 0,
-        desc: "Asynchronous CLI tool in Go to query, parse, and export active DHCP lease bindings, hostnames, and IP mappings across MikroTik RouterOS firewalls.",
-        tech: ["Go", "MikroTik", "RouterOS API", "TLS / Networking"],
-        url: "https://github.com/smford/dhcp-routeros-tool"
-      },
-      {
-        name: "pica-dry-pencil-wall-mount",
-        category: "3DPrinting",
-        stars: 1,
-        forks: 0,
-        desc: "3D printable wall-mounted holster remix for Pica Dry deep-hole construction markers with dual countersunk screw fixtures for workshop tool boards.",
-        tech: ["3D Printing", "Workshop Tooling", "CAD", "PLA"],
-        url: "https://github.com/smford/pica-dry-pencil-wall-mount"
-      }
-    ];
-
     /* ================= VIRTUAL FILE SYSTEM (VFS) ================= */
     const VFS = {
       'bio.txt': `OPERATOR PROFILE:
 Name: Steve Ford (@smford)
 Role: Woodworking Software Engineer & Hardware Prototyper
-Specialty: Bridging physical timber engineering with embedded C++, Linux sysadmin, and custom CAD tooling.
+Specialty: Bridging physical timber engineering with embedded C++ & Linux sysadmin.
 Location: Bay Area Node // UK Matrix Grid`,
 
       'hardware.ino': `// EEH ESP32 RFID Safety Sentry
@@ -1448,51 +1430,18 @@ void setup() {
 
 void loop() {
   if (!rfid.PICC_IsNewCardPresent() || !rfid.PICC_ReadCardSerial()) return;
+  // Authenticate user hex tag
   Serial.println("[AUTH] Clearance granted. Engaging power relay.");
   digitalWrite(RELAY_PIN, LOW);
   delay(10000); // 10s tool duty cycle
   digitalWrite(RELAY_PIN, HIGH);
 }`,
 
-      'temp_monitor.ino': `// ESP32 Temperature Regulator & Alert Daemon
-#include <WiFi.h>
-#include <OneWire.h>
-#include <DallasTemperature.h>
-
-#define ONE_WIRE_BUS 4
-#define FRIDGE_RELAY 26
-
-OneWire oneWire(ONE_WIRE_BUS);
-DallasTemperature sensors(&oneWire);
-
-void setup() {
-  pinMode(FRIDGE_RELAY, OUTPUT);
-  sensors.begin();
-}
-
-void loop() {
-  sensors.requestTemperatures();
-  float tempC = sensors.getTempCByIndex(0);
-  if (tempC > 5.0) {
-    digitalWrite(FRIDGE_RELAY, LOW); // Active cooling
-  } else if (tempC < 3.5) {
-    digitalWrite(FRIDGE_RELAY, HIGH); // Disengage cooling
-  }
-  delay(5000);
-}`,
-
-      'snmpd.conf': `# Raspberry Pi SNMPD Telemetry Configuration
-syslocation "Workshop Bay 4"
-syscontact "smford <admin@mainframe.local>"
-rocommunity public default
-# Hardware sensors script
-extend cpu_temp /usr/bin/vcgencmd measure_temp`,
-
       'notes.md': `# Night City Hardware Bench
-- [x] Tested Bambu magnetic poop chute remix on X1-Carbon
-- [x] Verified async upload progress bar on ESP32 SPIFFS
-- [x] Aligned wide-angle optics on Pi Zero RTSP laser-cam
-- [ ] Install Pica Dry wall holsters on main workbench`
+- [x] Align mirror beam optics on Pi Zero RTSP camera
+- [x] Complete stress testing on optocoupled 230V contactor
+- [ ] Mill walnut front faceplate for Sunton ESP32 touchscreen
+- [ ] Refactor DHCP extractor for RouterOS v7 TLS API`
     };
 
     /* ================= BUILD LOGS DATA ================= */
@@ -1566,25 +1515,6 @@ extend cpu_temp /usr/bin/vcgencmd measure_temp`,
         notes: `Modeled in Fusion 360 with 0.2mm tolerance offsets for snap-fit tabs. Integrated ventilation channels direct convection airflow across the onboard ESP32 Wi-Fi module.`
       },
       {
-        id: "log-112",
-        category: "Hardware",
-        title: "ESP32 Precision Temp Regulator",
-        date: "2026-07-05",
-        status: "DEPLOYED_ACTIVE",
-        summary: "Closed-loop micro-climate regulation unit logging DS18B20 telemetry to TICK stack and cycling 230V cooling relays for precision tortoise hibernation.",
-        bom: [
-          { item: "ESP32 Dev Board", qty: "1", role: "Controller & Wi-Fi Node" },
-          { item: "DS18B20 Probes (Waterproof)", qty: "2", role: "Multi-point Thermal Probes" },
-          { item: "Solid State Relay 10A", qty: "1", role: "Compressor Switching" }
-        ],
-        pinout: [
-          { gpio: "GPIO 4",  device: "OneWire Bus", note: "Dallas DS18B20 Sensors" },
-          { gpio: "GPIO 26", device: "Relay SSR", note: "Cooling Compressor Control" }
-        ],
-        schematic: `[ DS18B20 Probes ] ---> [ ESP32 GPIO 4 ] ---> [ SSR Relay ] ---> [ Mini Fridge ]`,
-        notes: `Includes built-in webserver for live threshold configuration and Pushover emergency pushes if temperatures drift +/- 1.5°C outside the safety window.`
-      },
-      {
         id: "log-118",
         category: "Fabrication",
         title: "Timber Rafter & Outbuilding CAD Engine",
@@ -1616,51 +1546,6 @@ extend cpu_temp /usr/bin/vcgencmd measure_temp`,
         targetPane.classList.add('active');
         window.location.hash = tabId;
       }
-    }
-
-    /* ================= REPOSITORIES DECK RENDERING ================= */
-    function renderRepositories(filter = 'all') {
-      const grid = document.getElementById('reposGrid');
-      grid.innerHTML = '';
-
-      const filtered = filter === 'all' 
-        ? REPOSITORIES 
-        : REPOSITORIES.filter(r => r.category.toLowerCase() === filter.toLowerCase());
-
-      filtered.forEach((repo, idx) => {
-        const card = document.createElement('div');
-        card.className = 'card';
-        
-        const techPills = repo.tech.map(t => `<span class="tech-pill">${t}</span>`).join('');
-        const numStr = (idx + 1).toString().padStart(2, '0');
-
-        card.innerHTML = `
-          <div>
-            <div class="card-meta">
-              <span class="card-tag">${repo.category.toUpperCase()}</span>
-              <div>
-                <span class="card-stars">★ ${repo.stars}</span>
-                <span style="margin-left: 0.5rem;">REPO #${numStr}</span>
-              </div>
-            </div>
-            <h3 class="card-title">${repo.name}</h3>
-            <p class="card-body">${repo.desc}</p>
-            <div class="card-tech">
-              ${techPills}
-            </div>
-          </div>
-          <a href="${repo.url}" target="_blank" class="action-btn">
-            EXECUTE PROTOCOL (GITHUB) &rarr;
-          </a>
-        `;
-        grid.appendChild(card);
-      });
-    }
-
-    function filterRepos(cat, btn) {
-      document.querySelectorAll('#tab-firmware .filter-btn').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      renderRepositories(cat);
     }
 
     /* ================= BUILD LOG RENDERING & FILTERING ================= */
@@ -1697,7 +1582,7 @@ extend cpu_temp /usr/bin/vcgencmd measure_temp`,
     }
 
     function filterLogs(cat, btn) {
-      document.querySelectorAll('#tab-logs .filter-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
       renderBuildLogs(cat);
     }
@@ -2167,31 +2052,22 @@ extend cpu_temp /usr/bin/vcgencmd measure_temp`,
 
     const commands = {
       help: `COMMAND PROTOCOL DIRECTORY:
-  • projects     - Dump all 10 GitHub repositories & telemetry stats
-  • cd firmware  - Switch to full GitHub Repositories HUD deck
   • reboot       - Replay hardware POST & kernel boot sequence
   • vim <file>   - Launch modal Vim 9.0 simulator (:w, :q, :wq, i, esc)
   • ls           - List files in Virtual File System (VFS)
   • cat <file>   - Print file contents to terminal
   • cd <tab>     - Navigate HUD [overview | logs | firmware | operator]
   • view <log>   - Open technical schematic dossier [e.g. view log-042]
+  • projects     - Dump firmware repository index
   • skills       - Display operator cyberware specs
   • theme        - Swap Night City / Altered Carbon visual modes
   • clear        - Wipe terminal window`,
 
-      projects: `GITHUB REPOSITORY INDEX (10 NODES):
-  [01] esp32-asyncwebserver-fileupload-example  (★ 104) [C++/SPIFFS]
-  [02] raspberry-pi-streaming-camera            (★ 83)  [v4l2/RTSP/Nginx]
-  [03] rpi-snmpd-configuration                  (★ 14)  [SNMP/Debian]
-  [04] eeh-esp32-rfid                           (★ 11)  [RFID/Safety Sentry]
-  [05] Sunton-ESP32-2432S028R-Case              (★ 11)  [3D CAD/PLA-CF]
-  [06] bambu-poop-chute-magnet-remix            (★ 4)   [3D CAD/Magnets]
-  [07] esp32-temp-monitor                       (★ 2)   [DS18B20/Relay]
-  [08] motioneye-snapshotter                    (★ 1)   [Go/Docker REST]
-  [09] dhcp-routeros-tool                       (★ 1)   [Go/MikroTik API]
-  [10] pica-dry-pencil-wall-mount               (★ 1)   [3D CAD/Tooling]
-  
-Type 'cd firmware' to view all repositories in the visual grid.`,
+      projects: `FIRMWARE REGISTRY:
+  [01] esp32-asyncwebserver-fileupload-example (C++, SPIFFS)
+  [02] motioneye-snapshotter (Golang, Docker)
+  [03] dhcp-routeros-tool (Go, MikroTik API)
+  [04] eeh-esp32-rfid (Safety Interlock Firmware)`,
 
       skills: `OPERATOR CAPABILITIES:
   • Embedded : C++, ESP32/ESP8266, FreeRTOS, SPIFFS, RFID
@@ -2281,7 +2157,7 @@ Type 'cd firmware' to view all repositories in the visual grid.`,
         const err = document.createElement('div');
         err.className = 'term-output';
         err.style.color = 'var(--accent-danger)';
-        err.textContent = `zsh: protocol '${cmd}' not recognized. Type 'help' or 'projects'.`;
+        err.textContent = `zsh: protocol '${cmd}' not recognized. Type 'help' or 'vim bio.txt'.`;
         termBody.appendChild(err);
       }
 
@@ -2319,12 +2195,12 @@ Type 'cd firmware' to view all repositories in the visual grid.`,
 
     /* ================= INITIALIZATION ================= */
     window.addEventListener('DOMContentLoaded', () => {
-      renderRepositories();
       renderBuildLogs();
       const hash = window.location.hash.replace('#', '');
       if (['overview', 'logs', 'firmware', 'operator'].includes(hash)) {
         switchTab(hash);
       }
+      // Trigger full terminal boot-up sequence on initial page load
       runBootSequence();
     });
   </script>

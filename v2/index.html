@@ -1,0 +1,890 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>smford // NEURAL_MAINFRAME</title>
+  <!-- Google Fonts: Orbitron & Share Tech Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Share+Tech+Mono&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg-base: #07090e;
+      --bg-panel: rgba(14, 18, 27, 0.85);
+      --bg-panel-solid: #0e121b;
+      --accent-primary: #FCEE0A; /* Cyberpunk Yellow */
+      --accent-secondary: #00F0FF; /* Neon Cyan */
+      --accent-danger: #FF003C; /* Arasaka Red */
+      --accent-purple: #9d4edd;
+      --text-main: #dcf2fd;
+      --text-muted: #6b8299;
+      --border-color: rgba(0, 240, 255, 0.3);
+      --font-mono: 'Share Tech Mono', monospace;
+      --font-display: 'Orbitron', sans-serif;
+      --font-body: 'Rajdhani', sans-serif;
+      --glow-primary: 0 0 12px rgba(252, 238, 10, 0.45);
+      --glow-secondary: 0 0 12px rgba(0, 240, 255, 0.45);
+    }
+
+    [data-theme="altered-carbon"] {
+      --bg-base: #030509;
+      --bg-panel: rgba(10, 14, 24, 0.9);
+      --bg-panel-solid: #0a0e18;
+      --accent-primary: #00E5FF; /* Psychasec Ice Blue */
+      --accent-secondary: #bd00ff; /* Needlecast Violet */
+      --accent-danger: #ff2a6d;
+      --accent-purple: #7928ca;
+      --text-main: #e2f1f8;
+      --text-muted: #5e768d;
+      --border-color: rgba(189, 0, 255, 0.35);
+      --glow-primary: 0 0 14px rgba(0, 229, 255, 0.5);
+      --glow-secondary: 0 0 14px rgba(189, 0, 255, 0.5);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg-base);
+      color: var(--text-main);
+      font-family: var(--font-body);
+      font-size: 16px;
+      line-height: 1.5;
+      min-height: 100vh;
+      overflow-x: hidden;
+      background-image: 
+        radial-gradient(circle at 50% 0%, rgba(0, 240, 255, 0.08) 0%, transparent 60%),
+        linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+      background-size: 100% 100%, 32px 32px, 32px 32px;
+      position: relative;
+    }
+
+    /* CRT Scanline Overlay */
+    body::before {
+      content: " ";
+      position: fixed;
+      top: 0; left: 0; bottom: 0; right: 0;
+      background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.35) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.03), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.03));
+      background-size: 100% 3px, 6px 100%;
+      pointer-events: none;
+      z-index: 999;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2rem 1.5rem 5rem;
+      position: relative;
+      z-index: 10;
+    }
+
+    /* Top Utility Bar */
+    .top-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.75rem 1.25rem;
+      background: var(--bg-panel);
+      border-bottom: 2px solid var(--accent-secondary);
+      clip-path: polygon(0 0, calc(100% - 15px) 0, 100% 15px, 100% 100%, 0 100%);
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+      margin-bottom: 2rem;
+    }
+
+    .status-group {
+      display: flex;
+      gap: 1.5rem;
+      align-items: center;
+    }
+
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: var(--accent-secondary);
+    }
+
+    .status-led {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--accent-primary);
+      box-shadow: var(--glow-primary);
+      animation: pulse 1.8s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.4; transform: scale(0.85); }
+    }
+
+    /* Theme Toggle */
+    .theme-switch-btn {
+      background: transparent;
+      border: 1px solid var(--accent-primary);
+      color: var(--accent-primary);
+      padding: 0.35rem 0.85rem;
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      cursor: pointer;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      transition: all 0.2s ease;
+      clip-path: polygon(8px 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%, 0 8px);
+    }
+    .theme-switch-btn:hover {
+      background: var(--accent-primary);
+      color: #000;
+      box-shadow: var(--glow-primary);
+    }
+
+    /* Header Hero Section */
+    .hero-hud {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 2rem;
+      align-items: center;
+      background: var(--bg-panel);
+      border: 1px solid var(--border-color);
+      border-left: 5px solid var(--accent-primary);
+      padding: 2.5rem 2rem;
+      position: relative;
+      clip-path: polygon(0 0, calc(100% - 30px) 0, 100% 30px, 100% 100%, 0 100%);
+      margin-bottom: 2rem;
+      backdrop-filter: blur(8px);
+    }
+
+    .hero-hud::after {
+      content: "SYS//VER 6.1.0";
+      position: absolute;
+      top: 0.5rem;
+      right: 1.5rem;
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      letter-spacing: 2px;
+    }
+
+    .glitch-title {
+      font-family: var(--font-display);
+      font-size: 2.8rem;
+      font-weight: 900;
+      color: var(--accent-primary);
+      text-shadow: var(--glow-primary);
+      letter-spacing: 2px;
+      line-height: 1.1;
+      margin-bottom: 0.5rem;
+    }
+
+    .hero-sub {
+      font-family: var(--font-mono);
+      color: var(--accent-secondary);
+      font-size: 1.1rem;
+      margin-bottom: 1rem;
+      letter-spacing: 1px;
+    }
+
+    .hero-desc {
+      max-width: 650px;
+      font-size: 1.05rem;
+      color: var(--text-main);
+      opacity: 0.9;
+    }
+
+    .telemetry-box {
+      border: 1px dashed var(--accent-secondary);
+      padding: 1.25rem 1.5rem;
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      background: rgba(0, 0, 0, 0.4);
+      min-width: 220px;
+    }
+
+    .telemetry-row {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 0.4rem;
+    }
+    .telemetry-row:last-child { margin-bottom: 0; }
+    .telemetry-label { color: var(--text-muted); }
+    .telemetry-val { color: var(--accent-primary); font-weight: bold; }
+
+    /* Interactive Terminal */
+    .terminal-window {
+      background: #05070c;
+      border: 1px solid rgba(0, 240, 255, 0.4);
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.7);
+      margin-bottom: 3rem;
+      font-family: var(--font-mono);
+    }
+
+    .term-header {
+      background: #0b111c;
+      padding: 0.5rem 1rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid rgba(0, 240, 255, 0.2);
+    }
+
+    .term-dots {
+      display: flex;
+      gap: 6px;
+    }
+    .term-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: #2a3547;
+    }
+    .term-dot.red { background: var(--accent-danger); }
+    .term-dot.yellow { background: var(--accent-primary); }
+    .term-dot.cyan { background: var(--accent-secondary); }
+
+    .term-title {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      letter-spacing: 1px;
+    }
+
+    .term-body {
+      padding: 1.25rem;
+      max-height: 260px;
+      overflow-y: auto;
+      font-size: 0.88rem;
+      color: #9fe7ff;
+    }
+
+    .term-output {
+      margin-bottom: 0.75rem;
+      line-height: 1.6;
+      white-space: pre-wrap;
+    }
+
+    .term-input-line {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-top: 0.5rem;
+    }
+
+    .term-prompt {
+      color: var(--accent-primary);
+      font-weight: bold;
+    }
+
+    .term-input {
+      flex: 1;
+      background: transparent;
+      border: none;
+      outline: none;
+      color: #fff;
+      font-family: var(--font-mono);
+      font-size: 0.9rem;
+    }
+
+    .quick-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      padding: 0.75rem 1.25rem;
+      background: rgba(0, 0, 0, 0.3);
+      border-top: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .chip-btn {
+      background: rgba(0, 240, 255, 0.08);
+      border: 1px solid rgba(0, 240, 255, 0.3);
+      color: var(--accent-secondary);
+      padding: 0.25rem 0.6rem;
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    .chip-btn:hover {
+      background: var(--accent-secondary);
+      color: #000;
+    }
+
+    /* Section Headers */
+    .section-head {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1.75rem;
+    }
+    .section-title {
+      font-family: var(--font-display);
+      font-size: 1.5rem;
+      color: #fff;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+    }
+    .section-line {
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(90deg, var(--accent-secondary), transparent);
+    }
+
+    /* Project Cards Grid */
+    .projects-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 3.5rem;
+    }
+
+    .card {
+      background: var(--bg-panel);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      position: relative;
+      padding: 1.5rem;
+      transition: all 0.25s ease;
+      clip-path: polygon(0 0, calc(100% - 20px) 0, 100% 20px, 100% 100%, 0 100%);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .card::before {
+      content: "";
+      position: absolute;
+      top: 0; left: 0;
+      width: 4px; height: 100%;
+      background: var(--accent-secondary);
+      opacity: 0.5;
+      transition: opacity 0.2s ease, width 0.2s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-4px);
+      border-color: var(--accent-secondary);
+      box-shadow: var(--glow-secondary);
+    }
+    .card:hover::before {
+      opacity: 1;
+      width: 6px;
+      background: var(--accent-primary);
+    }
+
+    .card-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-bottom: 0.75rem;
+    }
+
+    .card-tag {
+      color: var(--accent-primary);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .card-title {
+      font-family: var(--font-display);
+      font-size: 1.2rem;
+      color: #fff;
+      margin-bottom: 0.75rem;
+      letter-spacing: 0.5px;
+    }
+
+    .card-body {
+      color: var(--text-main);
+      font-size: 0.95rem;
+      opacity: 0.85;
+      margin-bottom: 1.25rem;
+      line-height: 1.45;
+    }
+
+    .card-tech {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      margin-bottom: 1.25rem;
+    }
+
+    .tech-pill {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      padding: 0.15rem 0.5rem;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: var(--accent-secondary);
+    }
+
+    .card-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+      color: var(--accent-primary);
+      text-decoration: none;
+      font-weight: bold;
+      transition: gap 0.2s ease;
+    }
+    .card-link:hover {
+      gap: 0.75rem;
+      text-shadow: var(--glow-primary);
+    }
+
+    /* Skills Deck */
+    .skills-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 1.25rem;
+      margin-bottom: 3.5rem;
+    }
+
+    .skill-card {
+      background: var(--bg-panel-solid);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      padding: 1.25rem;
+      position: relative;
+    }
+
+    .skill-name {
+      font-family: var(--font-mono);
+      font-size: 0.95rem;
+      color: #fff;
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 0.5rem;
+    }
+
+    .skill-bar-bg {
+      height: 6px;
+      background: rgba(255, 255, 255, 0.1);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .skill-bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--accent-secondary), var(--accent-primary));
+      box-shadow: var(--glow-secondary);
+    }
+
+    /* Footer */
+    footer {
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      padding-top: 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    footer a {
+      color: var(--accent-primary);
+      text-decoration: none;
+    }
+    footer a:hover {
+      text-decoration: underline;
+    }
+
+    @media (max-width: 768px) {
+      .hero-hud {
+        grid-template-columns: 1fr;
+      }
+      .glitch-title {
+        font-size: 2.1rem;
+      }
+      .top-bar {
+        flex-direction: column;
+        gap: 0.5rem;
+        align-items: flex-start;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+
+    <!-- Top Telemetry Bar -->
+    <header class="top-bar">
+      <div class="status-group">
+        <div class="status-badge">
+          <div class="status-led"></div>
+          <span>MAINFRAME // SEC_NET: ACTIVE</span>
+        </div>
+        <div style="color: var(--text-muted);">HOST: smford@mainframe</div>
+      </div>
+      <div>
+        <button id="themeToggle" class="theme-switch-btn" onclick="toggleTheme()">
+          STYLE: [ CYBERPUNK 2077 ]
+        </button>
+      </div>
+    </header>
+
+    <!-- Hero HUD Section -->
+    <section class="hero-hud">
+      <div>
+        <h1 class="glitch-title">smford.github.io</h1>
+        <div class="hero-sub">&gt; WOODWORKING SOFTWARE ENGINEER // HARDWARE PROTOTYPER</div>
+        <p class="hero-desc">
+          Architecting low-level firmware, bespoke IoT hardware controllers, real-time laser telemetry, and physical CNC/woodworking engineering from the Bay Area matrix.
+        </p>
+      </div>
+
+      <div class="telemetry-box">
+        <div class="telemetry-row">
+          <span class="telemetry-label">KERNEL:</span>
+          <span class="telemetry-val">6.1.0-DEBIAN</span>
+        </div>
+        <div class="telemetry-row">
+          <span class="telemetry-label">STACK INTEGRITY:</span>
+          <span class="telemetry-val">99.8%</span>
+        </div>
+        <div class="telemetry-row">
+          <span class="telemetry-label">CYBERWARE:</span>
+          <span class="telemetry-val">ESP32 / PI</span>
+        </div>
+        <div class="telemetry-row">
+          <span class="telemetry-label">SECURITY ICE:</span>
+          <span class="telemetry-val" style="color: var(--accent-danger);">UNRESTRICTED</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Interactive Terminal Emulator -->
+    <section class="terminal-window">
+      <div class="term-header">
+        <div class="term-dots">
+          <div class="term-dot red"></div>
+          <div class="term-dot yellow"></div>
+          <div class="term-dot cyan"></div>
+        </div>
+        <div class="term-title">BASH SHELL CYBERDECK v4.2</div>
+        <div style="font-size: 0.7rem; color: var(--accent-primary);">TTY1</div>
+      </div>
+
+      <div class="term-body" id="termBody">
+        <div class="term-output">SYSTEM: Linux terminal initialized successfully.
+SYSTEM: Type 'help' to access terminal modules and directory variables.
+smford@mainframe:~/projects$ ls -la</div>
+      </div>
+
+      <div class="quick-chips">
+        <span style="font-size: 0.75rem; color: var(--text-muted); align-self: center;">Quick Exec:</span>
+        <button class="chip-btn" onclick="execCommand('help')">help</button>
+        <button class="chip-btn" onclick="execCommand('projects')">projects</button>
+        <button class="chip-btn" onclick="execCommand('skills')">skills</button>
+        <button class="chip-btn" onclick="execCommand('cat bio.txt')">cat bio.txt</button>
+        <button class="chip-btn" onclick="execCommand('clear')">clear</button>
+      </div>
+
+      <div style="padding: 0.5rem 1.25rem; background: #080c14; border-top: 1px solid rgba(0, 240, 255, 0.1);">
+        <div class="term-input-line">
+          <span class="term-prompt">smford@mainframe:~$</span>
+          <input type="text" id="termInput" class="term-input" placeholder="type a command..." autocomplete="off" spellcheck="false" />
+        </div>
+      </div>
+    </section>
+
+    <!-- Projects Section -->
+    <div class="section-head">
+      <h2 class="section-title">// DEPLOYED HARDWARE & REPOSITORIES</h2>
+      <div class="section-line"></div>
+    </div>
+
+    <div class="projects-grid">
+      <!-- Project 1 -->
+      <div class="card">
+        <div>
+          <div class="card-meta">
+            <span class="card-tag">FIRMWARE / IOT</span>
+            <span>REPO #01</span>
+          </div>
+          <h3 class="card-title">ESP32 Async Web Uploader</h3>
+          <p class="card-body">
+            High-performance asynchronous web server for ESP32 microcontrollers enabling drag-and-drop SPIFFS filesystem uploads with real-time browser progress telemetry.
+          </p>
+          <div class="card-tech">
+            <span class="tech-pill">C++</span>
+            <span class="tech-pill">ESP32</span>
+            <span class="tech-pill">SPIFFS</span>
+            <span class="tech-pill">AsyncWebServer</span>
+          </div>
+        </div>
+        <a href="https://github.com/smford/esp32-asyncwebserver-fileupload-example" target="_blank" class="card-link">
+          EXECUTE PROTOCOL &rarr;
+        </a>
+      </div>
+
+      <!-- Project 2 -->
+      <div class="card">
+        <div>
+          <div class="card-meta">
+            <span class="card-tag">OPTICS / STREAMING</span>
+            <span>REPO #02</span>
+          </div>
+          <h3 class="card-title">Pi Zero RTSP Laser-Cam</h3>
+          <p class="card-body">
+            Ultra-low latency RTSP camera feed running on Raspberry Pi Zero with hardware video flip to monitor high-powered laser cutters in real time.
+          </p>
+          <div class="card-tech">
+            <span class="tech-pill">Raspberry Pi</span>
+            <span class="tech-pill">v4l2rtspserver</span>
+            <span class="tech-pill">Nginx</span>
+            <span class="tech-pill">Laser CNC</span>
+          </div>
+        </div>
+        <a href="https://github.com/smford/raspberry-pi-streaming-camera" target="_blank" class="card-link">
+          EXECUTE PROTOCOL &rarr;
+        </a>
+      </div>
+
+      <!-- Project 3 -->
+      <div class="card">
+        <div>
+          <div class="card-meta">
+            <span class="card-tag">PHYSICAL SECURITY</span>
+            <span>REPO #03</span>
+          </div>
+          <h3 class="card-title">EEH ESP32 RFID Tool Sentry</h3>
+          <p class="card-body">
+            Industrial RFID access control system enforcing authenticated safety interlocks on heavy workshop machinery and fabrication power tools.
+          </p>
+          <div class="card-tech">
+            <span class="tech-pill">Embedded C++</span>
+            <span class="tech-pill">RFID / NFC</span>
+            <span class="tech-pill">Hardware Relays</span>
+          </div>
+        </div>
+        <a href="https://github.com/smford/eeh-esp32-rfid" target="_blank" class="card-link">
+          EXECUTE PROTOCOL &rarr;
+        </a>
+      </div>
+
+      <!-- Project 4 -->
+      <div class="card">
+        <div>
+          <div class="card-meta">
+            <span class="card-tag">SURVEILLANCE API</span>
+            <span>REPO #04</span>
+          </div>
+          <h3 class="card-title">MotionEye Snapshotter</h3>
+          <p class="card-body">
+            Automated microservice providing an event-driven API to trigger instant, timestamped camera captures from external door switches and IoT alarms.
+          </p>
+          <div class="card-tech">
+            <span class="tech-pill">Golang</span>
+            <span class="tech-pill">Docker</span>
+            <span class="tech-pill">REST API</span>
+          </div>
+        </div>
+        <a href="https://github.com/smford/motioneye-snapshotter" target="_blank" class="card-link">
+          EXECUTE PROTOCOL &rarr;
+        </a>
+      </div>
+
+      <!-- Project 5 -->
+      <div class="card">
+        <div>
+          <div class="card-meta">
+            <span class="card-tag">NETWORKING TELEMETRY</span>
+            <span>REPO #05</span>
+          </div>
+          <h3 class="card-title">MikroTik RouterOS DHCP Tool</h3>
+          <p class="card-body">
+            Asynchronous CLI utility built in Go to poll, parse, and monitor active DHCP lease bindings and IP mappings across RouterOS infrastructure.
+          </p>
+          <div class="card-tech">
+            <span class="tech-pill">Go</span>
+            <span class="tech-pill">RouterOS</span>
+            <span class="tech-pill">TLS / Networking</span>
+          </div>
+        </div>
+        <a href="https://github.com/smford/dhcp-routeros-tool" target="_blank" class="card-link">
+          EXECUTE PROTOCOL &rarr;
+        </a>
+      </div>
+
+      <!-- Project 6 -->
+      <div class="card">
+        <div>
+          <div class="card-meta">
+            <span class="card-tag">FABRICATION / CAD</span>
+            <span>REPO #06</span>
+          </div>
+          <h3 class="card-title">Sunton ESP32 CAD Enclosure</h3>
+          <p class="card-body">
+            Custom parametric 3D-printed enclosure designed for the Sunton ESP32-2432S028R integrated LCD and touchscreen controller deck.
+          </p>
+          <div class="card-tech">
+            <span class="tech-pill">CAD</span>
+            <span class="tech-pill">3D Printing</span>
+            <span class="tech-pill">Industrial Design</span>
+          </div>
+        </div>
+        <a href="https://github.com/smford/Sunton-ESP32-2432S028R-Case" target="_blank" class="card-link">
+          EXECUTE PROTOCOL &rarr;
+        </a>
+      </div>
+    </div>
+
+    <!-- Cyberdeck Skills Matrix -->
+    <div class="section-head">
+      <h2 class="section-title">// CYBERNETIC SPECIALIZATIONS</h2>
+      <div class="section-line"></div>
+    </div>
+
+    <div class="skills-container">
+      <div class="skill-card">
+        <div class="skill-name">
+          <span>EMBEDDED C++ / ESP32</span>
+          <span style="color: var(--accent-primary);">96%</span>
+        </div>
+        <div class="skill-bar-bg"><div class="skill-bar-fill" style="width: 96%;"></div></div>
+      </div>
+
+      <div class="skill-card">
+        <div class="skill-name">
+          <span>LINUX / DEBIAN SYSADMIN</span>
+          <span style="color: var(--accent-primary);">94%</span>
+        </div>
+        <div class="skill-bar-bg"><div class="skill-bar-fill" style="width: 94%;"></div></div>
+      </div>
+
+      <div class="skill-card">
+        <div class="skill-name">
+          <span>GOLANG & NETWORKING</span>
+          <span style="color: var(--accent-primary);">88%</span>
+        </div>
+        <div class="skill-bar-bg"><div class="skill-bar-fill" style="width: 88%;"></div></div>
+      </div>
+
+      <div class="skill-card">
+        <div class="skill-name">
+          <span>HARDWARE CAD & CNC WOODWORKING</span>
+          <span style="color: var(--accent-primary);">92%</span>
+        </div>
+        <div class="skill-bar-bg"><div class="skill-bar-fill" style="width: 92%;"></div></div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+      <div>
+        <span>EXECUTED VIA NEURAL DEBIAN KERNEL // MAINTAINED BY <a href="https://github.com/smford" target="_blank">@smford</a></span>
+      </div>
+      <div>
+        <span>NIGHT CITY // BAY CITY NET PROTOCOL</span>
+      </div>
+    </footer>
+
+  </div>
+
+  <!-- Terminal Logic & Theme Switcher Script -->
+  <script>
+    const termBody = document.getElementById('termBody');
+    const termInput = document.getElementById('termInput');
+    const themeToggle = document.getElementById('themeToggle');
+
+    const commands = {
+      help: `AVAILABLE PROTOCOLS:
+  • projects     - Inspect active repositories and hardware decks
+  • skills       - Display cyberware & language proficiencies
+  • cat bio.txt  - Print operator neural profile
+  • clear        - Wipe current terminal buffer
+  • theme        - Toggle between CP2077 & Altered Carbon themes
+  • github       - Open operator's GitHub index`,
+      
+      projects: `ACTIVE FIRMWARE & HARDWARE NODES:
+  [01] esp32-asyncwebserver-fileupload-example (C++, SPIFFS)
+  [02] raspberry-pi-streaming-camera (RTSP, v4l2, Pi Zero)
+  [03] eeh-esp32-rfid (Industrial Tool Lockout Controller)
+  [04] motioneye-snapshotter (Golang, Docker, Camera API)
+  [05] dhcp-routeros-tool (MikroTik RouterOS telemetry)
+  [06] Sunton-ESP32-2432S028R-Case (Custom 3D CAD)`,
+
+      skills: `CYBERWARE SPECIFICATIONS:
+  • Embedded Systems : ESP32, Arduino, Raspberry Pi, RFID
+  • Languages        : C++, Golang, Bash, Python, HTML/JS
+  • Operating Sys    : Debian GNU/Linux, Raspbian, RouterOS
+  • Fabrication      : Woodworking, CNC Routing, Laser Cutting, 3D CAD`,
+
+      'cat bio.txt': `OPERATOR PROFILE:
+Name: Steve Ford (@smford)
+Role: Woodworking Software Engineer & Hardware Prototyper
+Specialty: Bridging physical engineering & woodwork with embedded low-level network computing.`,
+
+      github: `Opening uplink: https://github.com/smford ...`
+    };
+
+    function execCommand(cmd) {
+      const cleanCmd = cmd.trim().toLowerCase();
+      
+      const promptLine = document.createElement('div');
+      promptLine.style.color = '#fff';
+      promptLine.style.marginTop = '0.5rem';
+      promptLine.textContent = `smford@mainframe:~$ ${cmd}`;
+      termBody.appendChild(promptLine);
+
+      if (cleanCmd === 'clear') {
+        termBody.innerHTML = '';
+        return;
+      }
+
+      if (cleanCmd === 'theme') {
+        toggleTheme();
+        const res = document.createElement('div');
+        res.className = 'term-output';
+        res.textContent = `Theme swapped. Current: ${document.body.getAttribute('data-theme') || 'Cyberpunk 2077'}`;
+        termBody.appendChild(res);
+      } else if (cleanCmd === 'github') {
+        window.open('https://github.com/smford', '_blank');
+      } else if (commands[cleanCmd]) {
+        const res = document.createElement('div');
+        res.className = 'term-output';
+        res.textContent = commands[cleanCmd];
+        termBody.appendChild(res);
+      } else {
+        const err = document.createElement('div');
+        err.className = 'term-output';
+        err.style.color = 'var(--accent-danger)';
+        err.textContent = `zsh: command not found: ${cmd}. Type 'help' for valid protocols.`;
+        termBody.appendChild(err);
+      }
+
+      termBody.scrollTop = termBody.scrollHeight;
+    }
+
+    termInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        const val = termInput.value;
+        if (val) {
+          execCommand(val);
+          termInput.value = '';
+        }
+      }
+    });
+
+    function toggleTheme() {
+      const current = document.body.getAttribute('data-theme');
+      if (current === 'altered-carbon') {
+        document.body.removeAttribute('data-theme');
+        themeToggle.textContent = 'STYLE: [ CYBERPUNK 2077 ]';
+      } else {
+        document.body.setAttribute('data-theme', 'altered-carbon');
+        themeToggle.textContent = 'STYLE: [ ALTERED CARBON ]';
+      }
+    }
+  </script>
+</body>
+</html>

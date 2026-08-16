@@ -1,0 +1,1351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>smford // NEURAL_MAINFRAME</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Share+Tech+Mono&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg-base: #06080e;
+      --bg-panel: rgba(14, 18, 27, 0.88);
+      --bg-panel-solid: #0d121c;
+      --accent-primary: #FCEE0A; /* Night City Yellow */
+      --accent-secondary: #00F0FF; /* Neon Cyan */
+      --accent-danger: #FF003C; /* Arasaka Red */
+      --accent-purple: #9d4edd;
+      --text-main: #dcf2fd;
+      --text-muted: #6b8299;
+      --border-color: rgba(0, 240, 255, 0.25);
+      --font-mono: 'Share Tech Mono', monospace;
+      --font-display: 'Orbitron', sans-serif;
+      --font-body: 'Rajdhani', sans-serif;
+      --glow-primary: 0 0 14px rgba(252, 238, 10, 0.4);
+      --glow-secondary: 0 0 14px rgba(0, 240, 255, 0.4);
+    }
+
+    [data-theme="altered-carbon"] {
+      --bg-base: #030509;
+      --bg-panel: rgba(10, 14, 24, 0.92);
+      --bg-panel-solid: #080c16;
+      --accent-primary: #00E5FF; /* Psychasec Ice Blue */
+      --accent-secondary: #bd00ff; /* Needlecast Violet */
+      --accent-danger: #ff2a6d;
+      --accent-purple: #7928ca;
+      --text-main: #e2f1f8;
+      --text-muted: #577087;
+      --border-color: rgba(189, 0, 255, 0.3);
+      --glow-primary: 0 0 16px rgba(0, 229, 255, 0.45);
+      --glow-secondary: 0 0 16px rgba(189, 0, 255, 0.45);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background-color: var(--bg-base);
+      color: var(--text-main);
+      font-family: var(--font-body);
+      font-size: 16px;
+      line-height: 1.5;
+      min-height: 100vh;
+      overflow-x: hidden;
+      background-image: 
+        radial-gradient(circle at 50% 0%, rgba(0, 240, 255, 0.08) 0%, transparent 65%),
+        linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+      background-size: 100% 100%, 36px 36px, 36px 36px;
+      position: relative;
+    }
+
+    /* CRT Scanline Overlay */
+    body::before {
+      content: " ";
+      position: fixed;
+      top: 0; left: 0; bottom: 0; right: 0;
+      background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.32) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.02), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.02));
+      background-size: 100% 3px, 6px 100%;
+      pointer-events: none;
+      z-index: 999;
+    }
+
+    .container {
+      max-width: 1240px;
+      margin: 0 auto;
+      padding: 1.5rem 1.5rem 5rem;
+      position: relative;
+      z-index: 10;
+    }
+
+    /* Top Telemetry Header */
+    .top-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.75rem 1.25rem;
+      background: var(--bg-panel);
+      border-bottom: 2px solid var(--accent-secondary);
+      clip-path: polygon(0 0, calc(100% - 15px) 0, 100% 15px, 100% 100%, 0 100%);
+      font-family: var(--font-mono);
+      font-size: 0.82rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .status-group {
+      display: flex;
+      gap: 1.5rem;
+      align-items: center;
+    }
+
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: var(--accent-secondary);
+    }
+
+    .status-led {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--accent-primary);
+      box-shadow: var(--glow-primary);
+      animation: pulse 1.8s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.35; transform: scale(0.8); }
+    }
+
+    .theme-switch-btn {
+      background: transparent;
+      border: 1px solid var(--accent-primary);
+      color: var(--accent-primary);
+      padding: 0.35rem 0.85rem;
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      cursor: pointer;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      transition: all 0.2s ease;
+      clip-path: polygon(8px 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%, 0 8px);
+    }
+    .theme-switch-btn:hover {
+      background: var(--accent-primary);
+      color: #000;
+      box-shadow: var(--glow-primary);
+    }
+
+    /* Multi-Tab Navigation */
+    .hud-tabs {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 2rem;
+      border-bottom: 2px solid rgba(0, 240, 255, 0.2);
+      padding-bottom: 0.5rem;
+      overflow-x: auto;
+    }
+
+    .hud-tab {
+      background: rgba(14, 18, 27, 0.7);
+      border: 1px solid rgba(0, 240, 255, 0.2);
+      color: var(--text-muted);
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+      padding: 0.65rem 1.25rem;
+      cursor: pointer;
+      clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
+      transition: all 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      white-space: nowrap;
+    }
+
+    .hud-tab:hover {
+      border-color: var(--accent-secondary);
+      color: #fff;
+    }
+
+    .hud-tab.active {
+      background: var(--accent-primary);
+      color: #000;
+      font-weight: bold;
+      border-color: var(--accent-primary);
+      box-shadow: var(--glow-primary);
+    }
+
+    .tab-badge {
+      background: rgba(0, 0, 0, 0.35);
+      padding: 0.1rem 0.4rem;
+      font-size: 0.7rem;
+      border-radius: 2px;
+    }
+    .hud-tab.active .tab-badge {
+      background: #000;
+      color: var(--accent-primary);
+    }
+
+    /* Tab Panes */
+    .tab-pane {
+      display: none;
+      animation: tabFade 0.25s ease-out;
+    }
+    .tab-pane.active {
+      display: block;
+    }
+
+    @keyframes tabFade {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Hero HUD Module */
+    .hero-hud {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 2rem;
+      align-items: center;
+      background: var(--bg-panel);
+      border: 1px solid var(--border-color);
+      border-left: 5px solid var(--accent-primary);
+      padding: 2.25rem 2rem;
+      position: relative;
+      clip-path: polygon(0 0, calc(100% - 25px) 0, 100% 25px, 100% 100%, 0 100%);
+      margin-bottom: 2rem;
+      backdrop-filter: blur(8px);
+    }
+
+    .hero-hud::after {
+      content: "SYS//NODE 6.1.0-DEBIAN";
+      position: absolute;
+      top: 0.6rem;
+      right: 1.5rem;
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      letter-spacing: 2px;
+    }
+
+    .glitch-title {
+      font-family: var(--font-display);
+      font-size: 2.6rem;
+      font-weight: 900;
+      color: var(--accent-primary);
+      text-shadow: var(--glow-primary);
+      letter-spacing: 2px;
+      line-height: 1.1;
+      margin-bottom: 0.5rem;
+    }
+
+    .hero-sub {
+      font-family: var(--font-mono);
+      color: var(--accent-secondary);
+      font-size: 1.05rem;
+      margin-bottom: 0.85rem;
+      letter-spacing: 1px;
+    }
+
+    .hero-desc {
+      max-width: 680px;
+      font-size: 1.05rem;
+      color: var(--text-main);
+      opacity: 0.9;
+    }
+
+    .telemetry-box {
+      border: 1px dashed var(--accent-secondary);
+      padding: 1.25rem 1.5rem;
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      background: rgba(0, 0, 0, 0.45);
+      min-width: 230px;
+    }
+
+    .telemetry-row {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 0.4rem;
+    }
+    .telemetry-row:last-child { margin-bottom: 0; }
+    .telemetry-label { color: var(--text-muted); }
+    .telemetry-val { color: var(--accent-primary); font-weight: bold; }
+
+    /* Interactive Terminal */
+    .terminal-window {
+      background: #05070c;
+      border: 1px solid rgba(0, 240, 255, 0.35);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7);
+      margin-bottom: 2.5rem;
+      font-family: var(--font-mono);
+    }
+
+    .term-header {
+      background: #0a0f18;
+      padding: 0.5rem 1rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid rgba(0, 240, 255, 0.2);
+    }
+
+    .term-dots { display: flex; gap: 6px; }
+    .term-dot { width: 10px; height: 10px; border-radius: 50%; background: #2a3547; }
+    .term-dot.red { background: var(--accent-danger); }
+    .term-dot.yellow { background: var(--accent-primary); }
+    .term-dot.cyan { background: var(--accent-secondary); }
+
+    .term-title { font-size: 0.75rem; color: var(--text-muted); letter-spacing: 1px; }
+
+    .term-body {
+      padding: 1.25rem;
+      max-height: 220px;
+      overflow-y: auto;
+      font-size: 0.88rem;
+      color: #9fe7ff;
+      line-height: 1.5;
+    }
+
+    .term-output {
+      margin-bottom: 0.6rem;
+      white-space: pre-wrap;
+    }
+
+    .term-input-line {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.6rem 1.25rem;
+      background: #070a12;
+      border-top: 1px solid rgba(0, 240, 255, 0.12);
+    }
+
+    .term-prompt { color: var(--accent-primary); font-weight: bold; }
+
+    .term-input {
+      flex: 1;
+      background: transparent;
+      border: none;
+      outline: none;
+      color: #fff;
+      font-family: var(--font-mono);
+      font-size: 0.9rem;
+    }
+
+    .quick-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.45rem;
+      padding: 0.65rem 1.25rem;
+      background: rgba(0, 0, 0, 0.35);
+      border-top: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .chip-btn {
+      background: rgba(0, 240, 255, 0.08);
+      border: 1px solid rgba(0, 240, 255, 0.3);
+      color: var(--accent-secondary);
+      padding: 0.2rem 0.55rem;
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    .chip-btn:hover { background: var(--accent-secondary); color: #000; }
+
+    /* Section Headers */
+    .section-head {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+    .section-title {
+      font-family: var(--font-display);
+      font-size: 1.35rem;
+      color: #fff;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+    }
+    .section-line {
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(90deg, var(--accent-secondary), transparent);
+    }
+
+    /* Filter Bar */
+    .filter-bar {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+    }
+
+    .filter-btn {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      color: var(--text-muted);
+      padding: 0.3rem 0.8rem;
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      cursor: pointer;
+      text-transform: uppercase;
+    }
+    .filter-btn.active, .filter-btn:hover {
+      background: rgba(0, 240, 255, 0.15);
+      border-color: var(--accent-secondary);
+      color: var(--accent-secondary);
+    }
+
+    /* Cards Grid */
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 2.5rem;
+    }
+
+    .card {
+      background: var(--bg-panel);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      position: relative;
+      padding: 1.5rem;
+      transition: all 0.25s ease;
+      clip-path: polygon(0 0, calc(100% - 18px) 0, 100% 18px, 100% 100%, 0 100%);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .card::before {
+      content: "";
+      position: absolute;
+      top: 0; left: 0;
+      width: 4px; height: 100%;
+      background: var(--accent-secondary);
+      opacity: 0.5;
+      transition: all 0.2s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-4px);
+      border-color: var(--accent-secondary);
+      box-shadow: var(--glow-secondary);
+    }
+    .card:hover::before {
+      opacity: 1;
+      width: 6px;
+      background: var(--accent-primary);
+    }
+
+    .card-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-bottom: 0.75rem;
+    }
+
+    .card-tag { color: var(--accent-primary); font-weight: bold; letter-spacing: 1px; }
+
+    .card-title {
+      font-family: var(--font-display);
+      font-size: 1.18rem;
+      color: #fff;
+      margin-bottom: 0.65rem;
+    }
+
+    .card-body {
+      color: var(--text-main);
+      font-size: 0.95rem;
+      opacity: 0.88;
+      margin-bottom: 1.25rem;
+      line-height: 1.45;
+    }
+
+    .card-tech {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      margin-bottom: 1.25rem;
+    }
+
+    .tech-pill {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      padding: 0.15rem 0.5rem;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: var(--accent-secondary);
+    }
+
+    .action-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+      color: var(--accent-primary);
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      text-decoration: none;
+      font-weight: bold;
+      transition: gap 0.2s ease;
+      padding: 0;
+    }
+    .action-btn:hover { gap: 0.75rem; text-shadow: var(--glow-primary); }
+
+    /* Build Dossier Modal / Drawer */
+    .dossier-modal {
+      position: fixed;
+      top: 0; left: 0; width: 100vw; height: 100vh;
+      background: rgba(3, 5, 10, 0.85);
+      backdrop-filter: blur(10px);
+      z-index: 1000;
+      display: none;
+      justify-content: center;
+      align-items: center;
+      padding: 1.5rem;
+    }
+
+    .dossier-modal.active { display: flex; }
+
+    .dossier-content {
+      background: var(--bg-panel-solid);
+      border: 2px solid var(--accent-secondary);
+      box-shadow: 0 0 35px rgba(0, 240, 255, 0.25);
+      max-width: 860px;
+      width: 100%;
+      max-height: 90vh;
+      overflow-y: auto;
+      padding: 2.25rem;
+      position: relative;
+      clip-path: polygon(0 0, calc(100% - 25px) 0, 100% 25px, 100% 100%, 0 100%);
+    }
+
+    .close-dossier-btn {
+      position: absolute;
+      top: 1rem;
+      right: 1.25rem;
+      background: transparent;
+      border: 1px solid var(--accent-danger);
+      color: var(--accent-danger);
+      font-family: var(--font-mono);
+      padding: 0.3rem 0.75rem;
+      cursor: pointer;
+      font-size: 0.8rem;
+    }
+    .close-dossier-btn:hover {
+      background: var(--accent-danger);
+      color: #fff;
+    }
+
+    /* Technical Schematics Tables inside Dossier */
+    .tech-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-family: var(--font-mono);
+      font-size: 0.82rem;
+      margin: 1.25rem 0;
+    }
+
+    .tech-table th, .tech-table td {
+      padding: 0.65rem 0.85rem;
+      text-align: left;
+      border: 1px solid rgba(0, 240, 255, 0.15);
+    }
+
+    .tech-table th {
+      background: rgba(0, 240, 255, 0.1);
+      color: var(--accent-secondary);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .schematic-box {
+      background: #050811;
+      border: 1px dashed var(--accent-secondary);
+      padding: 1rem 1.25rem;
+      font-family: var(--font-mono);
+      font-size: 0.82rem;
+      color: #9fe7ff;
+      margin: 1.25rem 0;
+      white-space: pre-wrap;
+    }
+
+    /* Skills Grid */
+    .skills-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 1.25rem;
+      margin-bottom: 2.5rem;
+    }
+
+    .skill-card {
+      background: var(--bg-panel-solid);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      padding: 1.25rem;
+    }
+
+    .skill-name {
+      font-family: var(--font-mono);
+      font-size: 0.92rem;
+      color: #fff;
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 0.5rem;
+    }
+
+    .skill-bar-bg {
+      height: 6px;
+      background: rgba(255, 255, 255, 0.08);
+      overflow: hidden;
+    }
+
+    .skill-bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--accent-secondary), var(--accent-primary));
+      box-shadow: var(--glow-secondary);
+    }
+
+    /* Hardware Bench Inventory */
+    .bench-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.25rem;
+      margin-bottom: 2.5rem;
+    }
+
+    .bench-card {
+      background: rgba(0, 0, 0, 0.35);
+      border: 1px dashed rgba(0, 240, 255, 0.25);
+      padding: 1.25rem;
+      font-family: var(--font-mono);
+    }
+
+    .bench-title {
+      color: var(--accent-primary);
+      font-size: 0.95rem;
+      margin-bottom: 0.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .bench-list {
+      list-style: none;
+      font-size: 0.82rem;
+      color: var(--text-main);
+    }
+    .bench-list li { margin-bottom: 0.35rem; }
+    .bench-list li::before { content: "› "; color: var(--accent-secondary); }
+
+    /* Footer */
+    footer {
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      padding-top: 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    footer a { color: var(--accent-primary); text-decoration: none; }
+    footer a:hover { text-decoration: underline; }
+
+    @media (max-width: 768px) {
+      .hero-hud { grid-template-columns: 1fr; }
+      .glitch-title { font-size: 2rem; }
+      .top-bar { flex-direction: column; gap: 0.5rem; align-items: flex-start; }
+      .dossier-content { padding: 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+
+    <!-- Top Telemetry Bar -->
+    <header class="top-bar">
+      <div class="status-group">
+        <div class="status-badge">
+          <div class="status-led"></div>
+          <span>MAINFRAME // SEC_NET: ACTIVE</span>
+        </div>
+        <div style="color: var(--text-muted);">OPERATOR: smford@mainframe</div>
+      </div>
+      <div>
+        <button id="themeToggle" class="theme-switch-btn" onclick="toggleTheme()">
+          STYLE: [ CYBERPUNK 2077 ]
+        </button>
+      </div>
+    </header>
+
+    <!-- Multi-Tab Navigation Controller -->
+    <nav class="hud-tabs">
+      <button class="hud-tab active" data-tab="overview" onclick="switchTab('overview')">
+        <span>[01]</span> OVERVIEW_HUD
+      </button>
+      <button class="hud-tab" data-tab="logs" onclick="switchTab('logs')">
+        <span>[02]</span> BUILD_LOGS <span class="tab-badge" id="logBadgeCount">4</span>
+      </button>
+      <button class="hud-tab" data-tab="firmware" onclick="switchTab('firmware')">
+        <span>[03]</span> FIRMWARE_DECK
+      </button>
+      <button class="hud-tab" data-tab="operator" onclick="switchTab('operator')">
+        <span>[04]</span> OPERATOR_STACK
+      </button>
+    </nav>
+
+    <!-- ================= TAB 1: OVERVIEW HUD ================= -->
+    <main id="tab-overview" class="tab-pane active">
+      <section class="hero-hud">
+        <div>
+          <h1 class="glitch-title">smford.github.io</h1>
+          <div class="hero-sub">&gt; WOODWORKING SOFTWARE ENGINEER // HARDWARE PROTOTYPER</div>
+          <p class="hero-desc">
+            Bridging low-level firmware engineering, bespoke IoT hardware controllers, real-time laser telemetry, and physical CNC/timber fabrication from the Bay Area network.
+          </p>
+        </div>
+
+        <div class="telemetry-box">
+          <div class="telemetry-row">
+            <span class="telemetry-label">KERNEL:</span>
+            <span class="telemetry-val">6.1.0-DEBIAN</span>
+          </div>
+          <div class="telemetry-row">
+            <span class="telemetry-label">STACK INTEGRITY:</span>
+            <span class="telemetry-val">99.8%</span>
+          </div>
+          <div class="telemetry-row">
+            <span class="telemetry-label">ACTIVE CYBERWARE:</span>
+            <span class="telemetry-val">ESP32 / PI</span>
+          </div>
+          <div class="telemetry-row">
+            <span class="telemetry-label">SECURITY ICE:</span>
+            <span class="telemetry-val" style="color: var(--accent-danger);">UNRESTRICTED</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- Interactive Netrunner Terminal -->
+      <section class="terminal-window">
+        <div class="term-header">
+          <div class="term-dots">
+            <div class="term-dot red"></div>
+            <div class="term-dot yellow"></div>
+            <div class="term-dot cyan"></div>
+          </div>
+          <div class="term-title">BASH NETRUNNER CYBERDECK v4.5</div>
+          <div style="font-size: 0.7rem; color: var(--accent-primary);">TTY1_ONLINE</div>
+        </div>
+
+        <div class="term-body" id="termBody">
+          <div class="term-output">SYSTEM: Neural Debian Kernel 6.1.0 loaded.
+SYSTEM: Navigation synced. Type 'help', 'cd logs', or click chips below.
+smford@mainframe:~/projects$ ls -la</div>
+        </div>
+
+        <div class="quick-chips">
+          <span style="font-size: 0.75rem; color: var(--text-muted); align-self: center;">Quick Exec:</span>
+          <button class="chip-btn" onclick="execCommand('help')">help</button>
+          <button class="chip-btn" onclick="execCommand('cd logs')">cd logs</button>
+          <button class="chip-btn" onclick="execCommand('cd firmware')">cd firmware</button>
+          <button class="chip-btn" onclick="execCommand('view log-042')">view log-042</button>
+          <button class="chip-btn" onclick="execCommand('cat bio.txt')">cat bio.txt</button>
+          <button class="chip-btn" onclick="execCommand('clear')">clear</button>
+        </div>
+
+        <div class="term-input-line">
+          <span class="term-prompt">smford@mainframe:~$</span>
+          <input type="text" id="termInput" class="term-input" placeholder="enter command or protocol..." autocomplete="off" spellcheck="false" />
+        </div>
+      </section>
+
+      <!-- Highlights Preview -->
+      <div class="section-head">
+        <h2 class="section-title">// RECENT HARDWARE DISPATCHES</h2>
+        <div class="section-line"></div>
+      </div>
+
+      <div class="cards-grid">
+        <div class="card">
+          <div>
+            <div class="card-meta">
+              <span class="card-tag">SAFETY INTERLOCK</span>
+              <span>LOG #042</span>
+            </div>
+            <h3 class="card-title">EEH ESP32 RFID Workshop Sentry</h3>
+            <p class="card-body">Heavy machinery safety lockout utilizing RC522 RFID authentication and optocoupled relay isolation for 3kW workshop tools.</p>
+            <div class="card-tech">
+              <span class="tech-pill">ESP32</span>
+              <span class="tech-pill">RFID / SPI</span>
+              <span class="tech-pill">High-Voltage Isolation</span>
+            </div>
+          </div>
+          <button class="action-btn" onclick="openLogDossier('log-042')">INSPECT SCHEMATICS &rarr;</button>
+        </div>
+
+        <div class="card">
+          <div>
+            <div class="card-meta">
+              <span class="card-tag">OPTICAL TELEMETRY</span>
+              <span>LOG #089</span>
+            </div>
+            <h3 class="card-title">Pi Zero RTSP Laser-Cam</h3>
+            <p class="card-body">Ultra-low latency RTSP camera feed on Raspberry Pi Zero with hardware video flip to monitor high-powered laser cutters in real time.</p>
+            <div class="card-tech">
+              <span class="tech-pill">v4l2rtspserver</span>
+              <span class="tech-pill">Raspbian</span>
+              <span class="tech-pill">Laser CNC</span>
+            </div>
+          </div>
+          <button class="action-btn" onclick="openLogDossier('log-089')">INSPECT SCHEMATICS &rarr;</button>
+        </div>
+      </div>
+    </main>
+
+    <!-- ================= TAB 2: BUILD LOGS ================= -->
+    <section id="tab-logs" class="tab-pane">
+      <div class="section-head">
+        <h2 class="section-title">// HARDWARE ENGINEERING BUILD LOGS</h2>
+        <div class="section-line"></div>
+      </div>
+
+      <!-- Filter Controls -->
+      <div class="filter-bar">
+        <button class="filter-btn active" onclick="filterLogs('all', this)">ALL LOGS</button>
+        <button class="filter-btn" onclick="filterLogs('Hardware', this)">HARDWARE / IOT</button>
+        <button class="filter-btn" onclick="filterLogs('Optics', this)">OPTICS / STREAMING</button>
+        <button class="filter-btn" onclick="filterLogs('Fabrication', this)">FABRICATION / CAD</button>
+      </div>
+
+      <div class="cards-grid" id="buildLogsGrid">
+        <!-- Injected via JavaScript -->
+      </div>
+    </section>
+
+    <!-- ================= TAB 3: FIRMWARE DECK ================= -->
+    <section id="tab-firmware" class="tab-pane">
+      <div class="section-head">
+        <h2 class="section-title">// DEPLOYED REPOSITORIES & FIRMWARE</h2>
+        <div class="section-line"></div>
+      </div>
+
+      <div class="cards-grid">
+        <div class="card">
+          <div>
+            <div class="card-meta">
+              <span class="card-tag">FIRMWARE / ASYNC</span>
+              <span>REPO #01</span>
+            </div>
+            <h3 class="card-title">ESP32 Async Web File Uploader</h3>
+            <p class="card-body">Asynchronous web server for ESP32 enabling drag-and-drop SPIFFS filesystem uploads with real-time browser progress telemetry.</p>
+            <div class="card-tech">
+              <span class="tech-pill">C++</span>
+              <span class="tech-pill">ESP32</span>
+              <span class="tech-pill">SPIFFS</span>
+              <span class="tech-pill">WebSockets</span>
+            </div>
+          </div>
+          <a href="https://github.com/smford/esp32-asyncwebserver-fileupload-example" target="_blank" class="action-btn">EXECUTE PROTOCOL &rarr;</a>
+        </div>
+
+        <div class="card">
+          <div>
+            <div class="card-meta">
+              <span class="card-tag">SURVEILLANCE API</span>
+              <span>REPO #02</span>
+            </div>
+            <h3 class="card-title">MotionEye Snapshotter API</h3>
+            <p class="card-body">Event-driven microservice triggering instant, timestamped camera captures from external door switches and IoT alarms.</p>
+            <div class="card-tech">
+              <span class="tech-pill">Golang</span>
+              <span class="tech-pill">Docker</span>
+              <span class="tech-pill">REST API</span>
+            </div>
+          </div>
+          <a href="https://github.com/smford/motioneye-snapshotter" target="_blank" class="action-btn">EXECUTE PROTOCOL &rarr;</a>
+        </div>
+
+        <div class="card">
+          <div>
+            <div class="card-meta">
+              <span class="card-tag">NETWORK TELEMETRY</span>
+              <span>REPO #03</span>
+            </div>
+            <h3 class="card-title">MikroTik RouterOS DHCP Tool</h3>
+            <p class="card-body">Asynchronous CLI utility built in Go to poll, parse, and monitor active DHCP lease bindings and IP mappings across RouterOS infrastructure.</p>
+            <div class="card-tech">
+              <span class="tech-pill">Go</span>
+              <span class="tech-pill">RouterOS</span>
+              <span class="tech-pill">Networking</span>
+            </div>
+          </div>
+          <a href="https://github.com/smford/dhcp-routeros-tool" target="_blank" class="action-btn">EXECUTE PROTOCOL &rarr;</a>
+        </div>
+
+        <div class="card">
+          <div>
+            <div class="card-meta">
+              <span class="card-tag">SYSTEMS / LINUX</span>
+              <span>REPO #04</span>
+            </div>
+            <h3 class="card-title">Debian Auto-Provisioner</h3>
+            <p class="card-body">Idempotent Bash shell infrastructure scripts automating headless Debian deployments, secure SSH tunnels, and container daemons.</p>
+            <div class="card-tech">
+              <span class="tech-pill">Bash</span>
+              <span class="tech-pill">Debian</span>
+              <span class="tech-pill">Systemd</span>
+            </div>
+          </div>
+          <a href="https://github.com/smford" target="_blank" class="action-btn">EXECUTE PROTOCOL &rarr;</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= TAB 4: OPERATOR STACK ================= -->
+    <section id="tab-operator" class="tab-pane">
+      <div class="section-head">
+        <h2 class="section-title">// OPERATOR PROFILE & CYBERWARE SPEC</h2>
+        <div class="section-line"></div>
+      </div>
+
+      <div class="skills-container">
+        <div class="skill-card">
+          <div class="skill-name">
+            <span>EMBEDDED C++ / ESP32</span>
+            <span style="color: var(--accent-primary);">96%</span>
+          </div>
+          <div class="skill-bar-bg"><div class="skill-bar-fill" style="width: 96%;"></div></div>
+        </div>
+
+        <div class="skill-card">
+          <div class="skill-name">
+            <span>LINUX / DEBIAN SYSADMIN</span>
+            <span style="color: var(--accent-primary);">94%</span>
+          </div>
+          <div class="skill-bar-bg"><div class="skill-bar-fill" style="width: 94%;"></div></div>
+        </div>
+
+        <div class="skill-card">
+          <div class="skill-name">
+            <span>GOLANG & NETWORKING</span>
+            <span style="color: var(--accent-primary);">88%</span>
+          </div>
+          <div class="skill-bar-bg"><div class="skill-bar-fill" style="width: 88%;"></div></div>
+        </div>
+
+        <div class="skill-card">
+          <div class="skill-name">
+            <span>CAD & CNC TIMBER FABRICATION</span>
+            <span style="color: var(--accent-primary);">92%</span>
+          </div>
+          <div class="skill-bar-bg"><div class="skill-bar-fill" style="width: 92%;"></div></div>
+        </div>
+      </div>
+
+      <div class="section-head">
+        <h2 class="section-title">// WORKSHOP HARDWARE INVENTORY</h2>
+        <div class="section-line"></div>
+      </div>
+
+      <div class="bench-grid">
+        <div class="bench-card">
+          <div class="bench-title"><span>[01]</span> RAPID FABRICATION</div>
+          <ul class="bench-list">
+            <li>Bambu Lab 3D Printing (CF-Reinforced PETG/PLA)</li>
+            <li>Custom CNC Gantry Router & Laser Cutter</li>
+            <li>Parametric CAD (Fusion 360 / OpenSCAD)</li>
+          </ul>
+        </div>
+
+        <div class="bench-card">
+          <div class="bench-title"><span>[02]</span> EMBEDDED LAB</div>
+          <ul class="bench-list">
+            <li>ESP32 Dual-Core (Xtensa 240MHz, SPIFFS/LittleFS)</li>
+            <li>Raspberry Pi Zero W / Compute Module 4</li>
+            <li>Digital Logic Analyzers & Articulating Inspection</li>
+          </ul>
+        </div>
+
+        <div class="bench-card">
+          <div class="bench-title"><span>[03]</span> NETWORK & TELEMETRY</div>
+          <ul class="bench-list">
+            <li>Ubiquiti UniFi Local PoE Network Backbone</li>
+            <li>MikroTik RouterOS Telemetry Hooks</li>
+            <li>Home Assistant & Zigbee Mesh Integration</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+      <div>
+        <span>EXECUTED VIA NEURAL DEBIAN KERNEL // MAINTAINED BY <a href="https://github.com/smford" target="_blank">@smford</a></span>
+      </div>
+      <div>
+        <span>NIGHT CITY // BAY CITY NET PROTOCOL</span>
+      </div>
+    </footer>
+
+  </div>
+
+  <!-- Technical Build Dossier Modal -->
+  <div id="dossierModal" class="dossier-modal" onclick="if(event.target === this) closeLogDossier()">
+    <div class="dossier-content">
+      <button class="close-dossier-btn" onclick="closeLogDossier()">[ESC] CLOSE_DOSSIER</button>
+      <div id="dossierBody">
+        <!-- Injected via JavaScript -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Application Logic -->
+  <script>
+    /* ================= DATA: BUILD LOGS ================= */
+    const BUILD_LOGS = [
+      {
+        id: "log-042",
+        category: "Hardware",
+        title: "EEH ESP32 RFID Tool Sentry",
+        date: "2026-04-12",
+        status: "DEPLOYED_ACTIVE",
+        summary: "Industrial RFID safety interlock system preventing unauthorized activation of 3kW workshop machinery and high-draw fabrication tools.",
+        bom: [
+          { item: "ESP32 DevKit V1 (38-pin)", qty: "1", role: "Main Microcontroller" },
+          { item: "RC522 13.56MHz RFID Module", qty: "1", role: "User Badge Scanner" },
+          { item: "Optocoupler 5V Relay Block", qty: "1", role: "High-Voltage Coil Isolation" },
+          { item: "128x64 I2C OLED Display", qty: "1", role: "Telemetry & Operator Prompt" }
+        ],
+        pinout: [
+          { gpio: "GPIO 21", device: "I2C SDA", note: "OLED Screen Data line" },
+          { gpio: "GPIO 22", device: "I2C SCL", note: "OLED Screen Clock line" },
+          { gpio: "GPIO 5",  device: "SPI SS / CS", note: "RC522 RFID Chip Select" },
+          { gpio: "GPIO 18", device: "SPI SCK", note: "RC522 SPI Clock" },
+          { gpio: "GPIO 25", device: "Relay Trigger", note: "Active-Low Contactor Fire" }
+        ],
+        schematic: `[ 230V AC Mains ] ---> [ 30A Contactor ] ---> [ Workshop Table Saw ]
+                             ^
+                             | (Galvanic Isolation)
+[ ESP32 GPIO 25 ] ---> [ PC817 Optocoupler ] ---> [ 5V Relay Coil ]`,
+        notes: `To prevent inductive back-EMF surges when 3kW induction motors spin down, the 5V relay coil is completely isolated with an optocoupler and flyback diode. User badges are verified locally via hash tables on flash with sub-50ms lockout latency.`
+      },
+      {
+        id: "log-089",
+        category: "Optics",
+        title: "Pi Zero RTSP Laser-Cam",
+        date: "2026-05-20",
+        status: "DEPLOYED_ACTIVE",
+        summary: "Ultra-compact overhead optical monitoring system streaming low-latency video from inside a high-power CNC laser enclosure.",
+        bom: [
+          { item: "Raspberry Pi Zero W", qty: "1", role: "Video Streaming Host" },
+          { item: "5MP Wide-Angle Cam (160° FoV)", qty: "1", role: "Optical Sensor" },
+          { item: "3D Printed Magnetic Enclosure", qty: "1", role: "Chassis & Smoke Baffle" }
+        ],
+        pinout: [
+          { gpio: "CSI Ribbon", device: "Camera Port", note: "Direct 2-lane MIPI CSI-2" },
+          { gpio: "MicroUSB",   device: "Power", note: "5V 2.5A Regulated Supply" }
+        ],
+        schematic: `[ Wide-Angle Cam ] -(CSI)-> [ Pi Zero W ] -(H.264)-> [ v4l2rtspserver ] -(RTSP/WiFi)-> [ Mainframe ]`,
+        notes: `Configured v4l2rtspserver with hardware H.264 encoder flags (-H 1080 -W 1920 -F 25) achieving sub-120ms latency across local 5GHz Wi-Fi mesh.`
+      },
+      {
+        id: "log-104",
+        category: "Fabrication",
+        title: "Sunton ESP32 CAD Enclosure",
+        date: "2026-06-18",
+        status: "PRODUCTION_RELEASE",
+        summary: "Parametric 3D-printed enclosure designed for the Sunton ESP32-2432S028R integrated LCD and touchscreen development deck.",
+        bom: [
+          { item: "Sunton ESP32-2432S028R", qty: "1", role: "Integrated Touch Deck" },
+          { item: "Bambu PLA-CF (Carbon Fiber)", qty: "45g", role: "Structural Case Shell" },
+          { item: "M3x4mm Brass Heat-Set Inserts", qty: "4", role: "Threaded Fasteners" }
+        ],
+        pinout: [
+          { gpio: "Internal", device: "ST7789 TFT", note: "Parallel 8-bit SPI display" },
+          { gpio: "GPIO 35",  device: "LDR Sensor", note: "Ambient Light Sensor" }
+        ],
+        schematic: `[ Top Bezel w/ Screen Cutout ]
+          ↓ (M3 Screws)
+[ Sunton ESP32 Deck ]
+          ↓ (Heat-set Inserts)
+[ Bottom Shell w/ VESA & DIN Rail Mounts ]`,
+        notes: `Modeled in Fusion 360 with 0.2mm tolerance offsets for snap-fit tabs. Integrated ventilation channels direct convection airflow across the onboard ESP32 Wi-Fi module.`
+      },
+      {
+        id: "log-118",
+        category: "Fabrication",
+        title: "Timber Rafter & Outbuilding CAD Engine",
+        date: "2026-07-28",
+        status: "COMPLETED",
+        summary: "Interactive mathematical computation suite calculating complex dual-pitch birdsmouth cuts, structural joist spans, and cladding schedules.",
+        bom: [
+          { item: "WebGL / HTML5 Canvas", qty: "1", role: "Visual Geometry Renderer" },
+          { item: "UK Building Regs Part A/H", qty: "1", role: "Structural Compliance Matrix" }
+        ],
+        pinout: [
+          { gpio: "Virtual", device: "DOM Engine", note: "Real-time trigonometric rafter rendering" }
+        ],
+        schematic: `[ Span & Pitch Inputs ] ---> [ Trigonometric Solver ] ---> [ Canvas SVG Cutlist & BOM ]`,
+        notes: `Executes sub-millimeter timber cut calculations for complex hip rafters, calculating structural dead loads and Part H drainage runoffs instantly.`
+      }
+    ];
+
+    /* ================= TAB ROUTING ================= */
+    function switchTab(tabId) {
+      document.querySelectorAll('.hud-tab').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+
+      const targetBtn = document.querySelector(`[data-tab="${tabId}"]`);
+      const targetPane = document.getElementById(`tab-${tabId}`);
+
+      if (targetBtn && targetPane) {
+        targetBtn.classList.add('active');
+        targetPane.classList.add('active');
+        window.location.hash = tabId;
+      }
+    }
+
+    /* ================= BUILD LOG RENDERING & FILTERING ================= */
+    function renderBuildLogs(category = 'all') {
+      const grid = document.getElementById('buildLogsGrid');
+      grid.innerHTML = '';
+
+      const filtered = category === 'all' 
+        ? BUILD_LOGS 
+        : BUILD_LOGS.filter(l => l.category.toLowerCase() === category.toLowerCase());
+
+      filtered.forEach(log => {
+        const card = document.createElement('div');
+        card.className = 'card';
+        card.innerHTML = `
+          <div>
+            <div class="card-meta">
+              <span class="card-tag">${log.category.toUpperCase()}</span>
+              <span>${log.id.toUpperCase()} // ${log.date}</span>
+            </div>
+            <h3 class="card-title">${log.title}</h3>
+            <p class="card-body">${log.summary}</p>
+            <div class="card-tech">
+              <span class="tech-pill">${log.status}</span>
+              <span class="tech-pill">${log.bom.length} BOM Items</span>
+            </div>
+          </div>
+          <button class="action-btn" onclick="openLogDossier('${log.id}')">
+            OPEN TECHNICAL DOSSIER &rarr;
+          </button>
+        `;
+        grid.appendChild(card);
+      });
+    }
+
+    function filterLogs(cat, btn) {
+      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      renderBuildLogs(cat);
+    }
+
+    /* ================= DOSSIER MODAL ================= */
+    function openLogDossier(logId) {
+      const log = BUILD_LOGS.find(l => l.id.toLowerCase() === logId.toLowerCase());
+      if (!log) return;
+
+      const body = document.getElementById('dossierBody');
+      
+      const bomRows = log.bom.map(b => `
+        <tr>
+          <td style="color:#fff; font-weight:bold;">${b.item}</td>
+          <td style="color:var(--accent-primary);">${b.qty}</td>
+          <td>${b.role}</td>
+        </tr>
+      `).join('');
+
+      const pinoutRows = log.pinout.map(p => `
+        <tr>
+          <td style="color:var(--accent-secondary); font-weight:bold;">${p.gpio}</td>
+          <td style="color:#fff;">${p.device}</td>
+          <td>${p.note}</td>
+        </tr>
+      `).join('');
+
+      body.innerHTML = `
+        <div style="font-family: var(--font-mono); font-size: 0.78rem; color: var(--accent-primary); margin-bottom: 0.5rem;">
+          DOSSIER RECORD // ${log.id.toUpperCase()} // ${log.status}
+        </div>
+        <h2 style="font-family: var(--font-display); font-size: 1.8rem; color: #fff; margin-bottom: 1rem;">
+          ${log.title}
+        </h2>
+        <p style="color: var(--text-main); margin-bottom: 1.5rem; font-size: 1.05rem;">
+          ${log.summary}
+        </p>
+
+        <h4 style="font-family: var(--font-display); color: var(--accent-secondary); margin-bottom: 0.5rem;">// HARDWARE BILL OF MATERIALS (BOM)</h4>
+        <table class="tech-table">
+          <thead><tr><th>Component / Module</th><th>Qty</th><th>Subsystem Role</th></tr></thead>
+          <tbody>${bomRows}</tbody>
+        </table>
+
+        <h4 style="font-family: var(--font-display); color: var(--accent-secondary); margin: 1.5rem 0 0.5rem;">// PINOUT & BUS MAPPING</h4>
+        <table class="tech-table">
+          <thead><tr><th>Pin / GPIO</th><th>Target Device</th><th>Bus Function</th></tr></thead>
+          <tbody>${pinoutRows}</tbody>
+        </table>
+
+        <h4 style="font-family: var(--font-display); color: var(--accent-secondary); margin: 1.5rem 0 0.5rem;">// LOGICAL CIRCUIT TOPOLOGY</h4>
+        <div class="schematic-box">${log.schematic}</div>
+
+        <h4 style="font-family: var(--font-display); color: var(--accent-secondary); margin: 1.5rem 0 0.5rem;">// FIELD NOTES & BENCH TESTING</h4>
+        <p style="font-size: 0.95rem; line-height: 1.6; color: var(--text-main); opacity: 0.9;">
+          ${log.notes}
+        </p>
+      `;
+
+      document.getElementById('dossierModal').classList.add('active');
+    }
+
+    function closeLogDossier() {
+      document.getElementById('dossierModal').classList.remove('active');
+    }
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeLogDossier();
+    });
+
+    /* ================= TERMINAL ENGINE ================= */
+    const termBody = document.getElementById('termBody');
+    const termInput = document.getElementById('termInput');
+
+    const commands = {
+      help: `COMMAND DIRECTORY:
+  • cd [overview|logs|firmware|operator] - Switch HUD panes
+  • view [log-042|log-089|log-104|log-118] - Open technical schematic
+  • projects     - Dump firmware repository index
+  • skills       - Display cyberware capabilities
+  • cat bio.txt  - View operator neuro-profile
+  • theme        - Swap Night City / Altered Carbon visual modes
+  • clear        - Reset terminal window`,
+
+      projects: `FIRMWARE REGISTRY:
+  [01] esp32-asyncwebserver-fileupload-example (C++, SPIFFS)
+  [02] motioneye-snapshotter (Golang, Docker)
+  [03] dhcp-routeros-tool (Go, MikroTik API)
+  [04] eeh-esp32-rfid (Safety Interlock Firmware)`,
+
+      skills: `OPERATOR CAPABILITIES:
+  • Embedded : C++, ESP32/ESP8266, FreeRTOS, SPIFFS, RFID
+  • Backend  : Golang, Bash Scripting, Docker, REST
+  • Sysadmin : Debian Linux, MikroTik RouterOS, UniFi
+  • Hardware : 3D CAD (Fusion 360), CNC Routing, Timber Framing`,
+
+      'cat bio.txt': `OPERATOR SUMMARY:
+Name: Steve Ford (@smford)
+Bio: Software engineer & hardware maker combining embedded computing with CNC timber engineering and industrial security interlocks.`,
+
+      github: `Opening link: https://github.com/smford ...`
+    };
+
+    function execCommand(cmd) {
+      const cleanCmd = cmd.trim().toLowerCase();
+      
+      const promptLine = document.createElement('div');
+      promptLine.style.color = '#fff';
+      promptLine.style.marginTop = '0.5rem';
+      promptLine.textContent = `smford@mainframe:~$ ${cmd}`;
+      termBody.appendChild(promptLine);
+
+      if (cleanCmd === 'clear') {
+        termBody.innerHTML = '';
+        return;
+      }
+
+      if (cleanCmd.startsWith('cd ') || cleanCmd.startsWith('tab ')) {
+        const dest = cleanCmd.split(' ')[1];
+        if (['overview', 'logs', 'firmware', 'operator'].includes(dest)) {
+          switchTab(dest);
+          printTerm(`Transferred active focus to pane: [// ${dest.toUpperCase()}]`);
+          return;
+        }
+      }
+
+      if (cleanCmd.startsWith('view ') || cleanCmd.startsWith('cat log')) {
+        const id = cleanCmd.replace('cat ', '').replace('view ', '');
+        const exists = BUILD_LOGS.some(l => l.id.toLowerCase() === id.toLowerCase());
+        if (exists) {
+          switchTab('logs');
+          openLogDossier(id);
+          printTerm(`Accessing schematic dossier for node: ${id}`);
+          return;
+        }
+      }
+
+      if (cleanCmd === 'theme') {
+        toggleTheme();
+        printTerm(`Theme altered. Active: ${document.body.getAttribute('data-theme') ? 'Altered Carbon' : 'Cyberpunk 2077'}`);
+      } else if (cleanCmd === 'github') {
+        window.open('https://github.com/smford', '_blank');
+      } else if (commands[cleanCmd]) {
+        printTerm(commands[cleanCmd]);
+      } else {
+        const err = document.createElement('div');
+        err.className = 'term-output';
+        err.style.color = 'var(--accent-danger)';
+        err.textContent = `zsh: protocol '${cmd}' not recognized. Type 'help' for directory.`;
+        termBody.appendChild(err);
+      }
+
+      termBody.scrollTop = termBody.scrollHeight;
+    }
+
+    function printTerm(text) {
+      const res = document.createElement('div');
+      res.className = 'term-output';
+      res.textContent = text;
+      termBody.appendChild(res);
+      termBody.scrollTop = termBody.scrollHeight;
+    }
+
+    termInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' && termInput.value) {
+        execCommand(termInput.value);
+        termInput.value = '';
+      }
+    });
+
+    /* ================= THEME SWITCHER ================= */
+    const themeToggle = document.getElementById('themeToggle');
+
+    function toggleTheme() {
+      const current = document.body.getAttribute('data-theme');
+      if (current === 'altered-carbon') {
+        document.body.removeAttribute('data-theme');
+        themeToggle.textContent = 'STYLE: [ CYBERPUNK 2077 ]';
+      } else {
+        document.body.setAttribute('data-theme', 'altered-carbon');
+        themeToggle.textContent = 'STYLE: [ ALTERED CARBON ]';
+      }
+    }
+
+    /* ================= INITIALIZATION ================= */
+    window.addEventListener('DOMContentLoaded', () => {
+      renderBuildLogs();
+      const hash = window.location.hash.replace('#', '');
+      if (['overview', 'logs', 'firmware', 'operator'].includes(hash)) {
+        switchTab(hash);
+      }
+    });
+  </script>
+</body>
+</html>
