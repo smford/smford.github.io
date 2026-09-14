@@ -717,6 +717,8 @@
       padding: 0;
     }
     .action-btn:hover { gap: 0.75rem; text-shadow: var(--glow-primary); }
+    .action-btn.secondary { color: var(--accent-secondary); }
+    .action-btn.secondary:hover { text-shadow: var(--glow-secondary); }
 
     /* Build Dossier Modal */
     .dossier-modal {
@@ -940,7 +942,7 @@
         <span>[02]</span> BUILD_LOGS <span class="tab-badge" id="logBadgeCount">5</span>
       </button>
       <button class="hud-tab" data-tab="firmware" onclick="switchTab('firmware')">
-        <span>[03]</span> FIRMWARE_DECK <span class="tab-badge" id="repoBadgeCount">10</span>
+        <span>[03]</span> FIRMWARE_DECK <span class="tab-badge" id="repoBadgeCount">17</span>
       </button>
       <button class="hud-tab" data-tab="operator" onclick="switchTab('operator')">
         <span>[04]</span> OPERATOR_STACK
@@ -965,7 +967,7 @@
           </div>
           <div class="telemetry-row">
             <span class="telemetry-label">REPOSITORIES:</span>
-            <span class="telemetry-val">10 DEPLOYED</span>
+            <span class="telemetry-val">17 DEPLOYED</span>
           </div>
           <div class="telemetry-row">
             <span class="telemetry-label">ACTIVE CYBERWARE:</span>
@@ -1100,16 +1102,18 @@ smford@mainframe:~/projects$ ls -la</div>
     <!-- ================= TAB 3: FIRMWARE DECK (ALL REPOSITORIES) ================= -->
     <section id="tab-firmware" class="tab-pane">
       <div class="section-head">
-        <h2 class="section-title">// GITHUB REPOSITORY REGISTRY (10 NODES)</h2>
+        <h2 class="section-title">// GITHUB REPOSITORY REGISTRY (17 NODES)</h2>
         <div class="section-line"></div>
       </div>
 
       <div class="filter-bar">
-        <button class="filter-btn active" onclick="filterRepos('all', this)">ALL REPOSITORIES (10)</button>
+        <button class="filter-btn active" onclick="filterRepos('all', this)">ALL REPOSITORIES (17)</button>
         <button class="filter-btn" onclick="filterRepos('Embedded', this)">EMBEDDED & ESP32</button>
         <button class="filter-btn" onclick="filterRepos('RaspberryPi', this)">RASPBERRY PI & LINUX</button>
         <button class="filter-btn" onclick="filterRepos('Networking', this)">NETWORKING & APIS</button>
         <button class="filter-btn" onclick="filterRepos('3DPrinting', this)">3D PRINTING & CAD</button>
+        <button class="filter-btn" onclick="filterRepos('Terminal', this)">CLI & TERMINAL</button>
+        <button class="filter-btn" onclick="filterRepos('Web', this)">WEB & SIMULATIONS</button>
       </div>
 
       <div class="cards-grid" id="reposGrid">
@@ -1229,10 +1233,14 @@ smford@mainframe:~/projects$ ls -la</div>
       { text: "[ INFO ] Polling MikroTik RouterOS v7 DHCP leases via smford/dhcp-routeros-tool", type: "info", delay: 80 },
       { text: "[  OK  ] Mounted Sunton ESP32 touchscreen display CAD: smford/Sunton-ESP32-2432S028R-Case", type: "ok", delay: 60 },
       { text: "[  OK  ] Initialized temperature telemetry regulator: smford/esp32-temp-monitor", type: "ok", delay: 60 },
-      { text: "[  OK  ] Starting event-driven surveillance API daemon: smford/motioneye-snapshotter", type: "ok", delay: 70 },
+      { text: "[  OK  ] Starting event-driven surveillance API daemon: smford/motioneye-snapshotter", type: "ok", delay: 60 },
+      { text: "[  OK  ] Initialized Schwarzschild geodesic raymarcher: smford/blackhole", type: "ok", delay: 60 },
+      { text: "[  OK  ] Loaded Selenographic LOD reconnaissance engine: smford/fly-around-the-moon", type: "ok", delay: 60 },
+      { text: "[  OK  ] Mounted terminal Markdown parser pipeline: smford/mdee", type: "ok", delay: 60 },
+      { text: "[  OK  ] Armed terminal separator utility: smford/delim", type: "ok", delay: 50 },
       { text: "[ WARN ] Unrestricted ICE bypass active for local operator 'smford'", type: "warn", delay: 50 },
       { text: "[  OK  ] Started Bash Shell Netrunner Terminal daemon (TTY1)", type: "ok", delay: 60 },
-      { text: "[  OK  ] Loaded Vim 9.0 Neural modal editor simulator", type: "ok", delay: 50 },
+      { text: "[  OK  ] Loaded Vim 9.0 Neural modal editor simulator (smford/vim-html)", type: "ok", delay: 50 },
       { text: "SYSTEM: Neural link handshaking complete. Launching Cyberdeck HUD...", type: "stage", delay: 100 }
     ];
 
@@ -1366,7 +1374,7 @@ smford@mainframe:~/projects$ ls -la</div>
       {
         name: "Sunton-ESP32-2432S028R-Case",
         category: "3DPrinting",
-        stars: 11,
+        stars: 12,
         forks: 0,
         desc: "Custom parametric 3D printable enclosure remix for the Sunton ESP32 2.8\" LCD + touch controller, optimized for M3 socket screws and heat-set inserts.",
         tech: ["3D Printing", "Bambu Lab", "PLA-CF", "CAD Remix", "ESP32-CYD"],
@@ -1416,6 +1424,75 @@ smford@mainframe:~/projects$ ls -la</div>
         desc: "3D printable wall-mounted holster remix for Pica Dry deep-hole construction markers with dual countersunk screw fixtures for workshop tool boards.",
         tech: ["3D Printing", "Workshop Tooling", "CAD", "PLA"],
         url: "https://github.com/smford/pica-dry-pencil-wall-mount"
+      },
+      {
+        name: "mdee",
+        category: "Terminal",
+        stars: 0,
+        forks: 0,
+        desc: "Production-grade terminal Markdown viewer in Go engineered for macOS and iTerm2, featuring OSC 1337 inline graphics, Unicode-precise tables, Chroma syntax highlighting, and EPIPE safety.",
+        tech: ["Go", "macOS", "iTerm2", "Markdown", "OSC 1337", "CLI"],
+        url: "https://github.com/smford/mdee",
+        demo: "https://stephenford.org/mdee/"
+      },
+      {
+        name: "delim",
+        category: "Terminal",
+        stars: 0,
+        forks: 0,
+        desc: "Lightweight, zero-allocation terminal separator utility in Go that dynamically renders visual barrier lines, detecting tty width across stdout/stderr/stdin with cross-platform binaries.",
+        tech: ["Go", "Terminal CLI", "Zero-Alloc", "Cross-Platform", "Homebrew"],
+        url: "https://github.com/smford/delim"
+      },
+      {
+        name: "hamburger-decomp",
+        category: "Web",
+        stars: 0,
+        forks: 0,
+        desc: "Photorealistic, interactive 3D culinary exploded view featuring smooth scroll interpolation, anti-aliased composite layers, culinary inspection dossier, and procedural audio synthesis.",
+        tech: ["JavaScript", "CSS 3D", "Web Audio API", "HTML5", "Vanilla Web"],
+        url: "https://github.com/smford/hamburger-decomp",
+        demo: "https://stephenford.org/hamburger-decomp/"
+      },
+      {
+        name: "fly-around-the-moon",
+        category: "Web",
+        stars: 0,
+        forks: 0,
+        desc: "Interactive 3D Moon exploration web application featuring dynamic Level-of-Detail (LOD), sub-kilometer surface reconnaissance photography, precision Selenographic coordinates, and real-time ephemeris.",
+        tech: ["Three.js", "WebGL", "Vite", "JavaScript", "Astrodynamics"],
+        url: "https://github.com/smford/fly-around-the-moon",
+        demo: "https://stephenford.org/fly-around-the-moon/"
+      },
+      {
+        name: "blackhole",
+        category: "Web",
+        stars: 0,
+        forks: 0,
+        desc: "Chandra-X: Relativistic Schwarzschild black hole simulator featuring general relativistic raymarching, gravitational lensing, Doppler beaming accretion disk, and interactive free-fall kinematics.",
+        tech: ["WebGL 2.0", "GLSL Shaders", "General Relativity", "Raymarching", "Web Audio"],
+        url: "https://github.com/smford/blackhole",
+        demo: "https://stephenford.org/blackhole/"
+      },
+      {
+        name: "OpenLicenseGuide",
+        category: "Web",
+        stars: 0,
+        forks: 0,
+        desc: "Lawyer-crafted, interactive open-source license selector and decision tree designed with zero runtime dependencies to help developers choose the right OSS license in under 60 seconds.",
+        tech: ["JavaScript", "SPDX", "PWA", "Offline-First", "Vanilla Web"],
+        url: "https://github.com/smford/OpenLicenseGuide",
+        demo: "https://stephenford.org/OpenLicenseGuide/"
+      },
+      {
+        name: "vim-html",
+        category: "Terminal",
+        stars: 0,
+        forks: 0,
+        desc: "Authentic in-browser Vim replica and simulated Linux SRE workstation environment featuring hierarchical VFS, GFM markdown rendering, kernel boot simulation, and session export.",
+        tech: ["JavaScript", "Vim Simulator", "Virtual Filesystem", "Terminal Shell", "Web Audio"],
+        url: "https://github.com/smford/vim-html",
+        demo: "https://stephenford.org/vim-html/"
       }
     ];
 
@@ -1492,6 +1569,8 @@ extend cpu_temp /usr/bin/vcgencmd measure_temp`,
 - [x] Tested Bambu magnetic poop chute remix on X1-Carbon
 - [x] Verified async upload progress bar on ESP32 SPIFFS
 - [x] Aligned wide-angle optics on Pi Zero RTSP laser-cam
+- [x] Calibrated Chandra-X black hole raymarching shader (smford/blackhole)
+- [x] Optimized iTerm2 OSC 1337 image rendering in mdee (smford/mdee)
 - [ ] Install Pica Dry wall holsters on main workbench`
     };
 
@@ -1623,6 +1702,9 @@ extend cpu_temp /usr/bin/vcgencmd measure_temp`,
       const grid = document.getElementById('reposGrid');
       grid.innerHTML = '';
 
+      const repoBadge = document.getElementById('repoBadgeCount');
+      if (repoBadge) repoBadge.textContent = REPOSITORIES.length;
+
       const filtered = filter === 'all' 
         ? REPOSITORIES 
         : REPOSITORIES.filter(r => r.category.toLowerCase() === filter.toLowerCase());
@@ -1633,6 +1715,21 @@ extend cpu_temp /usr/bin/vcgencmd measure_temp`,
         
         const techPills = repo.tech.map(t => `<span class="tech-pill">${t}</span>`).join('');
         const numStr = (idx + 1).toString().padStart(2, '0');
+
+        const actionButtons = repo.demo
+          ? `
+          <div style="display: flex; gap: 1rem; align-items: center; flex-wrap: wrap;">
+            <a href="${repo.url}" target="_blank" class="action-btn">
+              EXECUTE PROTOCOL (GITHUB) &rarr;
+            </a>
+            <a href="${repo.demo}" target="_blank" class="action-btn secondary">
+              LAUNCH LIVE APP &rarr;
+            </a>
+          </div>`
+          : `
+          <a href="${repo.url}" target="_blank" class="action-btn">
+            EXECUTE PROTOCOL (GITHUB) &rarr;
+          </a>`;
 
         card.innerHTML = `
           <div>
@@ -1649,9 +1746,7 @@ extend cpu_temp /usr/bin/vcgencmd measure_temp`,
               ${techPills}
             </div>
           </div>
-          <a href="${repo.url}" target="_blank" class="action-btn">
-            EXECUTE PROTOCOL (GITHUB) &rarr;
-          </a>
+          ${actionButtons}
         `;
         grid.appendChild(card);
       });
@@ -2167,7 +2262,7 @@ extend cpu_temp /usr/bin/vcgencmd measure_temp`,
 
     const commands = {
       help: `COMMAND PROTOCOL DIRECTORY:
-  • projects     - Dump all 10 GitHub repositories & telemetry stats
+  • projects     - Dump all 17 GitHub repositories & telemetry stats
   • cd firmware  - Switch to full GitHub Repositories HUD deck
   • reboot       - Replay hardware POST & kernel boot sequence
   • vim <file>   - Launch modal Vim 9.0 simulator (:w, :q, :wq, i, esc)
@@ -2179,17 +2274,24 @@ extend cpu_temp /usr/bin/vcgencmd measure_temp`,
   • theme        - Swap Night City / Altered Carbon visual modes
   • clear        - Wipe terminal window`,
 
-      projects: `GITHUB REPOSITORY INDEX (10 NODES):
+      projects: `GITHUB REPOSITORY INDEX (17 NODES):
   [01] esp32-asyncwebserver-fileupload-example  (★ 104) [C++/SPIFFS]
   [02] raspberry-pi-streaming-camera            (★ 83)  [v4l2/RTSP/Nginx]
   [03] rpi-snmpd-configuration                  (★ 14)  [SNMP/Debian]
-  [04] eeh-esp32-rfid                           (★ 11)  [RFID/Safety Sentry]
-  [05] Sunton-ESP32-2432S028R-Case              (★ 11)  [3D CAD/PLA-CF]
+  [04] Sunton-ESP32-2432S028R-Case              (★ 12)  [3D CAD/PLA-CF]
+  [05] eeh-esp32-rfid                           (★ 11)  [RFID/Safety Sentry]
   [06] bambu-poop-chute-magnet-remix            (★ 4)   [3D CAD/Magnets]
   [07] esp32-temp-monitor                       (★ 2)   [DS18B20/Relay]
-  [08] motioneye-snapshotter                    (★ 1)   [Go/Docker REST]
-  [09] dhcp-routeros-tool                       (★ 1)   [Go/MikroTik API]
-  [10] pica-dry-pencil-wall-mount               (★ 1)   [3D CAD/Tooling]
+  [08] dhcp-routeros-tool                       (★ 1)   [Go/MikroTik API]
+  [09] motioneye-snapshotter                    (★ 0)   [Go/Docker REST]
+  [10] pica-dry-pencil-wall-mount               (★ 0)   [3D CAD/Tooling]
+  [11] mdee                                     (★ 0)   [Go/macOS/iTerm2]
+  [12] delim                                    (★ 0)   [Go/Terminal CLI]
+  [13] hamburger-decomp                         (★ 0)   [JS/CSS 3D/Audio]
+  [14] fly-around-the-moon                      (★ 0)   [Three.js/WebGL/LOD]
+  [15] blackhole                                (★ 0)   [WebGL 2.0/GLSL/Relativity]
+  [16] OpenLicenseGuide                         (★ 0)   [JS/OSS Licensing/PWA]
+  [17] vim-html                                 (★ 0)   [JS/Vim Simulator/VFS]
   
 Type 'cd firmware' to view all repositories in the visual grid.`,
 
@@ -2251,7 +2353,8 @@ Type 'cd firmware' to view all repositories in the visual grid.`,
       }
 
       if (cleanCmd.startsWith('cd ') || cleanCmd.startsWith('tab ')) {
-        const dest = cleanCmd.split(' ')[1];
+        let dest = cleanCmd.split(' ')[1];
+        if (dest === 'repos' || dest === 'repositories') dest = 'firmware';
         if (['overview', 'logs', 'firmware', 'operator'].includes(dest)) {
           switchTab(dest);
           printTerm(`Transferred active focus to pane: [// ${dest.toUpperCase()}]`);
