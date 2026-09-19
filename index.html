@@ -942,7 +942,7 @@
         <span>[02]</span> BUILD_LOGS <span class="tab-badge" id="logBadgeCount">5</span>
       </button>
       <button class="hud-tab" data-tab="firmware" onclick="switchTab('firmware')">
-        <span>[03]</span> FIRMWARE_DECK <span class="tab-badge" id="repoBadgeCount">17</span>
+        <span>[03]</span> FIRMWARE_DECK <span class="tab-badge" id="repoBadgeCount">25</span>
       </button>
       <button class="hud-tab" data-tab="operator" onclick="switchTab('operator')">
         <span>[04]</span> OPERATOR_STACK
@@ -967,7 +967,7 @@
           </div>
           <div class="telemetry-row">
             <span class="telemetry-label">REPOSITORIES:</span>
-            <span class="telemetry-val">17 DEPLOYED</span>
+            <span class="telemetry-val" id="repoCountTelemetry">25 DEPLOYED</span>
           </div>
           <div class="telemetry-row">
             <span class="telemetry-label">ACTIVE CYBERWARE:</span>
@@ -1102,12 +1102,12 @@ smford@mainframe:~/projects$ ls -la</div>
     <!-- ================= TAB 3: FIRMWARE DECK (ALL REPOSITORIES) ================= -->
     <section id="tab-firmware" class="tab-pane">
       <div class="section-head">
-        <h2 class="section-title">// GITHUB REPOSITORY REGISTRY (17 NODES)</h2>
+        <h2 class="section-title" id="repoRegistryTitle">// GITHUB REPOSITORY REGISTRY (25 NODES)</h2>
         <div class="section-line"></div>
       </div>
 
       <div class="filter-bar">
-        <button class="filter-btn active" onclick="filterRepos('all', this)">ALL REPOSITORIES (17)</button>
+        <button class="filter-btn active" id="allReposFilterBtn" onclick="filterRepos('all', this)">ALL REPOSITORIES (25)</button>
         <button class="filter-btn" onclick="filterRepos('Embedded', this)">EMBEDDED & ESP32</button>
         <button class="filter-btn" onclick="filterRepos('RaspberryPi', this)">RASPBERRY PI & LINUX</button>
         <button class="filter-btn" onclick="filterRepos('Networking', this)">NETWORKING & APIS</button>
@@ -1238,6 +1238,14 @@ smford@mainframe:~/projects$ ls -la</div>
       { text: "[  OK  ] Loaded Selenographic LOD reconnaissance engine: smford/fly-around-the-moon", type: "ok", delay: 60 },
       { text: "[  OK  ] Mounted terminal Markdown parser pipeline: smford/mdee", type: "ok", delay: 60 },
       { text: "[  OK  ] Armed terminal separator utility: smford/delim", type: "ok", delay: 50 },
+      { text: "[  OK  ] Synced Homebrew package tap formulas: smford/homebrew-tap", type: "ok", delay: 50 },
+      { text: "[  OK  ] Initialized VT100 Matrix digital rain streaming pipeline: smford/matrix-rain", type: "ok", delay: 50 },
+      { text: "[  OK  ] Mounted Matrix cascading text viewer: smford/matrix-cat", type: "ok", delay: 50 },
+      { text: "[  OK  ] Initialized power tool receipt optimization engine: smford/toolsplit", type: "ok", delay: 50 },
+      { text: "[  OK  ] Loaded in-browser Kubernetes RBAC security analyzer: smford/rbac-editor", type: "ok", delay: 50 },
+      { text: "[  OK  ] Loaded in-browser YAML AST & anchor validator: smford/yaml-web-validator", type: "ok", delay: 50 },
+      { text: "[  OK  ] Dialed PCBoard BBS node emulator via CP437 canvas: smford/pcboard-web-emu", type: "ok", delay: 50 },
+      { text: "[  OK  ] Initialized terminal Mermaid diagram rendering engine: smford/golang-mermaid", type: "ok", delay: 50 },
       { text: "[ WARN ] Unrestricted ICE bypass active for local operator 'smford'", type: "warn", delay: 50 },
       { text: "[  OK  ] Started Bash Shell Netrunner Terminal daemon (TTY1)", type: "ok", delay: 60 },
       { text: "[  OK  ] Loaded Vim 9.0 Neural modal editor simulator (smford/vim-html)", type: "ok", delay: 50 },
@@ -1363,15 +1371,6 @@ smford@mainframe:~/projects$ ls -la</div>
         url: "https://github.com/smford/rpi-snmpd-configuration"
       },
       {
-        name: "eeh-esp32-rfid",
-        category: "Embedded",
-        stars: 11,
-        forks: 0,
-        desc: "Industrial RFID access control and safety interlock system built for East Essex Hackspace to restrict unauthorized power to 3kW workshop tools.",
-        tech: ["Embedded C++", "ESP32", "RC522 RFID", "Hardware Relays"],
-        url: "https://github.com/smford/eeh-esp32-rfid"
-      },
-      {
         name: "Sunton-ESP32-2432S028R-Case",
         category: "3DPrinting",
         stars: 12,
@@ -1379,6 +1378,15 @@ smford@mainframe:~/projects$ ls -la</div>
         desc: "Custom parametric 3D printable enclosure remix for the Sunton ESP32 2.8\" LCD + touch controller, optimized for M3 socket screws and heat-set inserts.",
         tech: ["3D Printing", "Bambu Lab", "PLA-CF", "CAD Remix", "ESP32-CYD"],
         url: "https://github.com/smford/Sunton-ESP32-2432S028R-Case"
+      },
+      {
+        name: "eeh-esp32-rfid",
+        category: "Embedded",
+        stars: 11,
+        forks: 0,
+        desc: "Industrial RFID access control and safety interlock system built for East Essex Hackspace to restrict unauthorized power to 3kW workshop tools.",
+        tech: ["Embedded C++", "ESP32", "RC522 RFID", "Hardware Relays"],
+        url: "https://github.com/smford/eeh-esp32-rfid"
       },
       {
         name: "bambu-poop-chute-magnet-remix",
@@ -1399,15 +1407,6 @@ smford@mainframe:~/projects$ ls -la</div>
         url: "https://github.com/smford/esp32-temp-monitor"
       },
       {
-        name: "motioneye-snapshotter",
-        category: "Networking",
-        stars: 1,
-        forks: 0,
-        desc: "Event-driven Go microservice providing a REST API to trigger instant, timestamped camera snapshot captures from MotionEye upon IoT sensor triggers.",
-        tech: ["Golang", "Docker", "REST API", "MotionEye", "IoT"],
-        url: "https://github.com/smford/motioneye-snapshotter"
-      },
-      {
         name: "dhcp-routeros-tool",
         category: "Networking",
         stars: 1,
@@ -1417,9 +1416,18 @@ smford@mainframe:~/projects$ ls -la</div>
         url: "https://github.com/smford/dhcp-routeros-tool"
       },
       {
+        name: "motioneye-snapshotter",
+        category: "Networking",
+        stars: 0,
+        forks: 0,
+        desc: "Event-driven Go microservice providing a REST API to trigger instant, timestamped camera snapshot captures from MotionEye upon IoT sensor triggers.",
+        tech: ["Golang", "Docker", "REST API", "MotionEye", "IoT"],
+        url: "https://github.com/smford/motioneye-snapshotter"
+      },
+      {
         name: "pica-dry-pencil-wall-mount",
         category: "3DPrinting",
-        stars: 1,
+        stars: 0,
         forks: 0,
         desc: "3D printable wall-mounted holster remix for Pica Dry deep-hole construction markers with dual countersunk screw fixtures for workshop tool boards.",
         tech: ["3D Printing", "Workshop Tooling", "CAD", "PLA"],
@@ -1493,6 +1501,85 @@ smford@mainframe:~/projects$ ls -la</div>
         tech: ["JavaScript", "Vim Simulator", "Virtual Filesystem", "Terminal Shell", "Web Audio"],
         url: "https://github.com/smford/vim-html",
         demo: "https://stephenford.org/vim-html/"
+      },
+      {
+        name: "homebrew-tap",
+        category: "Terminal",
+        stars: 0,
+        forks: 0,
+        desc: "Official Homebrew tap for smford CLI tools (mdee, delim, matrix-rain, matrix-cat) with automated multi-architecture formula packaging, continuous testing, and live web catalog.",
+        tech: ["Homebrew", "Formulas", "Ruby", "Bash", "macOS/Linux"],
+        url: "https://github.com/smford/homebrew-tap",
+        demo: "https://stephenford.org/homebrew-tap/"
+      },
+      {
+        name: "matrix-rain",
+        category: "Terminal",
+        stars: 0,
+        forks: 0,
+        desc: "High-performance authentic Matrix digital rain simulator for the terminal in Go, featuring half-width Katakana glyphs, 24-bit truecolor glowing heads, and zero terminal corruption guarantees.",
+        tech: ["Go", "Terminal CLI", "VT100 / ANSI", "TrueColor", "Zero-Alloc"],
+        url: "https://github.com/smford/matrix-rain",
+        demo: "https://stephenford.org/matrix-rain/"
+      },
+      {
+        name: "matrix-cat",
+        category: "Terminal",
+        stars: 0,
+        forks: 0,
+        desc: "Digital rain terminal text and source code viewer (mcat) in Go, cascading characters down the screen with Chroma syntax highlighting, customizable speeds, and pipe streaming.",
+        tech: ["Go", "Terminal CLI", "Chroma Highlighting", "TrueColor", "Cascading Text"],
+        url: "https://github.com/smford/matrix-cat",
+        demo: "https://stephenford.org/matrix-cat/"
+      },
+      {
+        name: "toolsplit",
+        category: "Web",
+        stars: 0,
+        forks: 0,
+        desc: "Power tool promotional discount calculator and prorated return receipt engine optimizing Home Depot BOGO savings for Milwaukee, DeWalt, RIDGID, and Makita tooling.",
+        tech: ["JavaScript", "CSS3", "Calculators", "Workshop Tooling", "Web App"],
+        url: "https://github.com/smford/toolsplit",
+        demo: "https://stephenford.org/toolsplit/"
+      },
+      {
+        name: "rbac-editor",
+        category: "Web",
+        stars: 0,
+        forks: 0,
+        desc: "100% client-side in-browser Kubernetes RBAC and YAML security validator, featuring real-time AST traversal, anchor/alias resolution, dead-code analysis, and zero telemetry.",
+        tech: ["TypeScript", "Kubernetes RBAC", "YAML AST", "Security ICE", "Client-Side"],
+        url: "https://github.com/smford/rbac-editor",
+        demo: "https://stephenford.org/rbac-editor/"
+      },
+      {
+        name: "yaml-web-validator",
+        category: "Web",
+        stars: 0,
+        forks: 0,
+        desc: "YAML Clean: Modern client-side YAML IDE and anchor manager for SREs to manage anchors (&), aliases (*), and merge keys (<<), scan for plaintext secrets, and diff dereferenced trees.",
+        tech: ["TypeScript", "YAML AST", "PWA Offline", "SRE Tooling", "Zero-Telemetry"],
+        url: "https://github.com/smford/yaml-web-validator",
+        demo: "https://stephenford.org/yaml-web-validator/"
+      },
+      {
+        name: "pcboard-web-emu",
+        category: "Web",
+        stars: 0,
+        forks: 0,
+        desc: "High-fidelity retro BBS simulator recreating an IBM PC running MS-DOS 6.22 dialing into Clark Development PCBoard v15.22, featuring CP437 canvas text rendering and Web Audio modem dialing synthesis.",
+        tech: ["TypeScript", "Canvas CP437", "Web Audio API", "MS-DOS BBS", "Retro Computing"],
+        url: "https://github.com/smford/pcboard-web-emu",
+        demo: "https://stephenford.org/pcboard-web-emu/"
+      },
+      {
+        name: "golang-mermaid",
+        category: "Terminal",
+        stars: 0,
+        forks: 0,
+        desc: "Production-grade Go module rendering high-resolution Mermaid diagrams in modern terminals via Kitty graphics protocol, iTerm2 OSC 1337, and DEC Sixel bitmap with automatic ASCII/Unicode fallback.",
+        tech: ["Go", "Kitty Graphics", "iTerm2 OSC 1337", "DEC Sixel", "Mermaid CLI"],
+        url: "https://github.com/smford/golang-mermaid"
       }
     ];
 
@@ -1571,6 +1658,9 @@ extend cpu_temp /usr/bin/vcgencmd measure_temp`,
 - [x] Aligned wide-angle optics on Pi Zero RTSP laser-cam
 - [x] Calibrated Chandra-X black hole raymarching shader (smford/blackhole)
 - [x] Optimized iTerm2 OSC 1337 image rendering in mdee (smford/mdee)
+- [x] Deployed YAML anchor validator and RBAC manager (smford/yaml-web-validator)
+- [x] Verified high-res Sixel & iTerm2 terminal Mermaid diagrams (smford/golang-mermaid)
+- [x] Published official Homebrew tap formulas (smford/homebrew-tap)
 - [ ] Install Pica Dry wall holsters on main workbench`
     };
 
@@ -1705,16 +1795,26 @@ extend cpu_temp /usr/bin/vcgencmd measure_temp`,
       const repoBadge = document.getElementById('repoBadgeCount');
       if (repoBadge) repoBadge.textContent = REPOSITORIES.length;
 
+      const repoTelem = document.getElementById('repoCountTelemetry');
+      if (repoTelem) repoTelem.textContent = `${REPOSITORIES.length} DEPLOYED`;
+
+      const repoRegistryTitle = document.getElementById('repoRegistryTitle');
+      if (repoRegistryTitle) repoRegistryTitle.textContent = `// GITHUB REPOSITORY REGISTRY (${REPOSITORIES.length} NODES)`;
+
+      const allFilterBtn = document.getElementById('allReposFilterBtn');
+      if (allFilterBtn) allFilterBtn.textContent = `ALL REPOSITORIES (${REPOSITORIES.length})`;
+
       const filtered = filter === 'all' 
         ? REPOSITORIES 
         : REPOSITORIES.filter(r => r.category.toLowerCase() === filter.toLowerCase());
 
-      filtered.forEach((repo, idx) => {
+      filtered.forEach((repo) => {
         const card = document.createElement('div');
         card.className = 'card';
         
         const techPills = repo.tech.map(t => `<span class="tech-pill">${t}</span>`).join('');
-        const numStr = (idx + 1).toString().padStart(2, '0');
+        const globalIdx = REPOSITORIES.indexOf(repo) + 1;
+        const numStr = globalIdx.toString().padStart(2, '0');
 
         const actionButtons = repo.demo
           ? `
@@ -2262,7 +2362,7 @@ extend cpu_temp /usr/bin/vcgencmd measure_temp`,
 
     const commands = {
       help: `COMMAND PROTOCOL DIRECTORY:
-  • projects     - Dump all 17 GitHub repositories & telemetry stats
+  • projects     - Dump all 25 GitHub repositories & telemetry stats
   • cd firmware  - Switch to full GitHub Repositories HUD deck
   • reboot       - Replay hardware POST & kernel boot sequence
   • vim <file>   - Launch modal Vim 9.0 simulator (:w, :q, :wq, i, esc)
@@ -2274,7 +2374,7 @@ extend cpu_temp /usr/bin/vcgencmd measure_temp`,
   • theme        - Swap Night City / Altered Carbon visual modes
   • clear        - Wipe terminal window`,
 
-      projects: `GITHUB REPOSITORY INDEX (17 NODES):
+      projects: `GITHUB REPOSITORY INDEX (25 NODES):
   [01] esp32-asyncwebserver-fileupload-example  (★ 104) [C++/SPIFFS]
   [02] raspberry-pi-streaming-camera            (★ 83)  [v4l2/RTSP/Nginx]
   [03] rpi-snmpd-configuration                  (★ 14)  [SNMP/Debian]
@@ -2292,12 +2392,21 @@ extend cpu_temp /usr/bin/vcgencmd measure_temp`,
   [15] blackhole                                (★ 0)   [WebGL 2.0/GLSL/Relativity]
   [16] OpenLicenseGuide                         (★ 0)   [JS/OSS Licensing/PWA]
   [17] vim-html                                 (★ 0)   [JS/Vim Simulator/VFS]
+  [18] homebrew-tap                             (★ 0)   [Homebrew/Formulas]
+  [19] matrix-rain                              (★ 0)   [Go/Matrix VT100]
+  [20] matrix-cat                               (★ 0)   [Go/Syntax Rain/CLI]
+  [21] toolsplit                                (★ 0)   [JS/Receipt Engine]
+  [22] rbac-editor                              (★ 0)   [TS/K8s RBAC/AST]
+  [23] yaml-web-validator                       (★ 0)   [TS/YAML AST/PWA]
+  [24] pcboard-web-emu                          (★ 0)   [TS/MS-DOS/CP437]
+  [25] golang-mermaid                           (★ 0)   [Go/Sixel/OSC 1337]
   
 Type 'cd firmware' to view all repositories in the visual grid.`,
 
       skills: `OPERATOR CAPABILITIES:
   • Embedded : C++, ESP32/ESP8266, FreeRTOS, SPIFFS, RFID
-  • Backend  : Golang, Bash Scripting, Docker, REST
+  • Backend  : Golang, Bash Scripting, Docker, REST, Homebrew
+  • Frontend : TypeScript, Web Audio API, Canvas CP437, PWA
   • Sysadmin : Debian Linux, MikroTik RouterOS, UniFi
   • Hardware : 3D CAD (Fusion 360), CNC Routing, Timber Framing`,
 
