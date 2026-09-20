@@ -942,7 +942,7 @@
         <span>[02]</span> BUILD_LOGS <span class="tab-badge" id="logBadgeCount">5</span>
       </button>
       <button class="hud-tab" data-tab="firmware" onclick="switchTab('firmware')">
-        <span>[03]</span> FIRMWARE_DECK <span class="tab-badge" id="repoBadgeCount">25</span>
+        <span>[03]</span> FIRMWARE_DECK <span class="tab-badge" id="repoBadgeCount">26</span>
       </button>
       <button class="hud-tab" data-tab="operator" onclick="switchTab('operator')">
         <span>[04]</span> OPERATOR_STACK
@@ -967,7 +967,7 @@
           </div>
           <div class="telemetry-row">
             <span class="telemetry-label">REPOSITORIES:</span>
-            <span class="telemetry-val" id="repoCountTelemetry">25 DEPLOYED</span>
+            <span class="telemetry-val" id="repoCountTelemetry">26 DEPLOYED</span>
           </div>
           <div class="telemetry-row">
             <span class="telemetry-label">ACTIVE CYBERWARE:</span>
@@ -1025,6 +1025,7 @@ smford@mainframe:~/projects$ ls -la</div>
           <span style="font-size: 0.75rem; color: var(--text-muted); align-self: center;">Quick Exec:</span>
           <button class="chip-btn" onclick="execCommand('help')">help</button>
           <button class="chip-btn" onclick="execCommand('projects')">projects</button>
+          <button class="chip-btn" onclick="execCommand('cidr 192.168.1.10+5')">cidr 192.168.1.10+5</button>
           <button class="chip-btn" onclick="execCommand('cd firmware')">cd firmware</button>
           <button class="chip-btn" onclick="execCommand('vim hardware.ino')">vim hardware.ino</button>
           <button class="chip-btn" onclick="execCommand('ls')">ls</button>
@@ -1102,12 +1103,12 @@ smford@mainframe:~/projects$ ls -la</div>
     <!-- ================= TAB 3: FIRMWARE DECK (ALL REPOSITORIES) ================= -->
     <section id="tab-firmware" class="tab-pane">
       <div class="section-head">
-        <h2 class="section-title" id="repoRegistryTitle">// GITHUB REPOSITORY REGISTRY (25 NODES)</h2>
+        <h2 class="section-title" id="repoRegistryTitle">// GITHUB REPOSITORY REGISTRY (26 NODES)</h2>
         <div class="section-line"></div>
       </div>
 
       <div class="filter-bar">
-        <button class="filter-btn active" id="allReposFilterBtn" onclick="filterRepos('all', this)">ALL REPOSITORIES (25)</button>
+        <button class="filter-btn active" id="allReposFilterBtn" onclick="filterRepos('all', this)">ALL REPOSITORIES (26)</button>
         <button class="filter-btn" onclick="filterRepos('Embedded', this)">EMBEDDED & ESP32</button>
         <button class="filter-btn" onclick="filterRepos('RaspberryPi', this)">RASPBERRY PI & LINUX</button>
         <button class="filter-btn" onclick="filterRepos('Networking', this)">NETWORKING & APIS</button>
@@ -1246,6 +1247,7 @@ smford@mainframe:~/projects$ ls -la</div>
       { text: "[  OK  ] Loaded in-browser YAML AST & anchor validator: smford/yaml-web-validator", type: "ok", delay: 50 },
       { text: "[  OK  ] Dialed PCBoard BBS node emulator via CP437 canvas: smford/pcboard-web-emu", type: "ok", delay: 50 },
       { text: "[  OK  ] Initialized terminal Mermaid diagram rendering engine: smford/golang-mermaid", type: "ok", delay: 50 },
+      { text: "[  OK  ] Loaded IPv4/IPv6 CIDR decomposition & route summarizer: smford/cidr-calculator", type: "ok", delay: 50 },
       { text: "[ WARN ] Unrestricted ICE bypass active for local operator 'smford'", type: "warn", delay: 50 },
       { text: "[  OK  ] Started Bash Shell Netrunner Terminal daemon (TTY1)", type: "ok", delay: 60 },
       { text: "[  OK  ] Loaded Vim 9.0 Neural modal editor simulator (smford/vim-html)", type: "ok", delay: 50 },
@@ -1507,7 +1509,7 @@ smford@mainframe:~/projects$ ls -la</div>
         category: "Terminal",
         stars: 0,
         forks: 0,
-        desc: "Official Homebrew tap for smford CLI tools (mdee, delim, matrix-rain, matrix-cat) with automated multi-architecture formula packaging, continuous testing, and live web catalog.",
+        desc: "Official Homebrew tap for smford CLI tools (cidr-calculator, mdee, delim, matrix-rain, matrix-cat) with automated multi-architecture formula packaging, continuous testing, and live web catalog.",
         tech: ["Homebrew", "Formulas", "Ruby", "Bash", "macOS/Linux"],
         url: "https://github.com/smford/homebrew-tap",
         demo: "https://stephenford.org/homebrew-tap/"
@@ -1580,6 +1582,16 @@ smford@mainframe:~/projects$ ls -la</div>
         desc: "Production-grade Go module rendering high-resolution Mermaid diagrams in modern terminals via Kitty graphics protocol, iTerm2 OSC 1337, and DEC Sixel bitmap with automatic ASCII/Unicode fallback.",
         tech: ["Go", "Kitty Graphics", "iTerm2 OSC 1337", "DEC Sixel", "Mermaid CLI"],
         url: "https://github.com/smford/golang-mermaid"
+      },
+      {
+        name: "cidr-calculator",
+        category: "Networking",
+        stars: 0,
+        forks: 0,
+        desc: "High-performance zero-dependency IPv4/IPv6 CIDR range decomposition engine, route aggregator, collision detector, and capacity planner in Go with interactive web playground and Terraform IaC export.",
+        tech: ["Go", "IPv4 & IPv6", "CIDR / Subnetting", "Route Aggregation", "Terraform", "SRE Tooling"],
+        url: "https://github.com/smford/cidr-calculator",
+        demo: "https://stephenford.org/cidr-calculator/"
       }
     ];
 
@@ -1661,6 +1673,7 @@ extend cpu_temp /usr/bin/vcgencmd measure_temp`,
 - [x] Deployed YAML anchor validator and RBAC manager (smford/yaml-web-validator)
 - [x] Verified high-res Sixel & iTerm2 terminal Mermaid diagrams (smford/golang-mermaid)
 - [x] Published official Homebrew tap formulas (smford/homebrew-tap)
+- [x] Deployed IPv4/IPv6 CIDR decomposition & collision engine (smford/cidr-calculator)
 - [ ] Install Pica Dry wall holsters on main workbench`
     };
 
@@ -2362,7 +2375,8 @@ extend cpu_temp /usr/bin/vcgencmd measure_temp`,
 
     const commands = {
       help: `COMMAND PROTOCOL DIRECTORY:
-  • projects     - Dump all 25 GitHub repositories & telemetry stats
+  • projects     - Dump all 26 GitHub repositories & telemetry stats
+  • cidr <range> - Run IPv4/IPv6 CIDR range decomposition (e.g. cidr 192.168.1.10+5)
   • cd firmware  - Switch to full GitHub Repositories HUD deck
   • reboot       - Replay hardware POST & kernel boot sequence
   • vim <file>   - Launch modal Vim 9.0 simulator (:w, :q, :wq, i, esc)
@@ -2374,7 +2388,7 @@ extend cpu_temp /usr/bin/vcgencmd measure_temp`,
   • theme        - Swap Night City / Altered Carbon visual modes
   • clear        - Wipe terminal window`,
 
-      projects: `GITHUB REPOSITORY INDEX (25 NODES):
+      projects: `GITHUB REPOSITORY INDEX (26 NODES):
   [01] esp32-asyncwebserver-fileupload-example  (★ 104) [C++/SPIFFS]
   [02] raspberry-pi-streaming-camera            (★ 83)  [v4l2/RTSP/Nginx]
   [03] rpi-snmpd-configuration                  (★ 14)  [SNMP/Debian]
@@ -2400,6 +2414,7 @@ extend cpu_temp /usr/bin/vcgencmd measure_temp`,
   [23] yaml-web-validator                       (★ 0)   [TS/YAML AST/PWA]
   [24] pcboard-web-emu                          (★ 0)   [TS/MS-DOS/CP437]
   [25] golang-mermaid                           (★ 0)   [Go/Sixel/OSC 1337]
+  [26] cidr-calculator                         (★ 0)   [Go/IPv4 & IPv6/CIDR]
   
 Type 'cd firmware' to view all repositories in the visual grid.`,
 
@@ -2407,8 +2422,27 @@ Type 'cd firmware' to view all repositories in the visual grid.`,
   • Embedded : C++, ESP32/ESP8266, FreeRTOS, SPIFFS, RFID
   • Backend  : Golang, Bash Scripting, Docker, REST, Homebrew
   • Frontend : TypeScript, Web Audio API, Canvas CP437, PWA
-  • Sysadmin : Debian Linux, MikroTik RouterOS, UniFi
+  • Sysadmin : Debian Linux, MikroTik RouterOS, UniFi, SRE Subnetting
   • Hardware : 3D CAD (Fusion 360), CNC Routing, Timber Framing`,
+
+      cidr: `cidr-calculator v1.0.0 (Go SRE Subnet & CIDR Range Engine)
+USAGE:
+  cidr <range> [all|nocidr]      Decompose IP range into minimal CIDRs
+  cidr <range> -format=tf        Output in Terraform/HCL list format
+  cidr aggregate <cidr1> <cidr2> Merge contiguous/overlapping CIDRs
+  cidr overlap <cidr1> <cidr2>   Detect VPC subnet collisions
+  cidr contains <super> <sub>    Check range containment
+  cidr convert <ip>              Convert to Int/Hex/Binary/Dotted
+  cidr web                       Launch interactive Web Playground
+
+EXAMPLES:
+  cidr 192.168.1.10+5
+  cidr 10.0.0.1-50 -format=tf
+  cidr convert 192.168.1.1
+Web Playground: https://stephenford.org/cidr-calculator/`,
+
+      'cidr-calculator': `cidr-calculator v1.0.0 (Go SRE Subnet & CIDR Range Engine)
+Try 'cidr 192.168.1.10+5' or visit https://stephenford.org/cidr-calculator/`,
 
       github: `Opening link: https://github.com/smford ...`
     };
@@ -2482,6 +2516,30 @@ Type 'cd firmware' to view all repositories in the visual grid.`,
         }
       }
 
+      if (cleanCmd === 'cidr' || cleanCmd.startsWith('cidr ') || cleanCmd === 'cidr-calculator' || cleanCmd.startsWith('cidr-calculator ')) {
+        const argStr = cmd.replace(/^(cidr-calculator|cidr)\s*/i, '').trim();
+        if (!argStr || argStr === 'help') {
+          printTerm(commands.cidr);
+          return;
+        }
+        if (argStr === 'web' || argStr === 'open' || argStr === 'demo') {
+          window.open('https://stephenford.org/cidr-calculator/', '_blank');
+          printTerm('Accessing cidr-calculator Web Playground: https://stephenford.org/cidr-calculator/');
+          return;
+        }
+        try {
+          printTerm(executeCidrTerminal(argStr));
+        } catch (e) {
+          const err = document.createElement('div');
+          err.className = 'term-output';
+          err.style.color = 'var(--accent-danger)';
+          err.textContent = `cidr error: ${e.message}`;
+          termBody.appendChild(err);
+        }
+        termBody.scrollTop = termBody.scrollHeight;
+        return;
+      }
+
       if (cleanCmd === 'theme') {
         toggleTheme();
         printTerm(`Theme altered. Active: ${document.body.getAttribute('data-theme') ? 'Altered Carbon' : 'Cyberpunk 2077'}`);
@@ -2498,6 +2556,137 @@ Type 'cd firmware' to view all repositories in the visual grid.`,
       }
 
       termBody.scrollTop = termBody.scrollHeight;
+    }
+
+    function executeCidrTerminal(argStr) {
+      let raw = argStr.trim();
+      if (raw.startsWith('convert ')) {
+        const ip = raw.substring(8).trim();
+        const parts = ip.split('.').map(Number);
+        if (parts.length !== 4 || parts.some(n => isNaN(n) || n < 0 || n > 255)) {
+          throw new Error(`Invalid IPv4 address: ${ip}`);
+        }
+        const u32 = (((parts[0] << 24) >>> 0) + (parts[1] << 16) + (parts[2] << 8) + parts[3]) >>> 0;
+        const hex = '0x' + u32.toString(16).toUpperCase().padStart(8, '0');
+        const binPlain = (u32 >>> 0).toString(2).padStart(32, '0');
+        const binDotted = [
+          binPlain.slice(0, 8),
+          binPlain.slice(8, 16),
+          binPlain.slice(16, 24),
+          binPlain.slice(24, 32)
+        ].join('.');
+        return `Input:          ${ip} (IPv4 Dotted Decimal)\nInteger:        ${u32}\nHexadecimal:    ${hex}\nBinary:         ${binDotted}\nBinary (Plain): ${binPlain}`;
+      }
+
+      let format = 'text';
+      if (raw.includes('-format=terraform') || raw.includes('-format=tf')) {
+        format = 'tf';
+        raw = raw.replace(/-format=(terraform|tf)/g, '').trim();
+      } else if (raw.includes('-format=json')) {
+        format = 'json';
+        raw = raw.replace(/-format=json/g, '').trim();
+      }
+
+      let mode = 'cidr';
+      if (/\ball\b/i.test(raw)) {
+        mode = 'all';
+        raw = raw.replace(/\ball\b/ig, '').trim();
+      } else if (/\bnocidr\b/i.test(raw)) {
+        mode = 'nocidr';
+        raw = raw.replace(/\bnocidr\b/ig, '').trim();
+      }
+
+      function parseIp(ip) {
+        const parts = ip.trim().split('.').map(Number);
+        if (parts.length !== 4 || parts.some(n => isNaN(n) || n < 0 || n > 255)) {
+          throw new Error(`Invalid IPv4 address: ${ip}`);
+        }
+        return (((parts[0] << 24) >>> 0) + (parts[1] << 16) + (parts[2] << 8) + parts[3]) >>> 0;
+      }
+
+      function formatIp(long) {
+        return [(long >>> 24) & 255, (long >>> 16) & 255, (long >>> 8) & 255, long & 255].join('.');
+      }
+
+      let startU32 = 0, endU32 = 0;
+      if (raw.includes('+')) {
+        const [base, countStr] = raw.split('+');
+        startU32 = parseIp(base);
+        const count = parseInt(countStr.trim(), 10);
+        if (isNaN(count) || count < 0) throw new Error(`Invalid count offset: ${countStr}`);
+        endU32 = (startU32 + count) >>> 0;
+      } else if (raw.includes('..')) {
+        const parts = raw.split('..');
+        startU32 = parseIp(parts[0]);
+        endU32 = parseIp(parts[1]);
+      } else if (raw.includes('-')) {
+        const parts = raw.split('-');
+        const startStr = parts[0].trim();
+        startU32 = parseIp(startStr);
+        let p2 = parts[1].trim();
+        if (!p2.includes('.') && startStr.includes('.')) {
+          const octs = startStr.split('.');
+          octs[3] = p2;
+          endU32 = parseIp(octs.join('.'));
+        } else {
+          endU32 = parseIp(p2);
+        }
+      } else if (raw.includes('/')) {
+        return raw;
+      } else if (raw.includes(' ')) {
+        const parts = raw.split(/\s+/);
+        startU32 = parseIp(parts[0]);
+        endU32 = parseIp(parts[1]);
+      } else {
+        startU32 = parseIp(raw);
+        endU32 = startU32;
+      }
+
+      if (startU32 > endU32) {
+        const t = startU32; startU32 = endU32; endU32 = t;
+      }
+
+      const cidrs = [];
+      let cur = startU32;
+      const target = endU32;
+      while (cur <= target) {
+        let maxBits;
+        if (cur === 0) {
+          maxBits = 32;
+        } else {
+          const lowestBit = (cur & -cur) >>> 0;
+          maxBits = 31 - Math.clz32(lowestBit);
+        }
+        const remaining = target - cur + 1;
+        const remBits = Math.floor(Math.log2(remaining));
+        if (remBits < maxBits) {
+          maxBits = remBits;
+        }
+        const blockSize = Math.pow(2, maxBits);
+        const prefixLen = 32 - maxBits;
+        cidrs.push(`${formatIp(cur)}/${prefixLen}`);
+        cur += blockSize;
+        if (cur > 0xFFFFFFFF) break;
+      }
+
+      if (format === 'tf' || format === 'json') {
+        return JSON.stringify(cidrs, null, 2);
+      }
+
+      if (mode === 'nocidr' || mode === 'all') {
+        const ips = [];
+        for (let c = startU32; c <= endU32; c++) {
+          ips.push(formatIp(c));
+          if (ips.length > 256) {
+            ips.push('... (output truncated at 256 addresses)');
+            break;
+          }
+        }
+        if (mode === 'nocidr') return ips.join('\n');
+        return cidrs.concat(ips).join('\n');
+      }
+
+      return cidrs.join('\n');
     }
 
     function printTerm(text) {
