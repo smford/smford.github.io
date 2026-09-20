@@ -465,6 +465,8 @@
       padding: 0.65rem 1.25rem;
       background: rgba(0, 0, 0, 0.35);
       border-top: 1px solid rgba(255, 255, 255, 0.05);
+      max-height: 96px;
+      overflow-y: auto;
     }
 
     .chip-btn {
@@ -1029,8 +1031,8 @@
         <!-- Normal Terminal Body -->
         <div class="term-body" id="termBody">
           <div class="term-output">SYSTEM: Neural Debian Kernel 6.1.0-debian-smford loaded.
-SYSTEM: Cyberdeck CLI tools online: 'matrix-rain', 'mcat &lt;file&gt;', 'delim', 'cidr &lt;range&gt;'.
-SYSTEM: Type 'help' for full command directory, or click quick chips below.
+SYSTEM: Cyberdeck CLI nodes active across all 26 projects (Type 'help' or click quick chips).
+SYSTEM: Try 'blackhole', 'moon', 'bbs', 'burger', 'mdee notes.md', 'matrix-rain', 'cidr'.
 smford@mainframe:~$</div>
         </div>
 
@@ -1075,12 +1077,28 @@ smford@mainframe:~$</div>
           <span style="font-size: 0.75rem; color: var(--text-muted); align-self: center;">Quick Exec:</span>
           <button class="chip-btn" data-cmd="help" onclick="runTerminalCommand('help')">help</button>
           <button class="chip-btn" data-cmd="projects" onclick="runTerminalCommand('projects')">projects</button>
+          <button class="chip-btn" data-cmd="blackhole" onclick="runTerminalCommand('blackhole')">blackhole</button>
+          <button class="chip-btn" data-cmd="moon" onclick="runTerminalCommand('moon')">moon</button>
+          <button class="chip-btn" data-cmd="bbs" onclick="runTerminalCommand('bbs')">bbs</button>
+          <button class="chip-btn" data-cmd="burger" onclick="runTerminalCommand('burger')">burger</button>
+          <button class="chip-btn" data-cmd="mdee notes.md" onclick="runTerminalCommand('mdee notes.md')">mdee notes.md</button>
           <button class="chip-btn" data-cmd="matrix-rain" onclick="runTerminalCommand('matrix-rain')">matrix-rain</button>
           <button class="chip-btn" data-cmd="mcat notes.md" onclick="runTerminalCommand('mcat notes.md')">mcat notes.md</button>
           <button class="chip-btn" data-cmd="delim" onclick="runTerminalCommand('delim')">delim</button>
-          <button class="chip-btn" data-cmd="cidr 192.168.1.10+5" onclick="runTerminalCommand('cidr 192.168.1.10+5')">cidr 192.168.1.10+5</button>
+          <button class="chip-btn" data-cmd="cidr 192.168.1.10+5" onclick="runTerminalCommand('cidr 192.168.1.10+5')">cidr</button>
+          <button class="chip-btn" data-cmd="toolsplit calc 199 99" onclick="runTerminalCommand('toolsplit calc 199 99')">toolsplit</button>
+          <button class="chip-btn" data-cmd="rbac audit" onclick="runTerminalCommand('rbac audit')">rbac audit</button>
+          <button class="chip-btn" data-cmd="yaml lint" onclick="runTerminalCommand('yaml lint')">yaml lint</button>
+          <button class="chip-btn" data-cmd="license mit" onclick="runTerminalCommand('license mit')">license mit</button>
+          <button class="chip-btn" data-cmd="brew list" onclick="runTerminalCommand('brew list')">brew list</button>
+          <button class="chip-btn" data-cmd="mermaid" onclick="runTerminalCommand('mermaid')">mermaid</button>
+          <button class="chip-btn" data-cmd="snmp" onclick="runTerminalCommand('snmp')">snmp</button>
+          <button class="chip-btn" data-cmd="rfid" onclick="runTerminalCommand('rfid')">rfid</button>
+          <button class="chip-btn" data-cmd="temp" onclick="runTerminalCommand('temp')">temp</button>
+          <button class="chip-btn" data-cmd="cam" onclick="runTerminalCommand('cam')">cam</button>
+          <button class="chip-btn" data-cmd="cad" onclick="runTerminalCommand('cad')">cad</button>
           <button class="chip-btn" data-cmd="cd firmware" onclick="runTerminalCommand('cd firmware')">cd firmware</button>
-          <button class="chip-btn" data-cmd="vim hardware.ino" onclick="runTerminalCommand('vim hardware.ino')">vim hardware.ino</button>
+          <button class="chip-btn" data-cmd="vim hardware.ino" onclick="runTerminalCommand('vim hardware.ino')">vim</button>
           <button class="chip-btn" data-cmd="ls" onclick="runTerminalCommand('ls')">ls</button>
           <button class="chip-btn" data-cmd="clear" onclick="runTerminalCommand('clear')">clear</button>
         </div>
@@ -1088,7 +1106,7 @@ smford@mainframe:~$</div>
         <!-- Terminal Command Input Line -->
         <div class="term-input-line" id="termInputLine">
           <span class="term-prompt">smford@mainframe:~$</span>
-          <input type="text" id="termInput" class="term-input" placeholder="enter command (e.g. 'matrix-rain', 'mcat notes.md', 'delim', 'help')..." autocomplete="off" spellcheck="false" />
+          <input type="text" id="termInput" class="term-input" placeholder="enter command (e.g. 'blackhole', 'moon', 'bbs', 'burger', 'mdee', 'help')..." autocomplete="off" spellcheck="false" />
         </div>
       </section>
 
@@ -2802,27 +2820,681 @@ Examples:
       }
     });
 
+    /* ================= CYBERDECK AUDIO SYNTHESIZER ================= */
+    function playBbsDialSound() {
+      try {
+        const AudioCtx = window.AudioContext || window.webkitAudioContext;
+        if (!AudioCtx) return;
+        const ctx = new AudioCtx();
+        if (ctx.state === 'suspended') ctx.resume();
+        const now = ctx.currentTime;
+        
+        const o1 = ctx.createOscillator();
+        const o2 = ctx.createOscillator();
+        const g = ctx.createGain();
+        o1.frequency.setValueAtTime(350, now);
+        o2.frequency.setValueAtTime(440, now);
+        g.gain.setValueAtTime(0.04, now);
+        g.gain.exponentialRampToValueAtTime(0.0001, now + 0.3);
+        o1.connect(g); o2.connect(g); g.connect(ctx.destination);
+        o1.start(now); o2.start(now);
+        o1.stop(now + 0.3);
+
+        const beeps = [[770, 1336], [770, 1336], [770, 1336], [697, 1209], [697, 1477], [852, 1209]];
+        let t = now + 0.35;
+        beeps.forEach(([f1, f2]) => {
+          const bo1 = ctx.createOscillator();
+          const bo2 = ctx.createOscillator();
+          const bg = ctx.createGain();
+          bo1.frequency.setValueAtTime(f1, t);
+          bo2.frequency.setValueAtTime(f2, t);
+          bg.gain.setValueAtTime(0.03, t);
+          bg.gain.exponentialRampToValueAtTime(0.0001, t + 0.04);
+          bo1.connect(bg); bo2.connect(bg); bg.connect(ctx.destination);
+          bo1.start(t); bo2.start(t);
+          bo1.stop(t + 0.05);
+          t += 0.06;
+        });
+
+        const cOsc = ctx.createOscillator();
+        const cG = ctx.createGain();
+        cOsc.type = 'sawtooth';
+        cOsc.frequency.setValueAtTime(1800, t + 0.05);
+        cOsc.frequency.linearRampToValueAtTime(2250, t + 0.35);
+        cG.gain.setValueAtTime(0.02, t + 0.05);
+        cG.gain.exponentialRampToValueAtTime(0.0001, t + 0.45);
+        cOsc.connect(cG); cG.connect(ctx.destination);
+        cOsc.start(t + 0.05);
+        cOsc.stop(t + 0.46);
+      } catch (e) {
+        // Ignored if audio blocked
+      }
+    }
+
+    /* ================= PROJECT COMMAND HELPERS ================= */
+    const projectAliases = {
+      'moon': 'fly-around-the-moon',
+      'lunar': 'fly-around-the-moon',
+      'burger': 'hamburger-decomp',
+      'hamburger': 'hamburger-decomp',
+      'bbs': 'pcboard-web-emu',
+      'pcboard': 'pcboard-web-emu',
+      'rbac': 'rbac-editor',
+      'yaml': 'yaml-web-validator',
+      'yaml-clean': 'yaml-web-validator',
+      'license': 'OpenLicenseGuide',
+      'openlicense': 'OpenLicenseGuide',
+      'brew': 'homebrew-tap',
+      'homebrew': 'homebrew-tap',
+      'mermaid': 'golang-mermaid',
+      'snmp': 'rpi-snmpd-configuration',
+      'snmpwalk': 'rpi-snmpd-configuration',
+      'cam': 'raspberry-pi-streaming-camera',
+      'rtsp-cam': 'raspberry-pi-streaming-camera',
+      'esp32': 'esp32-asyncwebserver-fileupload-example',
+      'esp-upload': 'esp32-asyncwebserver-fileupload-example',
+      'rfid': 'eeh-esp32-rfid',
+      'temp': 'esp32-temp-monitor',
+      'routeros': 'dhcp-routeros-tool',
+      'dhcp': 'dhcp-routeros-tool',
+      'snapshot': 'motioneye-snapshotter',
+      'motioneye': 'motioneye-snapshotter',
+      'cad': 'Sunton-ESP32-2432S028R-Case',
+      '3dprint': 'Sunton-ESP32-2432S028R-Case',
+      'cyd': 'Sunton-ESP32-2432S028R-Case',
+      'bambu': 'bambu-poop-chute-magnet-remix',
+      'chute': 'bambu-poop-chute-magnet-remix',
+      'pica': 'pica-dry-pencil-wall-mount',
+      'mcat': 'matrix-cat',
+      'cidr': 'cidr-calculator',
+      'vim': 'vim-html'
+    };
+
+    function executeMdee(argStr) {
+      let raw = (argStr || '').trim();
+      if (raw === '-h' || raw === '--help' || raw === 'help') {
+        return `mdee v1.0.0 (Go / iTerm2 & Terminal Markdown Viewer)
+Usage: mdee [options] [file]
+
+Options:
+  -w, --width int       Terminal viewport wrap width (default 80)
+  --sixel               Enable DEC Sixel bitmap rendering
+  --osc1337             Enable iTerm2 inline graphic protocol
+  web, open             Launch live web demo
+  -h, --help            Show this help directory
+
+Examples:
+  mdee notes.md         Render VFS notes with Chroma AST formatting
+  mdee web              Open https://stephenford.org/mdee/`;
+      }
+
+      let file = raw || 'notes.md';
+      if (!VFS[file]) {
+        file = 'notes.md';
+      }
+
+      const lines = VFS[file].split('\n');
+      const rendered = lines.map(line => {
+        if (line.startsWith('# ')) {
+          return `\n═════════════ [ ${line.substring(2).toUpperCase()} ] ═════════════`;
+        }
+        if (line.startsWith('## ')) {
+          return `\n── [ ${line.substring(3)} ] ──`;
+        }
+        if (line.startsWith('- [x]')) {
+          return `  [✔] ${line.substring(5).trim()}`;
+        }
+        if (line.startsWith('- [ ]')) {
+          return `  [ ] ${line.substring(5).trim()}`;
+        }
+        if (line.startsWith('- ')) {
+          return `  • ${line.substring(2).trim()}`;
+        }
+        return line;
+      }).join('\n');
+
+      return `┌──────────────────────────────────────────────────────────────┐
+│  M D E E  -  TERMINAL MARKDOWN VIEWER (iTerm2 / OSC 1337)    │
+└──────────────────────────────────────────────────────────────┘
+File: ${file} | Engine: Chroma AST | Protocol: ANSI / Sixel
+
+${rendered}
+
+┌── [OSC 1337 Inline Graphic: bench_schematic.png] ────────────┐
+│ [Rendered via iTerm2 24-bit TrueColor Terminal Protocol]     │
+└──────────────────────────────────────────────────────────────┘
+Rendered in 2.1ms. Web demo: https://stephenford.org/mdee/`;
+    }
+
+    function executeBlackhole(argStr) {
+      let raw = (argStr || '').trim().toLowerCase();
+      if (raw === 'help' || raw === '-h') {
+        return `blackhole v1.0.0 (Chandra-X Schwarzschild Relativistic Simulator)
+Usage: blackhole [mass|preset|web]
+
+Presets:
+  blackhole 10          Stellar black hole (10 Solar Masses M☉)
+  blackhole saga        Sagittarius A* Galactic Core (4.3e6 M☉)
+  blackhole m87         Messier 87 Supermassive (6.5e9 M☉)
+  blackhole earth       Earth mass equivalent (5.97e24 kg)
+  blackhole web         Launch 3D WebGL 2.0 Raymarched Simulator
+
+Web App: https://stephenford.org/blackhole/`;
+      }
+
+      let name = "Stellar Black Hole";
+      let solarMasses = 10;
+      let customKg = null;
+
+      if (raw === 'saga' || raw === 'sag-a' || raw === 'sagittarius') {
+        name = "Sagittarius A* (Milky Way Supermassive Black Hole)";
+        solarMasses = 4.3e6;
+      } else if (raw === 'm87' || raw === 'm87*') {
+        name = "Messier 87* (M87 Central Supermassive Black Hole)";
+        solarMasses = 6.5e9;
+      } else if (raw === 'earth') {
+        name = "Earth Mass Miniature Singularity";
+        customKg = 5.972e24;
+        solarMasses = customKg / 1.989e30;
+      } else if (raw === 'sun') {
+        name = "Solar Mass Singularity";
+        solarMasses = 1.0;
+      } else if (parseFloat(raw)) {
+        solarMasses = parseFloat(raw);
+        name = `Custom Kerr-Schwarzschild Singularity (${solarMasses} M☉)`;
+      }
+
+      const M_kg = customKg || (solarMasses * 1.989e30);
+      const G = 6.6743e-11;
+      const c = 299792458;
+      const rs_m = (2 * G * M_kg) / (c * c);
+      const rs_km = rs_m / 1000;
+      const r_photon_km = rs_km * 1.5;
+      const r_isco_km = rs_km * 3.0;
+      const hawkingTemp = (1.227e23 / M_kg);
+
+      return `┌──────────────────────────────────────────────────────────────┐
+│  CHANDRA-X: RELATIVISTIC SCHWARZSCHILD BLACK HOLE SIMULATOR  │
+└──────────────────────────────────────────────────────────────┘
+Target: ${name}
+Mass (M): ${solarMasses.toExponential(3)} M☉ (${M_kg.toExponential(3)} kg)
+
+              . - ~ ~ ~ - .
+          . '       |       ' .
+        /     . - ~ | ~ - .     \\
+       :    '   . - " - .   '    :  << PHOTON SPHERE (1.5 rs)
+      :   /   /    ___    \\   \\   :
+      :  |   |   (  ●  )   |   |  :  << EVENT HORIZON (1.0 rs)
+      :   \\   \\    ---    /   /   :
+       :    .   ' - . - '   .    :  << ISCO ACCRETION DISK (3.0 rs)
+        \\     ' - ~ | ~ - '     /
+          . '       |       ' .
+              ' - ~ ~ ~ - '
+
+RELATIVISTIC TELEMETRY & METRIC VALUES:
+  • Event Horizon (rs = 2GM/c²) : ${rs_km < 1 ? (rs_m).toFixed(2) + ' m' : rs_km.toLocaleString(undefined, {maximumFractionDigits: 1}) + ' km'}
+  • Photon Sphere (1.5 rs)      : ${r_photon_km < 1 ? (rs_m * 1.5).toFixed(2) + ' m' : r_photon_km.toLocaleString(undefined, {maximumFractionDigits: 1}) + ' km'} (Closed circular light orbit)
+  • ISCO Innermost Orbit (3 rs) : ${r_isco_km < 1 ? (rs_m * 3.0).toFixed(2) + ' m' : r_isco_km.toLocaleString(undefined, {maximumFractionDigits: 1}) + ' km'} (Accretion disk inner boundary)
+  • Hawking Temperature         : ${hawkingTemp.toExponential(3)} Kelvin
+  • Gravitational Redshift      : z -> ∞ at r = rs (Infinite time dilation)
+
+Launch WebGL 2.0 Raymarching Simulator: 'blackhole web' or https://stephenford.org/blackhole/`;
+    }
+
+    function executeMoon(argStr) {
+      const epoch = new Date(2000, 0, 6, 18, 14, 0).getTime();
+      const now = Date.now();
+      const daysSinceEpoch = (now - epoch) / (1000 * 60 * 60 * 24);
+      const synodicPeriod = 29.53058867;
+      const currentPhaseDay = (daysSinceEpoch % synodicPeriod + synodicPeriod) % synodicPeriod;
+      const phaseRatio = currentPhaseDay / synodicPeriod;
+
+      let phaseName = "New Moon";
+      if (phaseRatio > 0.03 && phaseRatio < 0.22) phaseName = "Waxing Crescent";
+      else if (phaseRatio >= 0.22 && phaseRatio <= 0.28) phaseName = "First Quarter";
+      else if (phaseRatio > 0.28 && phaseRatio < 0.47) phaseName = "Waxing Gibbous";
+      else if (phaseRatio >= 0.47 && phaseRatio <= 0.53) phaseName = "Full Moon";
+      else if (phaseRatio > 0.53 && phaseRatio < 0.72) phaseName = "Waning Gibbous";
+      else if (phaseRatio >= 0.72 && phaseRatio <= 0.78) phaseName = "Last Quarter";
+      else if (phaseRatio > 0.78 && phaseRatio < 0.97) phaseName = "Waning Crescent";
+
+      const illumination = Math.round((1 - Math.cos(phaseRatio * 2 * Math.PI)) / 2 * 100);
+
+      return `┌──────────────────────────────────────────────────────────────┐
+│       FLY-AROUND-THE-MOON: 3D LUNAR RECONNAISSANCE ENGINE    │
+└──────────────────────────────────────────────────────────────┘
+Selenographic Telemetry & Ephemeris:
+  • Lunar Phase         : ${phaseName} (${illumination}% illumination)
+  • Cycle Age           : Day ${currentPhaseDay.toFixed(1)} / ${synodicPeriod.toFixed(1)}
+  • Distance to Earth   : ~384,400 km (1.282 light-seconds)
+  • Mean Radius         : 1,737.4 km (0.273 Earth radii)
+  • Orbital Velocity    : 1.022 km/s (Sidereal period: 27.32 days)
+  • Surface Gravity     : 1.62 m/s² (0.166g)
+
+HISTORIC APOLLO TOUCHDOWN SITES (SELENOGRAPHIC COORDINATES):
+  [Apollo 11] Mare Tranquillitatis   :  0.67408° N,  23.47297° E (Tranquility Base)
+  [Apollo 12] Oceanus Procellarum    :  3.01239° S,  23.42157° W (Surveyor 3 crater)
+  [Apollo 14] Fra Mauro Formation    :  3.64530° S,  17.47136° W (Cone crater)
+  [Apollo 15] Hadley–Apennine        : 26.13222° N,   3.63386° E (Hadley Rille gorge)
+  [Apollo 16] Descartes Highlands    :  8.97301° S,  15.50019° E (Cayley Plains)
+  [Apollo 17] Taurus–Littrow Valley  : 20.19080° N,  30.77168° E (Challenger base)
+
+Launch 3D WebGL Flyby Application: 'moon web' or https://stephenford.org/fly-around-the-moon/`;
+    }
+
+    function executeBurger() {
+      return `┌──────────────────────────────────────────────────────────────┐
+│        HAMBURGER-DECOMP: 3D CULINARY EXPLODED VIEW           │
+└──────────────────────────────────────────────────────────────┘
+EXPLODED COMPOSITE ARCHITECTURE:
+
+  ┌──────────────────────────────────────────────┐  [08] BRIOCHE CROWN
+  │    .  ·  •  .  *  ·  .  •  *  ·  .  •  *     │  Sesame toasted, French cultured butter
+  └──────────────────────────────────────────────┘
+  ┌──────────────────────────────────────────────┐  [07] HOUSE DILL PICKLE SLICES
+  │   ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~    │  Lactobacillus acidophilus barrel-brined
+  └──────────────────────────────────────────────┘
+  ┌──────────────────────────────────────────────┐  [06] CRISP ICEBERG RIBBONS
+  │   \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\│  Shredded 4mm, flash-chilled to 3.2°C
+  └──────────────────────────────────────────────┘
+  ┌──────────────────────────────────────────────┐  [05] HEIRLOOM BEEFSTEAK TOMATO
+  │   ════════════════════════════════════════   │  Center-cut 8mm, flake sea salt seasoned
+  └──────────────────────────────────────────────┘
+  ┌──────────────────────────────────────────────┐  [04] WISCONSIN AGED WHITE CHEDDAR
+  │   ████████████████████████████████████████   │  2-year sharp cheddar, steam melted
+  └──────────────────────────────────────────────┘
+  ┌──────────────────────────────────────────────┐  [03] 100% ANGUS CHUCK PATTY
+  │   ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓   │  80/20 double-grind, Maillard crust, 135°F
+  └──────────────────────────────────────────────┘
+  ┌──────────────────────────────────────────────┐  [02] UMAMI SHALLOT AIOLI
+  │   ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░   │  Roasted black garlic & caramelized shallots
+  └──────────────────────────────────────────────┘
+  ┌──────────────────────────────────────────────┐  [01] TOASTED BRIOCHE HEEL
+  │   ========================================   │  Seared bottom bun moisture barrier
+  └──────────────────────────────────────────────┘
+
+METRICS: Total Mass: 382.5g | Exploded Height: 240mm | Calories: 840 kcal
+Launch interactive 3D exploded view: 'burger web' or https://stephenford.org/hamburger-decomp/`;
+    }
+
+    function executeBbs() {
+      return `ATZ
+OK
+ATDT 1-800-555-PCBD
+DIALING...
+RINGING...
+CARRIER 14400 / V.32bis / LAPM / V.42bis COMPRESSION
+CONNECT 14400 / RELIABLE
+
+╔════════════════════════════════════════════════════════════╗
+║   Clark Development Company - PCBoard (R) v15.22/100 Node 1║
+║                THE OUTER LIMITS BBS                        ║
+║          Running on MS-DOS 6.22 / DESQview 386             ║
+╚════════════════════════════════════════════════════════════╝
+Enter your Alias or 'NEW' for guest access: smford
+Password: ********
+Welcome back, Stephen Ford! [Security Level: 100 - SYSOP]
+Node Status: Online | Line Speed: 14400 bps | Time Left: 120 min
+
+(B)ulletins  (F)iles  (M)essages  (C)hat  (G)oodbye  (W)eb Emulator
+Open full CP437 Retro BBS Emulator: 'bbs web' or https://stephenford.org/pcboard-web-emu/`;
+    }
+
+    function executeRbac(argStr) {
+      return `[K8s RBAC AST AUDIT ENGINE] Auditing cluster role definitions...
+-----------------------------------------------------------------
+[CRITICAL] ClusterRole 'cicd-runner':
+           rules:
+             - apiGroups: ["*"]
+               resources: ["*"]
+               verbs: ["*"]
+           --> RISK: Unrestricted cluster-admin wildcard permissions.
+
+[HIGH]     Role 'pod-debugger':
+           rules:
+             - apiGroups: [""]
+               resources: ["pods/exec", "pods/portforward"]
+               verbs: ["create"]
+           --> RISK: Interactive shell breakout vector.
+
+[PASS]     Role 'metrics-collector':
+           rules:
+             - apiGroups: [""]
+               resources: ["nodes/metrics", "pods"]
+               verbs: ["get", "list"]
+           --> STATUS: Compliant with Principle of Least Privilege.
+-----------------------------------------------------------------
+Scanned 28 Roles across 6 Namespaces. 1 Critical, 1 High, 26 Compliant.
+Launch in-browser client-side RBAC visualizer: 'rbac web' or https://stephenford.org/rbac-editor/`;
+    }
+
+    function executeYaml(argStr) {
+      return `[YAML CLEAN] Running AST Parser & Anchor Dependency Graph Analyzer...
+-----------------------------------------------------------------
+• Anchor Resolution  : &app-defaults, &db-pool, &telemetry-base
+• Alias Dereference  : *app-defaults (x4), *db-pool (x2)
+• Merge Key Map (<<) : 3 maps successfully deep-merged
+• Circular Reference : NONE detected (AST acyclic DAG verified)
+• Plaintext Secrets  : Scanned 12 manifests.
+                       - AWS_SECRET_ACCESS_KEY: None
+                       - PRIVATE_KEY: None
+                       - PASSWORDS: None
+• Schema Validation  : 100% compliant with YAML 1.2 Core Schema.
+-----------------------------------------------------------------
+Launch client-side YAML IDE & Anchor Manager: 'yaml web' or https://stephenford.org/yaml-web-validator/`;
+    }
+
+    function executeLicense(argStr) {
+      const lic = (argStr || 'mit').trim().toLowerCase();
+      if (lic.includes('gpl')) {
+        return `[SPDX LICENSE GUIDE] GNU General Public License v3.0 (GPL-3.0)
+Category: Strong Copyleft (Reciprocal Source Disclosure)
+Permissions : [✔] Commercial Use    [✔] Modification
+              [✔] Distribution      [✔] Patent Grants
+Conditions  : [!] Disclose Source   [!] Same License (Copyleft)
+              [!] State Changes     [!] License Notice
+Limitations : [✘] No Liability      [✘] No Warranty
+
+Launch 60-second interactive selector: 'license web' or https://stephenford.org/OpenLicenseGuide/`;
+      }
+      if (lic.includes('apache')) {
+        return `[SPDX LICENSE GUIDE] Apache License 2.0 (Apache-2.0)
+Category: Permissive with Patent Protection
+Permissions : [✔] Commercial Use    [✔] Modification
+              [✔] Distribution      [✔] Patent Use
+Conditions  : [!] License Notice    [!] State Changes
+Limitations : [✘] No Liability      [✘] Trademark Use
+
+Launch 60-second interactive selector: 'license web' or https://stephenford.org/OpenLicenseGuide/`;
+      }
+      return `[SPDX LICENSE GUIDE] MIT License (SPDX: MIT)
+Category: Highly Permissive (Minimal Restrictions)
+Permissions : [✔] Commercial Use    [✔] Modification
+              [✔] Distribution      [✔] Sublicensing
+Conditions  : [!] License & Copyright Notice
+Limitations : [✘] No Liability      [✘] No Warranty
+
+Other options: 'license gpl', 'license apache'.
+Launch 60-second interactive selector: 'license web' or https://stephenford.org/OpenLicenseGuide/`;
+    }
+
+    function executeToolsplit(argStr) {
+      let raw = (argStr || '').trim();
+      let p1 = 199.00;
+      let p2 = 99.00;
+
+      const numbers = raw.match(/\d+(?:\.\d+)?/g);
+      if (numbers && numbers.length >= 2) {
+        p1 = parseFloat(numbers[0]);
+        p2 = parseFloat(numbers[1]);
+      }
+
+      const total = p1 + p2;
+      const discount = p2;
+      const ratio = discount / total;
+
+      const return1 = (p1 * (1 - ratio)).toFixed(2);
+      const return2 = (p2 * (1 - ratio)).toFixed(2);
+      const savingsPercent = (ratio * 100).toFixed(1);
+
+      return `┌──────────────────────────────────────────────────────────────┐
+│  TOOLSPLIT: POWER TOOL BOGO PRORATED RECEIPT ENGINE          │
+└──────────────────────────────────────────────────────────────┘
+Home Depot BOGO Hack (Milwaukee M18 / DeWalt 20V Max Promotions)
+
+ORIGINAL RETAIL PRICING:
+  • Item A (Primary Bare Tool) : $${p1.toFixed(2)}
+  • Item B (Free Promotional)  : $${p2.toFixed(2)}
+  • Combined Tag Value         : $${total.toFixed(2)}
+  • Promotional Discount       : -$${discount.toFixed(2)} (${savingsPercent}% discount)
+
+PRORATED RETURN VALUES ON STORE RECEIPT:
+  • Item A Return Value / Cost : $${return1}  (Effective cost if kept)
+  • Item B Return Value / Cost : $${return2}  (Refund if returned to customer service)
+
+OPTIMAL WORKSHOP SRE STRATEGY:
+  Return Item B at the returns desk for a $${return2} cash refund.
+  Keep Item A for an effective price of $${return1} (${savingsPercent}% off MSRP).
+
+Try custom values: 'toolsplit calc 249 129'
+Launch interactive calculator: 'toolsplit web' or https://stephenford.org/toolsplit/`;
+    }
+
+    function executeBrew(argStr) {
+      const arg = (argStr || 'list').trim().toLowerCase();
+      if (arg.startsWith('install')) {
+        const pkg = arg.replace(/^install\s*/, '').trim() || 'cidr-calculator';
+        return `==> Downloading https://github.com/smford/homebrew-tap/releases/download/${pkg}/${pkg}-darwin-arm64.tar.gz
+######################################################################## 100.0%
+==> Verifying checksum... SHA256 matches formula
+==> Installing ${pkg} into /usr/local/Cellar/${pkg}/1.0.0
+==> Linking /usr/local/bin/${pkg}...
+🍺  /usr/local/Cellar/${pkg}/1.0.0: 4 files, 3.2MB, built in 0.4 seconds`;
+      }
+      return `==> Tapped 1 tap (smford/tap)
+Official Homebrew tap for Stephen Ford CLI utilities:
+
+FORMULA             DESCRIPTION                                  VERSION
+cidr-calculator     IPv4/IPv6 CIDR range decomposition & collision     v1.0.0
+delim               Lightweight zero-alloc terminal barrier      v1.0.0
+mdee                Terminal Markdown viewer with OSC 1337       v1.0.0
+matrix-rain         Authentic VT100 Matrix digital rain in Go    v1.0.0
+matrix-cat (mcat)   Digital rain source code & text viewer       v1.0.0
+
+Installation:
+  brew tap smford/tap
+  brew install <formula>
+
+Visit web catalog: 'brew web' or https://stephenford.org/homebrew-tap/`;
+    }
+
+    function executeMermaid() {
+      return `┌──────────────────────────────────────────────────────────────┐
+│  GOLANG-MERMAID: TERMINAL MERMAID RENDERER (DEC Sixel/Kitty) │
+└──────────────────────────────────────────────────────────────┘
+                 ┌─────────────────────────┐
+                 │     CLIENT BROWSER      │
+                 └────────────┬────────────┘
+                              │ HTTPS / TLS 1.3
+                              ▼
+                 ┌─────────────────────────┐
+                 │  Cloudflare Edge BGP    │
+                 └────────────┬────────────┘
+                              │ Anycast WAN
+                              ▼
+                 ┌─────────────────────────┐
+                 │ Kubernetes Ingress      │
+                 └──────┬───────────┬──────┘
+                        │           │
+               ┌────────▼──┐     ┌──▼────────┐
+               │ API Pods  │     │ Static Web│
+               └─────┬─────┘     └───────────┘
+                     │ (gRPC)
+                     ▼
+               ┌───────────┐
+               │ PostgreSQL│
+               └───────────┘
+Rendered with smford/golang-mermaid (Kitty & iTerm2 Sixel Protocol).
+GitHub Repo: https://github.com/smford/golang-mermaid`;
+    }
+
+    function executeSnmp() {
+      return `snmpwalk -v2c -c public 192.168.1.50 .1.3.6.1.4.1
+SNMPv2-MIB::sysDescr.0 = Linux rpi-node4 6.1.21-v8+ SMP aarch64
+SNMPv2-MIB::sysUpTimeInstance = Timeticks: (123184200) 142 days, 13:47:22.00
+HOST-RESOURCES-MIB::hrProcessorLoad.1 = 8%
+HOST-RESOURCES-MIB::hrProcessorLoad.2 = 11%
+HOST-RESOURCES-MIB::hrProcessorLoad.3 = 6%
+HOST-RESOURCES-MIB::hrProcessorLoad.4 = 9%
+UCD-SNMP-MIB::memTotalReal.0 = 1048576 kB (1024 MB)
+UCD-SNMP-MIB::memAvailReal.0 = 684120 kB (66.8% Free)
+NET-SNMP-EXTEND-MIB::nsExtendOutputFull."cpu_temp" = 41.8°C (BCM2837 SoC)
+NET-SNMP-EXTEND-MIB::nsExtendOutputFull."throttle_status" = 0x0 (Unthrottled)
+Configuration: Type 'cat snmpd.conf' to inspect daemon rules.
+GitHub Repo: https://github.com/smford/rpi-snmpd-configuration`;
+    }
+
+    function executeEsp32() {
+      return `[ESP32 AsyncWebServer] Initializing LittleFS/SPIFFS Multipart Stream...
+Target Host: esp32-spiffs.local (192.168.1.188:80)
+Telemetry  : WebSocket channel ws://esp32-spiffs.local/ws attached
+Uploading  : firmware_v2.bin [1,452,940 bytes]
+Transfer   : [========================================] 100% (2.6 MB/s)
+Flash Write: MD5 c29f8a1... Verified.
+SPIFFS ROM : 1.84 MB / 4.00 MB used (46% partition load)
+WebSocket  : {"event":"upload_complete","status":"SUCCESS","duration_ms":558}
+GitHub (104 ★ / 30 Forks): https://github.com/smford/esp32-asyncwebserver-fileupload-example`;
+    }
+
+    function executeCam() {
+      return `[LASER CUTTER RTSP SURVEILLANCE CAM] Raspberry Pi Zero W + v4l2rtspserver
+-----------------------------------------------------------------
+RTSP Pipeline   : rtsp://laser-cam.lan:8554/unicast
+Web HLS Stream  : http://laser-cam.lan:8080/live/stream.m3u8
+Camera Hardware : Sony IMX219 (8MP MIPI-CSI) with 160° Wide-Angle Lens
+Video Pipeline  : H.264 High Profile @ 1920x1080 30fps (Bitrate: 4.2Mbps)
+Hardware Flags  : v4l2-ctl --set-ctrl=hflip=1,vflip=1 (Inverted roof mount)
+Glass Latency   : ~45ms glass-to-glass (Ultra-low CNC cutting latency)
+Thermal Sensor  : 43.1°C under continuous RTSP hardware encode
+GitHub (83 ★ / 5 Forks): https://github.com/smford/raspberry-pi-streaming-camera`;
+    }
+
+    function executeRfid() {
+      return `[EEH ESP32 RFID TOOL SENTRY] East Essex Hackspace Safety Interlock
+-----------------------------------------------------------------
+RFID Reader : RC522 13.56MHz SPI (SS: GPIO_5, RST: GPIO_22)
+Scanned Tag : UID 0x4B 0x7E 0x91 0x0C (MIFARE Classic 1K)
+Member Name : Stephen Ford (Badge #042)
+Clearance   : MASTER LEVEL (3-Phase Table Saw, CNC Router, 80W CO2 Laser)
+Contactor   : RELAY ACTIVATED (Pin GPIO_25 -> LOW)
+Duty Cycle  : 10-minute auto-cutoff safety timer started.
+Audit Log   : Dispatched to hackspace MQTT broker: eeh/workshop/saw/audit
+GitHub (11 ★): https://github.com/smford/eeh-esp32-rfid`;
+    }
+
+    function executeTemp() {
+      return `[ESP32 TEMPERATURE REGULATOR] DS18B20 Tortoise Hibernation Monitor
+-----------------------------------------------------------------
+Probe 01 (Ambient Box Air)  :  4.8°C  [TARGET: 4.0°C - 7.0°C | OPTIMAL]
+Probe 02 (Substrate Core)   :  5.0°C  [OPTIMAL]
+Cooling Relay (GPIO 26)     :  STANDBY (Triggers cooling if > 6.5°C)
+Emergency Heater (GPIO 27)  :  STANDBY (Triggers warming if < 3.0°C)
+Pushover API Alert Gateway  :  ONLINE (Pushover push notification queue armed)
+Web UI Telemetry            :  http://tortoise-temp.local (AsyncWebServer)
+GitHub: https://github.com/smford/esp32-temp-monitor`;
+    }
+
+    function executeRouterOs() {
+      return `[MIKROTIK ROUTEROS DHCP TOOL] Querying TLS API on 192.168.1.1:8728...
+#  IP ADDRESS      MAC ADDRESS        HOSTNAME             STATUS   TYPE
+0  192.168.1.10    B8:27:EB:4A:12:F1  laser-cam.lan        bound    static
+1  192.168.1.50    DC:A6:32:89:FE:22  rpi-node4.lan        bound    static
+2  192.168.1.188   3C:61:05:D4:88:1A  esp32-spiffs.lan     bound    dynamic
+3  192.168.1.204   E0:5A:1B:77:C3:90  bambu-x1c.lan        bound    dynamic
+4  192.168.1.215   48:E7:DA:90:11:BC  workshop-macbook     bound    dynamic
+Active Leases: 5 total (2 static reservations, 3 dynamic pools)
+GitHub: https://github.com/smford/dhcp-routeros-tool`;
+    }
+
+    function executeSnapshot() {
+      return `[MOTIONEYE SNAPSHOTTER] Event-Driven Camera Capture Daemon
+--> Dispatched HTTP POST http://motioneye.local:8765/api/snapshot
+--> Status: HTTP 201 Created
+--> Image Saved: /captures/2026-09-20/capture_020729_cam1.jpg [1920x1080 436 KB]
+--> MQTT Notification published to home/security/capture
+GitHub: https://github.com/smford/motioneye-snapshotter`;
+    }
+
+    function executeCad(argStr) {
+      const arg = (argStr || '').trim().toLowerCase();
+      if (arg === 'cyd' || arg.includes('sunton') || arg.includes('case')) {
+        return `[Sunton ESP32 CYD Case (★ 12)]
+• Hardware : M3x6mm socket head cap screws, M3x4mm brass heat-set inserts
+• Filament : Bambu PLA-CF (Carbon Fiber) | 0.16mm Optimal layer height
+• Features : Dual stylus slot, exposed microSD and micro-USB cutouts
+• Repo: https://github.com/smford/Sunton-ESP32-2432S028R-Case`;
+      }
+      if (arg === 'chute' || arg.includes('poop') || arg.includes('bambu')) {
+        return `[Bambu Poop Chute Magnet Remix (★ 4)]
+• Hardware : 4x 10mm x 3mm N52 Neodymium disc magnets (recessed press-fit)
+• Filament : Bambu PETG / ABS (High thermal resistance to hot purge coils)
+• Features : Snaps directly to rear purge chute of Bambu Lab X1/P1 series
+• Repo: https://github.com/smford/bambu-poop-chute-magnet-remix`;
+      }
+      if (arg === 'pica' || arg.includes('pencil') || arg.includes('mount')) {
+        return `[Pica Dry Marker Wall Holster]
+• Hardware : Dual countersunk 3.5mm wood screws for French cleat wall
+• Filament : Bambu Tough PLA | 4 perimeters, 25% Gyroid infill
+• Features : Precision friction fit for Pica Dry deep-hole mechanical pencil
+• Repo: https://github.com/smford/pica-dry-pencil-wall-mount`;
+      }
+      return `[BAMBU LAB 3D PRINTING & WORKSHOP CAD REMIXES]
+-----------------------------------------------------------------
+1. Sunton ESP32 CYD Case (★ 12)
+   • Hardware : M3x6mm socket screws, M3x4mm brass heat-set threaded inserts
+   • Filament : Bambu PLA-CF (Carbon Fiber) | 0.16mm Optimal layer height
+   • Repo: https://github.com/smford/Sunton-ESP32-2432S028R-Case
+
+2. Bambu Poop Chute Magnet Remix (★ 4)
+   • Hardware : 4x 10mm x 3mm N52 Neodymium disc magnets (recessed slots)
+   • Filament : Bambu PETG / ABS (Thermal resistance to purge waste)
+   • Repo: https://github.com/smford/bambu-poop-chute-magnet-remix
+
+3. Pica Dry Marker Wall Holster
+   • Hardware : Dual countersunk 3.5mm wood screws for French cleat wall
+   • Filament : Bambu Tough PLA | 4 perimeters, 25% Gyroid infill
+   • Repo: https://github.com/smford/pica-dry-pencil-wall-mount
+
+Try 'cad cyd', 'cad chute', or 'cad pica'.`;
+    }
+
     /* ================= TERMINAL COMMAND ENGINE ================= */
     const termBody = document.getElementById('termBody');
     const termInput = document.getElementById('termInput');
 
     const commands = {
-      help: `COMMAND PROTOCOL DIRECTORY:
-  • projects     - Dump all 26 GitHub repositories & telemetry stats
-  • delim        - Render zero-alloc terminal barrier line (-c, -w)
-  • mcat <file>  - Matrix rain source code & text viewer (e.g. mcat notes.md)
-  • matrix-rain  - Launch authentic VT100 Matrix digital rain screensaver
-  • cidr <range> - Run IPv4/IPv6 CIDR range decomposition (e.g. cidr 192.168.1.10+5)
-  • cd firmware  - Switch to full GitHub Repositories HUD deck
-  • reboot       - Replay hardware POST & kernel boot sequence
-  • vim <file>   - Launch modal Vim 9.0 simulator (:w, :q, :wq, i, esc)
-  • ls           - List files in Virtual File System (VFS)
-  • cat <file>   - Print file contents to terminal
-  • cd <tab>     - Navigate HUD [overview | logs | firmware | operator]
-  • view <log>   - Open technical schematic dossier [e.g. view log-042]
-  • skills       - Display operator cyberware specs
-  • theme        - Swap Night City / Altered Carbon visual modes
-  • clear        - Wipe terminal window`,
+      help: `MAINFRAME COMMAND PROTOCOL DIRECTORY:
+
+SYSTEM & HUD:
+  • projects       - Dump all 26 GitHub repositories with telemetry & stars
+  • cd <tab>       - Switch HUD view [overview | logs | firmware | operator]
+  • open <project> - Launch any web app or GitHub repo (e.g. open blackhole)
+  • theme          - Toggle Night City / Altered Carbon cyberware styling
+  • clear / reboot - Clear terminal buffer / replay hardware POST boot
+  • vim <file>     - Modal Vim 9.0 editor (:w, :q, :wq, i, ESC)
+  • ls / which     - List executable binaries and Virtual File System (VFS)
+  • cat <file>     - Display raw file contents (notes.md, bio.txt, hardware.ino)
+
+INTERACTIVE WEB & 3D APPS:
+  • blackhole      - Relativistic Schwarzschild raymarcher & ISCO telemetry [web]
+  • moon           - 3D lunar reconnaissance ephemeris & Apollo sites [web]
+  • bbs            - Dial into Clark Dev PCBoard v15.22 MS-DOS BBS with audio [web]
+  • burger         - 3D culinary exploded view & layer inspection [web]
+  • toolsplit      - Power tool BOGO prorated return receipt calculator [web]
+  • license        - SPDX open-source license selector & permissions matrix [web]
+
+TERMINAL & CLI UTILITIES:
+  • cidr <range>   - High-perf IPv4/IPv6 CIDR decomposition & collision [web]
+  • delim          - Zero-alloc terminal visual barrier pipeline (-c, -w)
+  • matrix-rain    - Authentic VT100 Matrix digital rain screensaver [web]
+  • mcat <file>    - Cascading digital rain text & code viewer (-color) [web]
+  • mdee <file>    - Terminal Markdown viewer with OSC 1337 graphics [web]
+  • brew list      - Official Homebrew tap formula packaging & install [web]
+  • mermaid        - Render high-res ASCII/Unicode architecture diagrams
+
+SRE, DEVOPS & HARDWARE:
+  • rbac audit     - Kubernetes RBAC security scanner & AST escalation check [web]
+  • yaml lint      - YAML anchor manager, secret scanner & AST validator [web]
+  • routeros       - MikroTik RouterOS API active DHCP leases table
+  • snmp / snmpwalk- Raspberry Pi CPU temperature & system telemetry MIBs
+  • esp32          - ESP32 AsyncWebServer chunked SPIFFS upload telemetry
+  • cam            - Pi Zero W RTSP low-latency CNC surveillance camera
+  • rfid           - East Essex Hackspace 3kW machinery safety sentry
+  • temp           - DS18B20 tortoise hibernation regulation daemon
+  • snapshot       - MotionEye event-driven camera capture microservice
+  • cad / 3dprint  - Bambu Lab X1-Carbon 3D prints (PLA-CF, heat-set inserts)
+
+Tip: Append 'web' to any command (e.g. 'blackhole web', 'moon web') to launch!`,
 
       projects: `GITHUB REPOSITORY INDEX (26 NODES):
   [01] esp32-asyncwebserver-fileupload-example  (★ 104) [C++/SPIFFS]
@@ -2971,7 +3643,11 @@ Try 'cidr 192.168.1.10+5' or visit https://stephenford.org/cidr-calculator/`,
 
       if (cleanCmd === 'which' || cleanCmd.startsWith('which ')) {
         const target = cleanCmd.replace('which', '').trim();
-        const bins = ['delim', 'mcat', 'matrix-rain', 'cidr', 'cidr-calculator', 'vim', 'projects', 'cat', 'ls'];
+        const bins = [
+          'delim', 'mcat', 'matrix-rain', 'cidr', 'cidr-calculator', 'vim', 'projects', 'cat', 'ls',
+          'mdee', 'blackhole', 'moon', 'burger', 'bbs', 'pcboard', 'rbac', 'yaml', 'license', 'toolsplit',
+          'brew', 'mermaid', 'snmp', 'snmpwalk', 'esp32', 'cam', 'rfid', 'temp', 'routeros', 'dhcp', 'snapshot', 'cad', '3dprint'
+        ];
         if (bins.includes(target)) {
           printTerm(`/usr/local/bin/${target}`);
         } else {
@@ -2986,10 +3662,29 @@ Try 'cidr 192.168.1.10+5' or visit https://stephenford.org/cidr-calculator/`,
 
       if (cleanCmd === 'ls' || cleanCmd === 'ls -la' || cleanCmd.startsWith('ls ')) {
         const binFiles = [
-          `-rwxr-xr-x 1 smford staff  1.4M  delim*`,
+          `-rwxr-xr-x 1 smford staff  4.5M  brew*`,
+          `-rwxr-xr-x 1 smford staff  4.1M  blackhole*`,
+          `-rwxr-xr-x 1 smford staff  3.6M  moon*`,
+          `-rwxr-xr-x 1 smford staff  3.4M  mermaid*`,
+          `-rwxr-xr-x 1 smford staff  3.2M  cidr*`,
+          `-rwxr-xr-x 1 smford staff  3.1M  rbac*`,
+          `-rwxr-xr-x 1 smford staff  2.9M  yaml*`,
+          `-rwxr-xr-x 1 smford staff  2.8M  mdee*`,
           `-rwxr-xr-x 1 smford staff  2.6M  mcat*`,
+          `-rwxr-xr-x 1 smford staff  2.4M  routeros*`,
+          `-rwxr-xr-x 1 smford staff  2.2M  bbs*`,
           `-rwxr-xr-x 1 smford staff  2.1M  matrix-rain*`,
-          `-rwxr-xr-x 1 smford staff  3.2M  cidr*`
+          `-rwxr-xr-x 1 smford staff  1.8M  burger*`,
+          `-rwxr-xr-x 1 smford staff  1.7M  snapshot*`,
+          `-rwxr-xr-x 1 smford staff  1.5M  license*`,
+          `-rwxr-xr-x 1 smford staff  1.4M  delim*`,
+          `-rwxr-xr-x 1 smford staff  1.2M  toolsplit*`,
+          `-rwxr-xr-x 1 smford staff  1.1M  snmp*`,
+          `-rwxr-xr-x 1 smford staff  920K  cam*`,
+          `-rwxr-xr-x 1 smford staff  890K  cad*`,
+          `-rwxr-xr-x 1 smford staff  840K  esp32*`,
+          `-rwxr-xr-x 1 smford staff  640K  rfid*`,
+          `-rwxr-xr-x 1 smford staff  580K  temp*`
         ];
         const vfsFiles = Object.keys(VFS).map(f => `-rw-r--r-- 1 smford staff  ${VFS[f].length.toString().padStart(4, ' ')}B  ${f}`);
         const total = binFiles.length + vfsFiles.length;
@@ -3123,6 +3818,267 @@ Try 'cidr 192.168.1.10+5' or visit https://stephenford.org/cidr-calculator/`,
           termBody.appendChild(err);
         }
         termBody.scrollTop = termBody.scrollHeight;
+        return;
+      }
+
+      if (cleanCmd === 'mdee' || cleanCmd.startsWith('mdee ')) {
+        const argStr = cmd.replace(/^mdee\s*/i, '').trim();
+        if (argStr === 'web' || argStr === 'open' || argStr === 'demo') {
+          window.open('https://stephenford.org/mdee/', '_blank');
+          printTerm('Opening mdee live web app: https://stephenford.org/mdee/');
+          return;
+        }
+        printTerm(executeMdee(argStr));
+        termBody.scrollTop = termBody.scrollHeight;
+        return;
+      }
+
+      if (cleanCmd === 'blackhole' || cleanCmd.startsWith('blackhole ') || cleanCmd === 'chandra' || cleanCmd.startsWith('chandra ')) {
+        const argStr = cmd.replace(/^(blackhole|chandra)\s*/i, '').trim();
+        if (argStr === 'web' || argStr === 'open' || argStr === 'demo' || argStr === 'sim') {
+          window.open('https://stephenford.org/blackhole/', '_blank');
+          printTerm('Launching Chandra-X Relativistic Black Hole Simulator: https://stephenford.org/blackhole/');
+          return;
+        }
+        printTerm(executeBlackhole(argStr));
+        termBody.scrollTop = termBody.scrollHeight;
+        return;
+      }
+
+      if (cleanCmd === 'moon' || cleanCmd.startsWith('moon ') || cleanCmd === 'fly-around-the-moon' || cleanCmd.startsWith('fly-around-the-moon ') || cleanCmd === 'lunar' || cleanCmd.startsWith('lunar ')) {
+        const argStr = cmd.replace(/^(fly-around-the-moon|moon|lunar)\s*/i, '').trim();
+        if (argStr === 'web' || argStr === 'open' || argStr === 'demo' || argStr === '3d') {
+          window.open('https://stephenford.org/fly-around-the-moon/', '_blank');
+          printTerm('Launching Fly Around The Moon 3D: https://stephenford.org/fly-around-the-moon/');
+          return;
+        }
+        printTerm(executeMoon(argStr));
+        termBody.scrollTop = termBody.scrollHeight;
+        return;
+      }
+
+      if (cleanCmd === 'burger' || cleanCmd.startsWith('burger ') || cleanCmd === 'hamburger' || cleanCmd.startsWith('hamburger ') || cleanCmd === 'hamburger-decomp' || cleanCmd.startsWith('hamburger-decomp ')) {
+        const argStr = cmd.replace(/^(hamburger-decomp|hamburger|burger)\s*/i, '').trim();
+        if (argStr === 'web' || argStr === 'open' || argStr === 'demo') {
+          window.open('https://stephenford.org/hamburger-decomp/', '_blank');
+          printTerm('Opening 3D Hamburger Decomposition: https://stephenford.org/hamburger-decomp/');
+          return;
+        }
+        printTerm(executeBurger());
+        termBody.scrollTop = termBody.scrollHeight;
+        return;
+      }
+
+      if (cleanCmd === 'bbs' || cleanCmd.startsWith('bbs ') || cleanCmd === 'pcboard' || cleanCmd.startsWith('pcboard ') || cleanCmd === 'pcboard-web-emu' || cleanCmd.startsWith('pcboard-web-emu ')) {
+        const argStr = cmd.replace(/^(pcboard-web-emu|pcboard|bbs)\s*/i, '').trim();
+        if (argStr === 'web' || argStr === 'open' || argStr === 'demo') {
+          window.open('https://stephenford.org/pcboard-web-emu/', '_blank');
+          printTerm('Opening PCBoard v15.22 Web Emulator: https://stephenford.org/pcboard-web-emu/');
+          return;
+        }
+        playBbsDialSound();
+        printTerm(executeBbs());
+        termBody.scrollTop = termBody.scrollHeight;
+        return;
+      }
+
+      if (cleanCmd === 'toolsplit' || cleanCmd.startsWith('toolsplit ') || cleanCmd === 'bogo' || cleanCmd.startsWith('bogo ')) {
+        const argStr = cmd.replace(/^(toolsplit|bogo)\s*/i, '').trim();
+        if (argStr === 'web' || argStr === 'open' || argStr === 'demo') {
+          window.open('https://stephenford.org/toolsplit/', '_blank');
+          printTerm('Opening ToolSplit BOGO Calculator: https://stephenford.org/toolsplit/');
+          return;
+        }
+        printTerm(executeToolsplit(argStr));
+        termBody.scrollTop = termBody.scrollHeight;
+        return;
+      }
+
+      if (cleanCmd === 'rbac' || cleanCmd.startsWith('rbac ') || cleanCmd === 'rbac-editor' || cleanCmd.startsWith('rbac-editor ') || cleanCmd === 'k8s-rbac' || cleanCmd.startsWith('k8s-rbac ')) {
+        const argStr = cmd.replace(/^(rbac-editor|k8s-rbac|rbac)\s*/i, '').trim();
+        if (argStr === 'web' || argStr === 'open' || argStr === 'demo') {
+          window.open('https://stephenford.org/rbac-editor/', '_blank');
+          printTerm('Opening Kubernetes RBAC Editor: https://stephenford.org/rbac-editor/');
+          return;
+        }
+        printTerm(executeRbac(argStr));
+        termBody.scrollTop = termBody.scrollHeight;
+        return;
+      }
+
+      if (cleanCmd === 'yaml' || cleanCmd.startsWith('yaml ') || cleanCmd === 'yaml-clean' || cleanCmd.startsWith('yaml-clean ') || cleanCmd === 'yaml-web-validator' || cleanCmd.startsWith('yaml-web-validator ')) {
+        const argStr = cmd.replace(/^(yaml-web-validator|yaml-clean|yaml)\s*/i, '').trim();
+        if (argStr === 'web' || argStr === 'open' || argStr === 'demo') {
+          window.open('https://stephenford.org/yaml-web-validator/', '_blank');
+          printTerm('Opening YAML Clean Web Validator: https://stephenford.org/yaml-web-validator/');
+          return;
+        }
+        printTerm(executeYaml(argStr));
+        termBody.scrollTop = termBody.scrollHeight;
+        return;
+      }
+
+      if (cleanCmd === 'license' || cleanCmd.startsWith('license ') || cleanCmd === 'openlicense' || cleanCmd.startsWith('openlicense ') || cleanCmd === 'openlicenseguide' || cleanCmd.startsWith('openlicenseguide ')) {
+        const argStr = cmd.replace(/^(openlicenseguide|openlicense|license)\s*/i, '').trim();
+        if (argStr === 'web' || argStr === 'open' || argStr === 'demo') {
+          window.open('https://stephenford.org/OpenLicenseGuide/', '_blank');
+          printTerm('Opening Open License Guide: https://stephenford.org/OpenLicenseGuide/');
+          return;
+        }
+        printTerm(executeLicense(argStr));
+        termBody.scrollTop = termBody.scrollHeight;
+        return;
+      }
+
+      if (cleanCmd === 'brew' || cleanCmd.startsWith('brew ') || cleanCmd === 'homebrew' || cleanCmd.startsWith('homebrew ') || cleanCmd === 'homebrew-tap' || cleanCmd.startsWith('homebrew-tap ')) {
+        const argStr = cmd.replace(/^(homebrew-tap|homebrew|brew)\s*/i, '').trim();
+        if (argStr === 'web' || argStr === 'open' || argStr === 'demo') {
+          window.open('https://stephenford.org/homebrew-tap/', '_blank');
+          printTerm('Opening Homebrew Tap Catalog: https://stephenford.org/homebrew-tap/');
+          return;
+        }
+        printTerm(executeBrew(argStr));
+        termBody.scrollTop = termBody.scrollHeight;
+        return;
+      }
+
+      if (cleanCmd === 'mermaid' || cleanCmd.startsWith('mermaid ') || cleanCmd === 'golang-mermaid' || cleanCmd.startsWith('golang-mermaid ')) {
+        const argStr = cmd.replace(/^(golang-mermaid|mermaid)\s*/i, '').trim();
+        if (argStr === 'web' || argStr === 'open' || argStr === 'demo' || argStr === 'repo') {
+          window.open('https://github.com/smford/golang-mermaid', '_blank');
+          printTerm('Opening golang-mermaid repo: https://github.com/smford/golang-mermaid');
+          return;
+        }
+        printTerm(executeMermaid());
+        termBody.scrollTop = termBody.scrollHeight;
+        return;
+      }
+
+      if (cleanCmd === 'snmp' || cleanCmd.startsWith('snmp ') || cleanCmd === 'snmpwalk' || cleanCmd.startsWith('snmpwalk ') || cleanCmd === 'rpi-snmpd-configuration' || cleanCmd.startsWith('rpi-snmpd-configuration ')) {
+        const argStr = cmd.replace(/^(rpi-snmpd-configuration|snmpwalk|snmp)\s*/i, '').trim();
+        if (argStr === 'web' || argStr === 'open' || argStr === 'demo' || argStr === 'repo') {
+          window.open('https://github.com/smford/rpi-snmpd-configuration', '_blank');
+          printTerm('Opening rpi-snmpd-configuration repo: https://github.com/smford/rpi-snmpd-configuration');
+          return;
+        }
+        printTerm(executeSnmp());
+        termBody.scrollTop = termBody.scrollHeight;
+        return;
+      }
+
+      if (cleanCmd === 'esp32' || cleanCmd.startsWith('esp32 ') || cleanCmd === 'esp-upload' || cleanCmd.startsWith('esp-upload ') || cleanCmd === 'esp32-asyncwebserver-fileupload-example' || cleanCmd.startsWith('esp32-asyncwebserver-fileupload-example ')) {
+        const argStr = cmd.replace(/^(esp32-asyncwebserver-fileupload-example|esp-upload|esp32)\s*/i, '').trim();
+        if (argStr === 'web' || argStr === 'open' || argStr === 'demo' || argStr === 'repo') {
+          window.open('https://github.com/smford/esp32-asyncwebserver-fileupload-example', '_blank');
+          printTerm('Opening esp32-asyncwebserver repo: https://github.com/smford/esp32-asyncwebserver-fileupload-example');
+          return;
+        }
+        printTerm(executeEsp32());
+        termBody.scrollTop = termBody.scrollHeight;
+        return;
+      }
+
+      if (cleanCmd === 'cam' || cleanCmd.startsWith('cam ') || cleanCmd === 'rtsp-cam' || cleanCmd.startsWith('rtsp-cam ') || cleanCmd === 'raspberry-pi-streaming-camera' || cleanCmd.startsWith('raspberry-pi-streaming-camera ')) {
+        const argStr = cmd.replace(/^(raspberry-pi-streaming-camera|rtsp-cam|cam)\s*/i, '').trim();
+        if (argStr === 'web' || argStr === 'open' || argStr === 'demo' || argStr === 'repo') {
+          window.open('https://github.com/smford/raspberry-pi-streaming-camera', '_blank');
+          printTerm('Opening raspberry-pi-streaming-camera repo: https://github.com/smford/raspberry-pi-streaming-camera');
+          return;
+        }
+        printTerm(executeCam());
+        termBody.scrollTop = termBody.scrollHeight;
+        return;
+      }
+
+      if (cleanCmd === 'rfid' || cleanCmd.startsWith('rfid ') || cleanCmd === 'eeh-esp32-rfid' || cleanCmd.startsWith('eeh-esp32-rfid ')) {
+        const argStr = cmd.replace(/^(eeh-esp32-rfid|rfid)\s*/i, '').trim();
+        if (argStr === 'web' || argStr === 'open' || argStr === 'demo' || argStr === 'repo') {
+          window.open('https://github.com/smford/eeh-esp32-rfid', '_blank');
+          printTerm('Opening eeh-esp32-rfid repo: https://github.com/smford/eeh-esp32-rfid');
+          return;
+        }
+        printTerm(executeRfid());
+        termBody.scrollTop = termBody.scrollHeight;
+        return;
+      }
+
+      if (cleanCmd === 'temp' || cleanCmd.startsWith('temp ') || cleanCmd === 'esp32-temp-monitor' || cleanCmd.startsWith('esp32-temp-monitor ')) {
+        const argStr = cmd.replace(/^(esp32-temp-monitor|temp)\s*/i, '').trim();
+        if (argStr === 'web' || argStr === 'open' || argStr === 'demo' || argStr === 'repo') {
+          window.open('https://github.com/smford/esp32-temp-monitor', '_blank');
+          printTerm('Opening esp32-temp-monitor repo: https://github.com/smford/esp32-temp-monitor');
+          return;
+        }
+        printTerm(executeTemp());
+        termBody.scrollTop = termBody.scrollHeight;
+        return;
+      }
+
+      if (cleanCmd === 'routeros' || cleanCmd.startsWith('routeros ') || cleanCmd === 'dhcp' || cleanCmd.startsWith('dhcp ') || cleanCmd === 'dhcp-routeros-tool' || cleanCmd.startsWith('dhcp-routeros-tool ')) {
+        const argStr = cmd.replace(/^(dhcp-routeros-tool|routeros|dhcp)\s*/i, '').trim();
+        if (argStr === 'web' || argStr === 'open' || argStr === 'demo' || argStr === 'repo') {
+          window.open('https://github.com/smford/dhcp-routeros-tool', '_blank');
+          printTerm('Opening dhcp-routeros-tool repo: https://github.com/smford/dhcp-routeros-tool');
+          return;
+        }
+        printTerm(executeRouterOs());
+        termBody.scrollTop = termBody.scrollHeight;
+        return;
+      }
+
+      if (cleanCmd === 'snapshot' || cleanCmd.startsWith('snapshot ') || cleanCmd === 'motioneye' || cleanCmd.startsWith('motioneye ') || cleanCmd === 'motioneye-snapshotter' || cleanCmd.startsWith('motioneye-snapshotter ')) {
+        const argStr = cmd.replace(/^(motioneye-snapshotter|motioneye|snapshot)\s*/i, '').trim();
+        if (argStr === 'web' || argStr === 'open' || argStr === 'demo' || argStr === 'repo') {
+          window.open('https://github.com/smford/motioneye-snapshotter', '_blank');
+          printTerm('Opening motioneye-snapshotter repo: https://github.com/smford/motioneye-snapshotter');
+          return;
+        }
+        printTerm(executeSnapshot());
+        termBody.scrollTop = termBody.scrollHeight;
+        return;
+      }
+
+      if (cleanCmd === 'cad' || cleanCmd.startsWith('cad ') || cleanCmd === '3dprint' || cleanCmd.startsWith('3dprint ') || cleanCmd === 'bambu' || cleanCmd.startsWith('bambu ')) {
+        const argStr = cmd.replace(/^(3dprint|bambu|cad)\s*/i, '').trim();
+        if (argStr === 'web' || argStr === 'open' || argStr === 'demo' || argStr === 'repo') {
+          window.open('https://github.com/smford/Sunton-ESP32-2432S028R-Case', '_blank');
+          printTerm('Opening 3D CAD project repo: https://github.com/smford/Sunton-ESP32-2432S028R-Case');
+          return;
+        }
+        printTerm(executeCad(argStr));
+        termBody.scrollTop = termBody.scrollHeight;
+        return;
+      }
+
+      if (cleanCmd.startsWith('open ') && !cleanCmd.startsWith('open log')) {
+        const target = cleanCmd.substring(5).trim();
+        const projectKey = projectAliases[target] || target;
+        const matched = REPOSITORIES.find(r => r.name.toLowerCase() === projectKey.toLowerCase() || r.name.toLowerCase().replace(/-/g, '') === projectKey.toLowerCase().replace(/-/g, ''));
+        if (matched) {
+          const destUrl = matched.demo || matched.url;
+          window.open(destUrl, '_blank');
+          printTerm(`Opening ${matched.name}: ${destUrl}`);
+          return;
+        }
+        if (target.startsWith('http://') || target.startsWith('https://')) {
+          window.open(target, '_blank');
+          printTerm(`Opening URL: ${target}`);
+          return;
+        }
+        const err = document.createElement('div');
+        err.className = 'term-output';
+        err.style.color = 'var(--accent-danger)';
+        err.textContent = `open: unknown project or URL '${target}'. Type 'projects' for a list of valid targets.`;
+        termBody.appendChild(err);
+        return;
+      }
+
+      // Check if command is an exact or normalized match to any repository
+      const matchedRepo = REPOSITORIES.find(r => r.name.toLowerCase() === cleanCmd || r.name.toLowerCase().replace(/-/g, '') === cleanCmd.replace(/-/g, ''));
+      if (matchedRepo) {
+        const dest = matchedRepo.demo || matchedRepo.url;
+        window.open(dest, '_blank');
+        printTerm(`[${matchedRepo.name}] (★ ${matchedRepo.stars})\n${matchedRepo.desc}\nOpening: ${dest}`);
         return;
       }
 
@@ -3282,7 +4238,12 @@ Try 'cidr 192.168.1.10+5' or visit https://stephenford.org/cidr-calculator/`,
     function printTerm(text) {
       const res = document.createElement('div');
       res.className = 'term-output';
-      res.textContent = text;
+      const escaped = String(text)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;');
+      const withLinks = escaped.replace(/(https?:\/\/[^\s\)\],]+)/g, '<a href="$1" target="_blank" rel="noopener noreferrer" style="color: var(--accent-secondary); text-decoration: underline;">$1</a>');
+      res.innerHTML = withLinks;
       termBody.appendChild(res);
       termBody.scrollTop = termBody.scrollHeight;
     }
