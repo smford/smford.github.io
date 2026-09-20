@@ -978,7 +978,7 @@
         <span>[02]</span> BUILD_LOGS <span class="tab-badge" id="logBadgeCount">5</span>
       </button>
       <button class="hud-tab" data-tab="firmware" onclick="switchTab('firmware')">
-        <span>[03]</span> FIRMWARE_DECK <span class="tab-badge" id="repoBadgeCount">26</span>
+        <span>[03]</span> FIRMWARE_DECK <span class="tab-badge" id="repoBadgeCount">27</span>
       </button>
       <button class="hud-tab" data-tab="operator" onclick="switchTab('operator')">
         <span>[04]</span> OPERATOR_STACK
@@ -1003,7 +1003,7 @@
           </div>
           <div class="telemetry-row">
             <span class="telemetry-label">REPOSITORIES:</span>
-            <span class="telemetry-val" id="repoCountTelemetry">26 DEPLOYED</span>
+            <span class="telemetry-val" id="repoCountTelemetry">27 DEPLOYED</span>
           </div>
           <div class="telemetry-row">
             <span class="telemetry-label">ACTIVE CYBERWARE:</span>
@@ -1031,7 +1031,7 @@
         <!-- Normal Terminal Body -->
         <div class="term-body" id="termBody">
           <div class="term-output">SYSTEM: Neural Debian Kernel 6.1.0-debian-smford loaded.
-SYSTEM: Cyberdeck CLI nodes active across all 26 projects (Type 'help' or click quick chips).
+SYSTEM: Cyberdeck CLI nodes active across all 27 projects (Type 'help' or click quick chips).
 SYSTEM: Try 'blackhole', 'moon', 'bbs', 'burger', 'mdee notes.md', 'matrix-rain', 'cidr'.
 smford@mainframe:~$</div>
         </div>
@@ -1045,7 +1045,7 @@ smford@mainframe:~$</div>
           <div class="vim-statusline">
             <div id="vimStatusLeft">
               <span id="vimModeBadge" class="vim-mode-badge">NORMAL</span>
-              <span id="vimFileStatus" style="margin-left: 0.5rem;">"bio.txt" [Modified]</span>
+              <span id="vimFileStatus" style="margin-left: 0.5rem;">"hardware.ino" 28L</span>
             </div>
             <div id="vimStatusRight">
               <span id="vimPos">1,1</span> | <span id="vimPercent">All</span>
@@ -1097,6 +1097,7 @@ smford@mainframe:~$</div>
           <button class="chip-btn" data-cmd="temp" onclick="runTerminalCommand('temp')">temp</button>
           <button class="chip-btn" data-cmd="cam" onclick="runTerminalCommand('cam')">cam</button>
           <button class="chip-btn" data-cmd="cad" onclick="runTerminalCommand('cad')">cad</button>
+          <button class="chip-btn" data-cmd="estop" onclick="runTerminalCommand('estop')">estop</button>
           <button class="chip-btn" data-cmd="cd firmware" onclick="runTerminalCommand('cd firmware')">cd firmware</button>
           <button class="chip-btn" data-cmd="vim hardware.ino" onclick="runTerminalCommand('vim hardware.ino')">vim</button>
           <button class="chip-btn" data-cmd="ls" onclick="runTerminalCommand('ls')">ls</button>
@@ -1173,12 +1174,12 @@ smford@mainframe:~$</div>
     <!-- ================= TAB 3: FIRMWARE DECK (ALL REPOSITORIES) ================= -->
     <section id="tab-firmware" class="tab-pane">
       <div class="section-head">
-        <h2 class="section-title" id="repoRegistryTitle">// GITHUB REPOSITORY REGISTRY (26 NODES)</h2>
+        <h2 class="section-title" id="repoRegistryTitle">// GITHUB REPOSITORY REGISTRY (27 NODES)</h2>
         <div class="section-line"></div>
       </div>
 
       <div class="filter-bar">
-        <button class="filter-btn active" id="allReposFilterBtn" onclick="filterRepos('all', this)">ALL REPOSITORIES (26)</button>
+        <button class="filter-btn active" id="allReposFilterBtn" onclick="filterRepos('all', this)">ALL REPOSITORIES (27)</button>
         <button class="filter-btn" onclick="filterRepos('Embedded', this)">EMBEDDED & ESP32</button>
         <button class="filter-btn" onclick="filterRepos('RaspberryPi', this)">RASPBERRY PI & LINUX</button>
         <button class="filter-btn" onclick="filterRepos('Networking', this)">NETWORKING & APIS</button>
@@ -1303,6 +1304,7 @@ smford@mainframe:~$</div>
       { text: "[  OK  ] Mounted SNMP daemon configuration: smford/rpi-snmpd-configuration", type: "ok", delay: 60 },
       { text: "[ INFO ] Polling MikroTik RouterOS v7 DHCP leases via smford/dhcp-routeros-tool", type: "info", delay: 80 },
       { text: "[  OK  ] Mounted Sunton ESP32 touchscreen display CAD: smford/Sunton-ESP32-2432S028R-Case", type: "ok", delay: 60 },
+      { text: "[  OK  ] Mounted workshop safety CAD enclosures: smford/emergency-stop-holder", type: "ok", delay: 50 },
       { text: "[  OK  ] Initialized temperature telemetry regulator: smford/esp32-temp-monitor", type: "ok", delay: 60 },
       { text: "[  OK  ] Starting event-driven surveillance API daemon: smford/motioneye-snapshotter", type: "ok", delay: 60 },
       { text: "[  OK  ] Initialized Schwarzschild geodesic raymarcher: smford/blackhole", type: "ok", delay: 60 },
@@ -1662,6 +1664,15 @@ smford@mainframe:~$</div>
         tech: ["Go", "IPv4 & IPv6", "CIDR / Subnetting", "Route Aggregation", "Terraform", "SRE Tooling"],
         url: "https://github.com/smford/cidr-calculator",
         demo: "https://stephenford.org/cidr-calculator/"
+      },
+      {
+        name: "emergency-stop-holder",
+        category: "3DPrinting",
+        stars: 0,
+        forks: 0,
+        desc: "Industrial 3D printable wall mount enclosure for standard 22mm mushroom emergency stop switches, featuring tall (92mm) and short (75mm) models with dual 3mm screw fixtures.",
+        tech: ["3D Printing", "Workshop Safety", "CAD", "Bambu Lab", "Hardware"],
+        url: "https://github.com/smford/emergency-stop-holder"
       }
     ];
 
@@ -1744,6 +1755,7 @@ extend cpu_temp /usr/bin/vcgencmd measure_temp`,
 - [x] Verified high-res Sixel & iTerm2 terminal Mermaid diagrams (smford/golang-mermaid)
 - [x] Published official Homebrew tap formulas (smford/homebrew-tap)
 - [x] Deployed IPv4/IPv6 CIDR decomposition & collision engine (smford/cidr-calculator)
+- [x] 3D printed emergency stop wall mount (smford/emergency-stop-holder)
 - [ ] Install Pica Dry wall holsters on main workbench`
     };
 
@@ -2871,6 +2883,36 @@ Examples:
       }
     }
 
+    function playEstopAlertSound() {
+      try {
+        const AudioCtx = window.AudioContext || window.webkitAudioContext;
+        if (!AudioCtx) return;
+        const ctx = new AudioCtx();
+        const now = ctx.currentTime;
+        const pulses = [
+          { f: 880, start: 0.00, dur: 0.12 },
+          { f: 587, start: 0.14, dur: 0.12 },
+          { f: 880, start: 0.28, dur: 0.12 },
+          { f: 587, start: 0.42, dur: 0.16 }
+        ];
+        pulses.forEach(p => {
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.type = 'sawtooth';
+          osc.frequency.setValueAtTime(p.f, now + p.start);
+          osc.frequency.exponentialRampToValueAtTime(p.f * 0.85, now + p.start + p.dur);
+          gain.gain.setValueAtTime(0.06, now + p.start);
+          gain.gain.exponentialRampToValueAtTime(0.0001, now + p.start + p.dur);
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          osc.start(now + p.start);
+          osc.stop(now + p.start + p.dur);
+        });
+      } catch (e) {
+        // Ignored if audio blocked
+      }
+    }
+
     /* ================= PROJECT COMMAND HELPERS ================= */
     const projectAliases = {
       'moon': 'fly-around-the-moon',
@@ -2905,6 +2947,9 @@ Examples:
       'bambu': 'bambu-poop-chute-magnet-remix',
       'chute': 'bambu-poop-chute-magnet-remix',
       'pica': 'pica-dry-pencil-wall-mount',
+      'estop': 'emergency-stop-holder',
+      'emergency-stop': 'emergency-stop-holder',
+      'emergency-stop-holder': 'emergency-stop-holder',
       'mcat': 'matrix-cat',
       'cidr': 'cidr-calculator',
       'vim': 'vim-html'
@@ -3428,6 +3473,13 @@ GitHub: https://github.com/smford/motioneye-snapshotter`;
 • Features : Precision friction fit for Pica Dry deep-hole mechanical pencil
 • Repo: https://github.com/smford/pica-dry-pencil-wall-mount`;
       }
+      if (arg === 'estop' || arg.includes('stop') || arg.includes('emergency')) {
+        return `[Emergency Stop Switch Wall Mount]
+• Hardware : Two 3mm wood screws (Tall 92mm / Short 75mm models)
+• Filament : Bambu PLA / PETG | 58x72x72mm industrial enclosure
+• Features : Heavy-duty safety mount for 22mm industrial mushroom e-stop buttons
+• Repo: https://github.com/smford/emergency-stop-holder`;
+      }
       return `[BAMBU LAB 3D PRINTING & WORKSHOP CAD REMIXES]
 -----------------------------------------------------------------
 1. Sunton ESP32 CYD Case (★ 12)
@@ -3445,7 +3497,48 @@ GitHub: https://github.com/smford/motioneye-snapshotter`;
    • Filament : Bambu Tough PLA | 4 perimeters, 25% Gyroid infill
    • Repo: https://github.com/smford/pica-dry-pencil-wall-mount
 
-Try 'cad cyd', 'cad chute', or 'cad pica'.`;
+4. Emergency Stop Switch Wall Mount
+   • Hardware : Two 3mm wood screws (Tall 92mm / Short 75mm models)
+   • Filament : Bambu PLA / PETG | 58x72x72mm industrial enclosure
+   • Repo: https://github.com/smford/emergency-stop-holder
+
+Try 'cad cyd', 'cad chute', 'cad pica', or 'cad estop'.`;
+    }
+
+    function executeEstop(argStr) {
+      const arg = (argStr || '').trim().toLowerCase();
+      if (arg === 'web' || arg === 'open' || arg === 'repo') {
+        window.open('https://github.com/smford/emergency-stop-holder', '_blank');
+        return 'Opening emergency-stop-holder repo: https://github.com/smford/emergency-stop-holder';
+      }
+      if (arg === 'trigger' || arg === 'hit' || arg === 'press' || arg === 'kill' || arg === 'alarm') {
+        playEstopAlertSound();
+        return `🚨 [EMERGENCY STOP TRIGGERED // WORKSHOP INTERLOCK CUT] 🚨
+-----------------------------------------------------------------
+STATUS      : ** CIRCUIT BREAKER OPEN **
+MAIN BUS    : 400V 3-PHASE CNC & TABLE SAW POWER TRIPPED (RELAY GPIO_25 -> OPEN)
+MECHANICAL  : Wall-mounted mushroom e-stop plunger physically depressed
+ENCLOSURE   : 3D printed emergency-stop-holder (Bambu Lab PLA / PETG)
+MOUNTING    : Dual 3mm wood screws anchored to workshop framing
+TIME STAMP  : ${new Date().toISOString()}
+ACTION REQD : Twist mushroom cap CW to release interlock and reset safety sentry.
+GitHub Repo : https://github.com/smford/emergency-stop-holder`;
+      }
+      return `[EMERGENCY STOP WALL MOUNT ENCLOSURE]
+-----------------------------------------------------------------
+Hardware Dimensions : 58mm x 72mm x 72mm
+Wall Fixture        : Two 3mm countersunk wood screws
+Variants Supported  :
+  • Tall Variant    : 92mm height with visible outer mounting flanges (Red)
+  • Short Variant   : 75mm height with concealed internal mounting (Light Blue)
+Filament Specs      : Bambu PLA Tough / PETG | 4 perimeters, 35% Gyroid infill
+Safety Certification: Designed for 22mm industrial mushroom emergency stop switches
+License             : CC BY-NC-SA 4.0
+GitHub Repository   : https://github.com/smford/emergency-stop-holder
+
+Usage:
+  • estop trigger   - Simulate physical e-stop plunger strike & power cutoff
+  • estop web       - Open GitHub repository in new tab`;
     }
 
     /* ================= TERMINAL COMMAND ENGINE ================= */
@@ -3456,7 +3549,7 @@ Try 'cad cyd', 'cad chute', or 'cad pica'.`;
       help: `MAINFRAME COMMAND PROTOCOL DIRECTORY:
 
 SYSTEM & HUD:
-  • projects       - Dump all 26 GitHub repositories with telemetry & stars
+  • projects       - Dump all 27 GitHub repositories with telemetry & stars
   • cd <tab>       - Switch HUD view [overview | logs | firmware | operator]
   • open <project> - Launch any web app or GitHub repo (e.g. open blackhole)
   • theme          - Toggle Night City / Altered Carbon cyberware styling
@@ -3492,11 +3585,11 @@ SRE, DEVOPS & HARDWARE:
   • rfid           - East Essex Hackspace 3kW machinery safety sentry
   • temp           - DS18B20 tortoise hibernation regulation daemon
   • snapshot       - MotionEye event-driven camera capture microservice
-  • cad / 3dprint  - Bambu Lab X1-Carbon 3D prints (PLA-CF, heat-set inserts)
+  • cad / estop    - Bambu 3D CAD prints & workshop emergency stop mount
 
 Tip: Append 'web' to any command (e.g. 'blackhole web', 'moon web') to launch!`,
 
-      projects: `GITHUB REPOSITORY INDEX (26 NODES):
+      projects: `GITHUB REPOSITORY INDEX (27 NODES):
   [01] esp32-asyncwebserver-fileupload-example  (★ 104) [C++/SPIFFS]
   [02] raspberry-pi-streaming-camera            (★ 83)  [v4l2/RTSP/Nginx]
   [03] rpi-snmpd-configuration                  (★ 14)  [SNMP/Debian]
@@ -3523,8 +3616,16 @@ Tip: Append 'web' to any command (e.g. 'blackhole web', 'moon web') to launch!`,
   [24] pcboard-web-emu                          (★ 0)   [TS/MS-DOS/CP437]
   [25] golang-mermaid                           (★ 0)   [Go/Sixel/OSC 1337]
   [26] cidr-calculator                         (★ 0)   [Go/IPv4 & IPv6/CIDR]
+  [27] emergency-stop-holder                   (★ 0)   [3D CAD/Safety]
   
 Type 'cd firmware' to view all repositories in the visual grid.`,
+
+      estop: `emergency-stop-holder (3D Printable Wall Mount Enclosure)
+Usage: estop [trigger|web]
+  • estop           - View dimensions, screw specs, and 3D printing parameters
+  • estop trigger   - Simulate physical plunger strike & emergency power trip
+  • estop web       - Open GitHub repository in new tab
+Repo: https://github.com/smford/emergency-stop-holder`,
 
       skills: `OPERATOR CAPABILITIES:
   • Embedded : C++, ESP32/ESP8266, FreeRTOS, SPIFFS, RFID
@@ -3646,7 +3747,8 @@ Try 'cidr 192.168.1.10+5' or visit https://stephenford.org/cidr-calculator/`,
         const bins = [
           'delim', 'mcat', 'matrix-rain', 'cidr', 'cidr-calculator', 'vim', 'projects', 'cat', 'ls',
           'mdee', 'blackhole', 'moon', 'burger', 'bbs', 'pcboard', 'rbac', 'yaml', 'license', 'toolsplit',
-          'brew', 'mermaid', 'snmp', 'snmpwalk', 'esp32', 'cam', 'rfid', 'temp', 'routeros', 'dhcp', 'snapshot', 'cad', '3dprint'
+          'brew', 'mermaid', 'snmp', 'snmpwalk', 'esp32', 'cam', 'rfid', 'temp', 'routeros', 'dhcp', 'snapshot', 'cad', '3dprint',
+          'estop', 'emergency-stop', 'emergency-stop-holder'
         ];
         if (bins.includes(target)) {
           printTerm(`/usr/local/bin/${target}`);
@@ -3683,6 +3785,7 @@ Try 'cidr 192.168.1.10+5' or visit https://stephenford.org/cidr-calculator/`,
           `-rwxr-xr-x 1 smford staff  920K  cam*`,
           `-rwxr-xr-x 1 smford staff  890K  cad*`,
           `-rwxr-xr-x 1 smford staff  840K  esp32*`,
+          `-rwxr-xr-x 1 smford staff  720K  estop*`,
           `-rwxr-xr-x 1 smford staff  640K  rfid*`,
           `-rwxr-xr-x 1 smford staff  580K  temp*`
         ];
@@ -4046,6 +4149,18 @@ Try 'cidr 192.168.1.10+5' or visit https://stephenford.org/cidr-calculator/`,
           return;
         }
         printTerm(executeCad(argStr));
+        termBody.scrollTop = termBody.scrollHeight;
+        return;
+      }
+
+      if (cleanCmd === 'estop' || cleanCmd.startsWith('estop ') || cleanCmd === 'emergency-stop' || cleanCmd.startsWith('emergency-stop ') || cleanCmd === 'emergency-stop-holder' || cleanCmd.startsWith('emergency-stop-holder ')) {
+        const argStr = cmd.replace(/^(emergency-stop-holder|emergency-stop|estop)\s*/i, '').trim();
+        if (argStr === 'web' || argStr === 'open' || argStr === 'demo' || argStr === 'repo') {
+          window.open('https://github.com/smford/emergency-stop-holder', '_blank');
+          printTerm('Opening emergency-stop-holder repo: https://github.com/smford/emergency-stop-holder');
+          return;
+        }
+        printTerm(executeEstop(argStr));
         termBody.scrollTop = termBody.scrollHeight;
         return;
       }
