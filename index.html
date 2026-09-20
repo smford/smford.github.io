@@ -1073,16 +1073,16 @@ smford@mainframe:~$</div>
         <!-- Terminal Quick Action Chips -->
         <div class="quick-chips" id="quickChips">
           <span style="font-size: 0.75rem; color: var(--text-muted); align-self: center;">Quick Exec:</span>
-          <button class="chip-btn" onclick="execCommand('help')">help</button>
-          <button class="chip-btn" onclick="execCommand('projects')">projects</button>
-          <button class="chip-btn" onclick="execCommand('matrix-rain')">matrix-rain</button>
-          <button class="chip-btn" onclick="execCommand('mcat notes.md')">mcat notes.md</button>
-          <button class="chip-btn" onclick="execCommand('delim')">delim</button>
-          <button class="chip-btn" onclick="execCommand('cidr 192.168.1.10+5')">cidr 192.168.1.10+5</button>
-          <button class="chip-btn" onclick="execCommand('cd firmware')">cd firmware</button>
-          <button class="chip-btn" onclick="execCommand('vim hardware.ino')">vim hardware.ino</button>
-          <button class="chip-btn" onclick="execCommand('ls')">ls</button>
-          <button class="chip-btn" onclick="execCommand('clear')">clear</button>
+          <button class="chip-btn" data-cmd="help" onclick="runTerminalCommand('help')">help</button>
+          <button class="chip-btn" data-cmd="projects" onclick="runTerminalCommand('projects')">projects</button>
+          <button class="chip-btn" data-cmd="matrix-rain" onclick="runTerminalCommand('matrix-rain')">matrix-rain</button>
+          <button class="chip-btn" data-cmd="mcat notes.md" onclick="runTerminalCommand('mcat notes.md')">mcat notes.md</button>
+          <button class="chip-btn" data-cmd="delim" onclick="runTerminalCommand('delim')">delim</button>
+          <button class="chip-btn" data-cmd="cidr 192.168.1.10+5" onclick="runTerminalCommand('cidr 192.168.1.10+5')">cidr 192.168.1.10+5</button>
+          <button class="chip-btn" data-cmd="cd firmware" onclick="runTerminalCommand('cd firmware')">cd firmware</button>
+          <button class="chip-btn" data-cmd="vim hardware.ino" onclick="runTerminalCommand('vim hardware.ino')">vim hardware.ino</button>
+          <button class="chip-btn" data-cmd="ls" onclick="runTerminalCommand('ls')">ls</button>
+          <button class="chip-btn" data-cmd="clear" onclick="runTerminalCommand('clear')">clear</button>
         </div>
 
         <!-- Terminal Command Input Line -->
@@ -2940,7 +2940,7 @@ Try 'cidr 192.168.1.10+5' or visit https://stephenford.org/cidr-calculator/`,
       github: `Opening link: https://github.com/smford ...`
     };
 
-    function execCommand(rawCmd) {
+    function runTerminalCommand(rawCmd) {
       const cmd = rawCmd.trim();
       const rawLower = cmd.toLowerCase();
       const cleanCmd = rawLower.startsWith('./') ? rawLower.substring(2) : rawLower;
@@ -3144,6 +3144,10 @@ Try 'cidr 192.168.1.10+5' or visit https://stephenford.org/cidr-calculator/`,
       termBody.scrollTop = termBody.scrollHeight;
     }
 
+    const execCommand = runTerminalCommand;
+    window.runTerminalCommand = runTerminalCommand;
+    window.execCommand = runTerminalCommand;
+
     function executeCidrTerminal(argStr) {
       let raw = argStr.trim();
       if (raw.startsWith('convert ')) {
@@ -3285,10 +3289,20 @@ Try 'cidr 192.168.1.10+5' or visit https://stephenford.org/cidr-calculator/`,
 
     termInput.addEventListener('keydown', (e) => {
       if (e.key === 'Enter' && termInput.value) {
-        execCommand(termInput.value);
+        runTerminalCommand(termInput.value);
         termInput.value = '';
       }
     });
+
+    const quickChipsEl = document.getElementById('quickChips');
+    if (quickChipsEl) {
+      quickChipsEl.addEventListener('click', (e) => {
+        const btn = e.target.closest('.chip-btn');
+        if (btn && btn.dataset && btn.dataset.cmd) {
+          runTerminalCommand(btn.dataset.cmd);
+        }
+      });
+    }
 
     /* ================= THEME SWITCHER ================= */
     const themeToggle = document.getElementById('themeToggle');
