@@ -1028,9 +1028,10 @@
 
         <!-- Normal Terminal Body -->
         <div class="term-body" id="termBody">
-          <div class="term-output">SYSTEM: Neural Debian Kernel 6.1.0 loaded.
-SYSTEM: Type 'help', 'projects', 'vim bio.txt', or click chips below.
-smford@mainframe:~/projects$ ls -la</div>
+          <div class="term-output">SYSTEM: Neural Debian Kernel 6.1.0-debian-smford loaded.
+SYSTEM: Cyberdeck CLI tools online: 'matrix-rain', 'mcat &lt;file&gt;', 'delim', 'cidr &lt;range&gt;'.
+SYSTEM: Type 'help' for full command directory, or click quick chips below.
+smford@mainframe:~$</div>
         </div>
 
         <!-- Embedded Vim Workspace -->
@@ -1087,7 +1088,7 @@ smford@mainframe:~/projects$ ls -la</div>
         <!-- Terminal Command Input Line -->
         <div class="term-input-line" id="termInputLine">
           <span class="term-prompt">smford@mainframe:~$</span>
-          <input type="text" id="termInput" class="term-input" placeholder="enter command (e.g. 'projects', 'vim bio.txt', 'reboot')..." autocomplete="off" spellcheck="false" />
+          <input type="text" id="termInput" class="term-input" placeholder="enter command (e.g. 'matrix-rain', 'mcat notes.md', 'delim', 'help')..." autocomplete="off" spellcheck="false" />
         </div>
       </section>
 
@@ -2941,7 +2942,8 @@ Try 'cidr 192.168.1.10+5' or visit https://stephenford.org/cidr-calculator/`,
 
     function execCommand(rawCmd) {
       const cmd = rawCmd.trim();
-      const cleanCmd = cmd.toLowerCase();
+      const rawLower = cmd.toLowerCase();
+      const cleanCmd = rawLower.startsWith('./') ? rawLower.substring(2) : rawLower;
       
       const promptLine = document.createElement('div');
       promptLine.style.color = '#fff';
@@ -2961,15 +2963,37 @@ Try 'cidr 192.168.1.10+5' or visit https://stephenford.org/cidr-calculator/`,
       }
 
       if (cleanCmd === 'vim' || cleanCmd.startsWith('vim ')) {
-        const parts = cmd.split(/\s+/);
+        const parts = cmd.replace(/^\.\//, '').split(/\s+/);
         const targetFile = parts[1] || 'scratch.txt';
         Vim.open(targetFile);
         return;
       }
 
-      if (cleanCmd === 'ls' || cleanCmd === 'ls -la') {
-        const files = Object.keys(VFS).map(f => `-rw-r--r-- 1 smford staff  ${VFS[f].length}B  ${f}`).join('\n');
-        printTerm(`total ${Object.keys(VFS).length}\n${files}`);
+      if (cleanCmd === 'which' || cleanCmd.startsWith('which ')) {
+        const target = cleanCmd.replace('which', '').trim();
+        const bins = ['delim', 'mcat', 'matrix-rain', 'cidr', 'cidr-calculator', 'vim', 'projects', 'cat', 'ls'];
+        if (bins.includes(target)) {
+          printTerm(`/usr/local/bin/${target}`);
+        } else {
+          const err = document.createElement('div');
+          err.className = 'term-output';
+          err.style.color = 'var(--accent-danger)';
+          err.textContent = `which: no ${target} in (/usr/local/bin:/usr/bin:/bin)`;
+          termBody.appendChild(err);
+        }
+        return;
+      }
+
+      if (cleanCmd === 'ls' || cleanCmd === 'ls -la' || cleanCmd.startsWith('ls ')) {
+        const binFiles = [
+          `-rwxr-xr-x 1 smford staff  1.4M  delim*`,
+          `-rwxr-xr-x 1 smford staff  2.6M  mcat*`,
+          `-rwxr-xr-x 1 smford staff  2.1M  matrix-rain*`,
+          `-rwxr-xr-x 1 smford staff  3.2M  cidr*`
+        ];
+        const vfsFiles = Object.keys(VFS).map(f => `-rw-r--r-- 1 smford staff  ${VFS[f].length.toString().padStart(4, ' ')}B  ${f}`);
+        const total = binFiles.length + vfsFiles.length;
+        printTerm(`total ${total}\n${binFiles.join('\n')}\n${vfsFiles.join('\n')}`);
         return;
       }
 
