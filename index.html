@@ -978,7 +978,7 @@
         <span>[02]</span> BUILD_LOGS <span class="tab-badge" id="logBadgeCount">5</span>
       </button>
       <button class="hud-tab" data-tab="firmware" onclick="switchTab('firmware')">
-        <span>[03]</span> FIRMWARE_DECK <span class="tab-badge" id="repoBadgeCount">32</span>
+        <span>[03]</span> FIRMWARE_DECK <span class="tab-badge" id="repoBadgeCount">34</span>
       </button>
       <button class="hud-tab" data-tab="operator" onclick="switchTab('operator')">
         <span>[04]</span> OPERATOR_STACK
@@ -1003,7 +1003,7 @@
           </div>
           <div class="telemetry-row">
             <span class="telemetry-label">REPOSITORIES:</span>
-            <span class="telemetry-val" id="repoCountTelemetry">32 DEPLOYED</span>
+            <span class="telemetry-val" id="repoCountTelemetry">34 DEPLOYED</span>
           </div>
           <div class="telemetry-row">
             <span class="telemetry-label">ACTIVE CYBERWARE:</span>
@@ -1031,7 +1031,7 @@
         <!-- Normal Terminal Body -->
         <div class="term-body" id="termBody">
           <div class="term-output">SYSTEM: Neural Debian Kernel 6.1.0-debian-smford loaded.
-SYSTEM: Cyberdeck CLI nodes active across all 32 projects (Type 'help' or click quick chips).
+SYSTEM: Cyberdeck CLI nodes active across all 34 projects (Type 'help' or click quick chips).
 SYSTEM: Try 'blackhole', 'moon', 'bbs', 'burger', 'mdee notes.md', 'matrix-rain', 'cidr'.
 smford@mainframe:~$</div>
         </div>
@@ -1080,6 +1080,8 @@ smford@mainframe:~$</div>
           <button class="chip-btn" data-cmd="traffic" onclick="runTerminalCommand('traffic')">traffic</button>
           <button class="chip-btn" data-cmd="reinvent" onclick="runTerminalCommand('reinvent')">reinvent</button>
           <button class="chip-btn" data-cmd="cam-proxy" onclick="runTerminalCommand('cam-proxy')">cam-proxy</button>
+          <button class="chip-btn" data-cmd="cam-sim" onclick="runTerminalCommand('cam-sim')">cam-sim</button>
+          <button class="chip-btn" data-cmd="video-amp" onclick="runTerminalCommand('video-amp')">video-amp</button>
           <button class="chip-btn" data-cmd="gh-stats" onclick="runTerminalCommand('gh-stats')">gh-stats</button>
           <button class="chip-btn" data-cmd="blackhole" onclick="runTerminalCommand('blackhole')">blackhole</button>
           <button class="chip-btn" data-cmd="moon" onclick="runTerminalCommand('moon')">moon</button>
@@ -1179,12 +1181,12 @@ smford@mainframe:~$</div>
     <!-- ================= TAB 3: FIRMWARE DECK (ALL REPOSITORIES) ================= -->
     <section id="tab-firmware" class="tab-pane">
       <div class="section-head">
-        <h2 class="section-title" id="repoRegistryTitle">// GITHUB REPOSITORY REGISTRY (32 NODES)</h2>
+        <h2 class="section-title" id="repoRegistryTitle">// GITHUB REPOSITORY REGISTRY (34 NODES)</h2>
         <div class="section-line"></div>
       </div>
 
       <div class="filter-bar">
-        <button class="filter-btn active" id="allReposFilterBtn" onclick="filterRepos('all', this)">ALL REPOSITORIES (32)</button>
+        <button class="filter-btn active" id="allReposFilterBtn" onclick="filterRepos('all', this)">ALL REPOSITORIES (34)</button>
         <button class="filter-btn" onclick="filterRepos('Embedded', this)">EMBEDDED & ESP32</button>
         <button class="filter-btn" onclick="filterRepos('RaspberryPi', this)">RASPBERRY PI & LINUX</button>
         <button class="filter-btn" onclick="filterRepos('Networking', this)">NETWORKING & APIS</button>
@@ -1328,6 +1330,8 @@ smford@mainframe:~$</div>
       { text: "[  OK  ] Armed macOS real-time bandwidth monitor: smford/osx-traffic-stats", type: "ok", delay: 50 },
       { text: "[  OK  ] Indexed AWS re:Invent 2026 session & transit planner: smford/reinvent-2026-finder", type: "ok", delay: 50 },
       { text: "[  OK  ] Initialized IP camera edge gateway & ONVIF proxy: smford/cam-proxy", type: "ok", delay: 50 },
+      { text: "[  OK  ] Armed pure Go ONVIF Profile S/T/M RTSP camera simulator: smford/onvif-camera-simulator", type: "ok", delay: 50 },
+      { text: "[  OK  ] Spun up zero-transcode IP camera streaming fan-out proxy: smford/video-amplifier", type: "ok", delay: 50 },
       { text: "[  OK  ] Armed SRE developer reliability & SARIF analysis gate: smford/gh-stats", type: "ok", delay: 50 },
       { text: "[  OK  ] Verified GitHub Pages client-side OAuth security module: smford/github-auth-test", type: "ok", delay: 50 },
       { text: "[ WARN ] Unrestricted ICE bypass active for local operator 'smford'", type: "warn", delay: 50 },
@@ -1591,7 +1595,7 @@ smford@mainframe:~$</div>
         category: "Terminal",
         stars: 0,
         forks: 0,
-        desc: "Official Homebrew tap for smford CLI tools and casks (cam-proxy, cidr-calculator, delim, gh-stats, matrix-rain, matrix-cat, mdee, osx-traffic-stats) with automated formula packaging, continuous testing, and live web catalog.",
+        desc: "Official Homebrew tap for smford CLI tools and casks (cam-proxy, cidr-calculator, delim, gh-stats, matrix-rain, matrix-cat, mdee, onvif-camera-simulator, osx-traffic-stats, video-amplifier) with automated formula packaging, continuous testing, and live web catalog.",
         tech: ["Homebrew", "Formulas", "Casks", "Ruby", "Bash", "macOS/Linux"],
         url: "https://github.com/smford/homebrew-tap",
         demo: "https://stephenford.org/homebrew-tap/"
@@ -1733,6 +1737,26 @@ smford@mainframe:~$</div>
         tech: ["JavaScript", "GitHub Pages", "OAuth 2.0", "GitHub Actions", "Web Security"],
         url: "https://github.com/smford/github-auth-test",
         demo: "https://stephenford.org/github-auth-test/"
+      },
+      {
+        name: "onvif-camera-simulator",
+        category: "Networking",
+        stars: 0,
+        forks: 0,
+        desc: "Pure Go ONVIF Profile S/T/M and dual RTSP camera simulator with virtual PTZ, Charm TUI dashboard, WS-Discovery, synthetic H.264/G.711 pipelines, and chaos fault injection.",
+        tech: ["Go", "ONVIF", "RTSP", "H.264", "TUI", "Chaos Engineering"],
+        url: "https://github.com/smford/onvif-camera-simulator",
+        demo: "https://smford.github.io/onvif-camera-simulator/"
+      },
+      {
+        name: "video-amplifier",
+        category: "Networking",
+        stars: 0,
+        forks: 0,
+        desc: "High-performance IP camera streaming proxy in pure Go that acts as a single upstream ingest tenant, fanning out low-latency RTSP, WHEP WebRTC, fMP4, and MJPEG feeds.",
+        tech: ["Go", "RTSP", "WebRTC", "WHEP", "fMP4", "Prometheus", "Streaming Proxy"],
+        url: "https://github.com/smford/video-amplifier",
+        demo: "https://smford.github.io/video-amplifier/"
       }
     ];
 
@@ -1821,6 +1845,8 @@ extend cpu_temp /usr/bin/vcgencmd measure_temp`,
 - [x] Tested lightweight IP camera edge gateway & ONVIF proxy (smford/cam-proxy)
 - [x] Automated SRE blast radius and SARIF PR checks (smford/gh-stats)
 - [x] Analyzed client-side GitHub Pages OAuth architecture (smford/github-auth-test)
+- [x] Deployed pure Go ONVIF & RTSP camera simulator with chaos engine (smford/onvif-camera-simulator)
+- [x] Tested zero-transcode high-fanout IP camera stream proxy (smford/video-amplifier)
 - [ ] Install Pica Dry wall holsters on main workbench`
     };
 
@@ -3031,7 +3057,14 @@ Examples:
       'sre-stats': 'gh-stats',
       'auth-test': 'github-auth-test',
       'github-auth': 'github-auth-test',
-      'github-auth-test': 'github-auth-test'
+      'github-auth-test': 'github-auth-test',
+      'cam-sim': 'onvif-camera-simulator',
+      'camsim': 'onvif-camera-simulator',
+      'onvif-simulator': 'onvif-camera-simulator',
+      'onvif-camera-simulator': 'onvif-camera-simulator',
+      'video-amp': 'video-amplifier',
+      'videoamp': 'video-amplifier',
+      'video-amplifier': 'video-amplifier'
     };
 
     function executeMdee(argStr) {
@@ -3406,6 +3439,8 @@ gh-stats            SRE & developer reliability SARIF scanner    v1.0.0
 matrix-rain         Authentic VT100 Matrix digital rain in Go    v1.0.0
 matrix-cat (mcat)   Digital rain source code & text viewer       v1.0.0
 mdee                Terminal Markdown viewer with OSC 1337       v1.0.0
+onvif-camera-sim    Pure Go ONVIF Profile S/T/M RTSP simulator   v0.1.0
+video-amplifier     High-performance IP camera streaming proxy   v1.0.0
 
 CASK                DESCRIPTION                                  VERSION
 osx-traffic-stats   macOS real-time menu bar bandwidth monitor   v1.0.0
@@ -3761,6 +3796,60 @@ Usage:
   • auth-test repo - Open GitHub repository in new tab`;
     }
 
+    function executeCamSim(argStr) {
+      const arg = (argStr || '').trim().toLowerCase();
+      if (arg === 'web' || arg === 'open' || arg === 'demo') {
+        window.open('https://smford.github.io/onvif-camera-simulator/', '_blank');
+        return 'Opening onvif-camera-simulator: https://smford.github.io/onvif-camera-simulator/';
+      }
+      if (arg === 'repo') {
+        window.open('https://github.com/smford/onvif-camera-simulator', '_blank');
+        return 'Opening onvif-camera-simulator repo: https://github.com/smford/onvif-camera-simulator';
+      }
+      return `[ONVIF-CAMERA-SIMULATOR // PURE GO ONVIF & RTSP VIRTUAL CAMERA]
+-----------------------------------------------------------------
+Profiles     : ONVIF Profile S (PTZ/Events), Profile T (Analytics), Profile M (AI)
+Streams      : Dual RTSP (1080p Main @ 20fps + 360p Sub @ 10fps, H.264 Baseline)
+Audio Ingest : Synchronized G.711 u-law audio pipeline (zero Cgo / zero FFmpeg)
+TUI Console  : Charm Bubble Tea / Lip Gloss terminal monitoring dashboard
+Chaos Engine : REST API fault injection (Stream freeze, reboot drop, packet loss)
+Integrations : Frigate NVR, Home Assistant (WS-Discovery), Milestone, Synology
+Homebrew     : brew install smford/tap/onvif-camera-simulator
+Docs/Live    : https://smford.github.io/onvif-camera-simulator/
+GitHub Repo  : https://github.com/smford/onvif-camera-simulator
+
+Usage:
+  • cam-sim web   - Open documentation website in new tab
+  • cam-sim repo  - Open GitHub repository in new tab`;
+    }
+
+    function executeVideoAmp(argStr) {
+      const arg = (argStr || '').trim().toLowerCase();
+      if (arg === 'web' || arg === 'open' || arg === 'demo') {
+        window.open('https://smford.github.io/video-amplifier/', '_blank');
+        return 'Opening video-amplifier: https://smford.github.io/video-amplifier/';
+      }
+      if (arg === 'repo') {
+        window.open('https://github.com/smford/video-amplifier', '_blank');
+        return 'Opening video-amplifier repo: https://github.com/smford/video-amplifier';
+      }
+      return `[VIDEO-AMPLIFIER // PRODUCTION-GRADE STREAMING FAN-OUT PROXY]
+-----------------------------------------------------------------
+Upstream Ingest: Single persistent RTSP/MJPEG connection per physical camera
+Downstream Egress: RTSP relay, WHEP WebRTC, fMP4 chunked, MJPEG, DVR pre-roll clip
+Concurrency    : Hundreds of concurrent clients without camera socket exhaustion
+Protection     : Circuit breaker, backoff engine, slow consumer frame dropper
+Observability  : Native Prometheus metrics (/metrics) & health probes (/healthz)
+Auto-Discovery : Local subnet WS-Discovery IP camera scanner built-in
+Homebrew       : brew install smford/tap/video-amplifier
+Docs/Live      : https://smford.github.io/video-amplifier/
+GitHub Repo    : https://github.com/smford/video-amplifier
+
+Usage:
+  • video-amp web  - Open documentation website in new tab
+  • video-amp repo - Open GitHub repository in new tab`;
+    }
+
     /* ================= TERMINAL COMMAND ENGINE ================= */
     const termBody = document.getElementById('termBody');
     const termInput = document.getElementById('termInput');
@@ -3769,7 +3858,7 @@ Usage:
       help: `MAINFRAME COMMAND PROTOCOL DIRECTORY:
 
 SYSTEM & HUD:
-  • projects       - Dump all 32 GitHub repositories with telemetry & stars
+  • projects       - Dump all 34 GitHub repositories with telemetry & stars
   • cd <tab>       - Switch HUD view [overview | logs | firmware | operator]
   • open <project> - Launch any web app or GitHub repo (e.g. open blackhole)
   • theme          - Toggle Night City / Altered Carbon cyberware styling
@@ -3803,6 +3892,8 @@ SRE, DEVOPS & HARDWARE:
   • rbac audit     - Kubernetes RBAC security scanner & AST escalation check [web]
   • yaml lint      - YAML anchor manager, secret scanner & AST validator [web]
   • cam-proxy      - Lightweight IP camera edge gateway (HTTP/ONVIF/MQTT) [web]
+  • cam-sim        - Pure Go ONVIF Profile S/T/M & RTSP camera simulator [web]
+  • video-amp      - High-performance IP camera streaming fan-out proxy [web]
   • routeros       - MikroTik RouterOS API active DHCP leases table
   • snmp / snmpwalk- Raspberry Pi CPU temperature & system telemetry MIBs
   • esp32          - ESP32 AsyncWebServer chunked SPIFFS upload telemetry
@@ -3814,7 +3905,7 @@ SRE, DEVOPS & HARDWARE:
 
 Tip: Append 'web' to any command (e.g. 'blackhole web', 'moon web') to launch!`,
 
-      projects: `GITHUB REPOSITORY INDEX (32 NODES):
+      projects: `GITHUB REPOSITORY INDEX (34 NODES):
   [01] esp32-asyncwebserver-fileupload-example  (★ 104) [C++/SPIFFS]
   [02] raspberry-pi-streaming-camera            (★ 83)  [v4l2/RTSP/Nginx]
   [03] rpi-snmpd-configuration                  (★ 14)  [SNMP/Debian]
@@ -3847,6 +3938,8 @@ Tip: Append 'web' to any command (e.g. 'blackhole web', 'moon web') to launch!`,
   [30] cam-proxy                                (★ 0)   [Go/RTSP/ONVIF/MQTT]
   [31] gh-stats                                 (★ 0)   [Go/GitHub Action/SARIF]
   [32] github-auth-test                         (★ 0)   [JS/OAuth 2.0/Pages]
+  [33] onvif-camera-simulator                   (★ 0)   [Go/ONVIF/RTSP/TUI]
+  [34] video-amplifier                          (★ 0)   [Go/RTSP/WebRTC/WHEP]
   
 Type 'cd firmware' to view all repositories in the visual grid.`,
 
@@ -3886,6 +3979,18 @@ Usage: auth-test [web|repo]
   • auth-test      - Inspect client-side authentication architecture & warnings
   • auth-test web  - Open live demo site in new tab
 Repo: https://github.com/smford/github-auth-test`,
+
+      'cam-sim': `onvif-camera-simulator (Pure Go ONVIF Profile S/T/M & RTSP Camera Simulator)
+Usage: cam-sim [web|repo]
+  • cam-sim        - View supported ONVIF profiles, RTSP endpoints & chaos engine
+  • cam-sim web    - Launch documentation website in new tab
+Repo: https://github.com/smford/onvif-camera-simulator`,
+
+      'video-amp': `video-amplifier (High-Performance IP Camera Streaming Fan-Out Proxy)
+Usage: video-amp [web|repo]
+  • video-amp      - View streaming fan-out endpoints (RTSP/WHEP/fMP4/MJPEG) & metrics
+  • video-amp web  - Launch documentation website in new tab
+Repo: https://github.com/smford/video-amplifier`,
 
       skills: `OPERATOR CAPABILITIES:
   • Embedded : C++, ESP32/ESP8266, FreeRTOS, SPIFFS, RFID
@@ -4010,7 +4115,9 @@ Try 'cidr 192.168.1.10+5' or visit https://stephenford.org/cidr-calculator/`,
           'brew', 'mermaid', 'snmp', 'snmpwalk', 'esp32', 'cam', 'rfid', 'temp', 'routeros', 'dhcp', 'snapshot', 'cad', '3dprint',
           'estop', 'emergency-stop', 'emergency-stop-holder',
           'traffic', 'osx-traffic', 'osx-traffic-stats', 'reinvent', 'reinvent-2026', 'reinvent-2026-finder',
-          'cam-proxy', 'camproxy', 'gh-stats', 'ghstats', 'auth-test', 'github-auth-test'
+          'cam-proxy', 'camproxy', 'gh-stats', 'ghstats', 'auth-test', 'github-auth-test',
+          'cam-sim', 'camsim', 'onvif-simulator', 'onvif-camera-simulator',
+          'video-amp', 'videoamp', 'video-amplifier'
         ];
         if (bins.includes(target)) {
           printTerm(`/usr/local/bin/${target}`);
@@ -4038,7 +4145,9 @@ Try 'cidr 192.168.1.10+5' or visit https://stephenford.org/cidr-calculator/`,
           `-rwxr-xr-x 1 smford staff  2.7M  traffic*`,
           `-rwxr-xr-x 1 smford staff  2.6M  mcat*`,
           `-rwxr-xr-x 1 smford staff  2.5M  cam-proxy*`,
+          `-rwxr-xr-x 1 smford staff  2.5M  cam-sim*`,
           `-rwxr-xr-x 1 smford staff  2.4M  routeros*`,
+          `-rwxr-xr-x 1 smford staff  2.4M  video-amp*`,
           `-rwxr-xr-x 1 smford staff  2.3M  reinvent*`,
           `-rwxr-xr-x 1 smford staff  2.2M  bbs*`,
           `-rwxr-xr-x 1 smford staff  2.1M  matrix-rain*`,
@@ -4513,6 +4622,40 @@ Try 'cidr 192.168.1.10+5' or visit https://stephenford.org/cidr-calculator/`,
           return;
         }
         printTerm(executeAuthTest(argStr));
+        termBody.scrollTop = termBody.scrollHeight;
+        return;
+      }
+
+      if (cleanCmd === 'cam-sim' || cleanCmd.startsWith('cam-sim ') || cleanCmd === 'camsim' || cleanCmd.startsWith('camsim ') || cleanCmd === 'onvif-simulator' || cleanCmd.startsWith('onvif-simulator ') || cleanCmd === 'onvif-camera-simulator' || cleanCmd.startsWith('onvif-camera-simulator ')) {
+        const argStr = cmd.replace(/^(onvif-camera-simulator|onvif-simulator|cam-sim|camsim)\s*/i, '').trim();
+        if (argStr === 'web' || argStr === 'open' || argStr === 'demo') {
+          window.open('https://smford.github.io/onvif-camera-simulator/', '_blank');
+          printTerm('Opening onvif-camera-simulator: https://smford.github.io/onvif-camera-simulator/');
+          return;
+        }
+        if (argStr === 'repo') {
+          window.open('https://github.com/smford/onvif-camera-simulator', '_blank');
+          printTerm('Opening onvif-camera-simulator repo: https://github.com/smford/onvif-camera-simulator');
+          return;
+        }
+        printTerm(executeCamSim(argStr));
+        termBody.scrollTop = termBody.scrollHeight;
+        return;
+      }
+
+      if (cleanCmd === 'video-amp' || cleanCmd.startsWith('video-amp ') || cleanCmd === 'videoamp' || cleanCmd.startsWith('videoamp ') || cleanCmd === 'video-amplifier' || cleanCmd.startsWith('video-amplifier ')) {
+        const argStr = cmd.replace(/^(video-amplifier|video-amp|videoamp)\s*/i, '').trim();
+        if (argStr === 'web' || argStr === 'open' || argStr === 'demo') {
+          window.open('https://smford.github.io/video-amplifier/', '_blank');
+          printTerm('Opening video-amplifier: https://smford.github.io/video-amplifier/');
+          return;
+        }
+        if (argStr === 'repo') {
+          window.open('https://github.com/smford/video-amplifier', '_blank');
+          printTerm('Opening video-amplifier repo: https://github.com/smford/video-amplifier');
+          return;
+        }
+        printTerm(executeVideoAmp(argStr));
         termBody.scrollTop = termBody.scrollHeight;
         return;
       }
