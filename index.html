@@ -1746,7 +1746,7 @@ smford@mainframe:~$</div>
         desc: "Pure Go ONVIF Profile S/T/M and dual RTSP camera simulator with virtual PTZ, Charm TUI dashboard, WS-Discovery, synthetic H.264/G.711 pipelines, and chaos fault injection.",
         tech: ["Go", "ONVIF", "RTSP", "H.264", "TUI", "Chaos Engineering"],
         url: "https://github.com/smford/onvif-camera-simulator",
-        demo: "https://smford.github.io/onvif-camera-simulator/"
+        demo: "https://stephenford.org/onvif-camera-simulator/"
       },
       {
         name: "video-amplifier",
@@ -1756,7 +1756,7 @@ smford@mainframe:~$</div>
         desc: "High-performance IP camera streaming proxy in pure Go that acts as a single upstream ingest tenant, fanning out low-latency RTSP, WHEP WebRTC, fMP4, and MJPEG feeds.",
         tech: ["Go", "RTSP", "WebRTC", "WHEP", "fMP4", "Prometheus", "Streaming Proxy"],
         url: "https://github.com/smford/video-amplifier",
-        demo: "https://smford.github.io/video-amplifier/"
+        demo: "https://stephenford.org/video-amplifier/"
       }
     ];
 
@@ -3799,8 +3799,8 @@ Usage:
     function executeCamSim(argStr) {
       const arg = (argStr || '').trim().toLowerCase();
       if (arg === 'web' || arg === 'open' || arg === 'demo') {
-        window.open('https://smford.github.io/onvif-camera-simulator/', '_blank');
-        return 'Opening onvif-camera-simulator: https://smford.github.io/onvif-camera-simulator/';
+        window.open('https://stephenford.org/onvif-camera-simulator/', '_blank');
+        return 'Opening onvif-camera-simulator: https://stephenford.org/onvif-camera-simulator/';
       }
       if (arg === 'repo') {
         window.open('https://github.com/smford/onvif-camera-simulator', '_blank');
@@ -3815,7 +3815,7 @@ TUI Console  : Charm Bubble Tea / Lip Gloss terminal monitoring dashboard
 Chaos Engine : REST API fault injection (Stream freeze, reboot drop, packet loss)
 Integrations : Frigate NVR, Home Assistant (WS-Discovery), Milestone, Synology
 Homebrew     : brew install smford/tap/onvif-camera-simulator
-Docs/Live    : https://smford.github.io/onvif-camera-simulator/
+Docs/Live    : https://stephenford.org/onvif-camera-simulator/
 GitHub Repo  : https://github.com/smford/onvif-camera-simulator
 
 Usage:
@@ -3826,8 +3826,8 @@ Usage:
     function executeVideoAmp(argStr) {
       const arg = (argStr || '').trim().toLowerCase();
       if (arg === 'web' || arg === 'open' || arg === 'demo') {
-        window.open('https://smford.github.io/video-amplifier/', '_blank');
-        return 'Opening video-amplifier: https://smford.github.io/video-amplifier/';
+        window.open('https://stephenford.org/video-amplifier/', '_blank');
+        return 'Opening video-amplifier: https://stephenford.org/video-amplifier/';
       }
       if (arg === 'repo') {
         window.open('https://github.com/smford/video-amplifier', '_blank');
@@ -3842,7 +3842,7 @@ Protection     : Circuit breaker, backoff engine, slow consumer frame dropper
 Observability  : Native Prometheus metrics (/metrics) & health probes (/healthz)
 Auto-Discovery : Local subnet WS-Discovery IP camera scanner built-in
 Homebrew       : brew install smford/tap/video-amplifier
-Docs/Live      : https://smford.github.io/video-amplifier/
+Docs/Live      : https://stephenford.org/video-amplifier/
 GitHub Repo    : https://github.com/smford/video-amplifier
 
 Usage:
@@ -4629,8 +4629,8 @@ Try 'cidr 192.168.1.10+5' or visit https://stephenford.org/cidr-calculator/`,
       if (cleanCmd === 'cam-sim' || cleanCmd.startsWith('cam-sim ') || cleanCmd === 'camsim' || cleanCmd.startsWith('camsim ') || cleanCmd === 'onvif-simulator' || cleanCmd.startsWith('onvif-simulator ') || cleanCmd === 'onvif-camera-simulator' || cleanCmd.startsWith('onvif-camera-simulator ')) {
         const argStr = cmd.replace(/^(onvif-camera-simulator|onvif-simulator|cam-sim|camsim)\s*/i, '').trim();
         if (argStr === 'web' || argStr === 'open' || argStr === 'demo') {
-          window.open('https://smford.github.io/onvif-camera-simulator/', '_blank');
-          printTerm('Opening onvif-camera-simulator: https://smford.github.io/onvif-camera-simulator/');
+          window.open('https://stephenford.org/onvif-camera-simulator/', '_blank');
+          printTerm('Opening onvif-camera-simulator: https://stephenford.org/onvif-camera-simulator/');
           return;
         }
         if (argStr === 'repo') {
@@ -4646,8 +4646,8 @@ Try 'cidr 192.168.1.10+5' or visit https://stephenford.org/cidr-calculator/`,
       if (cleanCmd === 'video-amp' || cleanCmd.startsWith('video-amp ') || cleanCmd === 'videoamp' || cleanCmd.startsWith('videoamp ') || cleanCmd === 'video-amplifier' || cleanCmd.startsWith('video-amplifier ')) {
         const argStr = cmd.replace(/^(video-amplifier|video-amp|videoamp)\s*/i, '').trim();
         if (argStr === 'web' || argStr === 'open' || argStr === 'demo') {
-          window.open('https://smford.github.io/video-amplifier/', '_blank');
-          printTerm('Opening video-amplifier: https://smford.github.io/video-amplifier/');
+          window.open('https://stephenford.org/video-amplifier/', '_blank');
+          printTerm('Opening video-amplifier: https://stephenford.org/video-amplifier/');
           return;
         }
         if (argStr === 'repo') {
