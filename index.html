@@ -646,6 +646,82 @@
       color: var(--accent-secondary);
     }
 
+    /* Repository Search & Controls */
+    .repo-controls-wrapper {
+      margin-bottom: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.85rem;
+    }
+
+    .repo-search-container {
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .repo-search-box {
+      flex: 1;
+      min-width: 280px;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      background: rgba(13, 19, 33, 0.85);
+      border: 1px solid rgba(0, 240, 255, 0.25);
+      padding: 0.5rem 0.85rem;
+      font-family: var(--font-mono);
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .repo-search-box:focus-within {
+      border-color: var(--accent-secondary);
+      box-shadow: 0 0 12px rgba(0, 240, 255, 0.25);
+    }
+
+    .repo-search-icon {
+      color: var(--accent-primary);
+      font-weight: bold;
+      font-size: 0.95rem;
+    }
+
+    .repo-search-input {
+      flex: 1;
+      background: transparent;
+      border: none;
+      outline: none;
+      color: #fff;
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+    }
+    .repo-search-input::placeholder {
+      color: var(--text-muted);
+      opacity: 0.75;
+    }
+
+    .repo-search-clear {
+      background: rgba(255, 0, 60, 0.15);
+      border: 1px solid rgba(255, 0, 60, 0.4);
+      color: var(--accent-danger);
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      padding: 0.15rem 0.5rem;
+      cursor: pointer;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .repo-search-clear:hover {
+      background: rgba(255, 0, 60, 0.3);
+    }
+
+    .repo-search-meta {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      white-space: nowrap;
+    }
+
     /* Cards Grid */
     .cards-grid {
       display: grid;
@@ -1190,14 +1266,25 @@ smford@mainframe:~$</div>
         <div class="section-line"></div>
       </div>
 
-      <div class="filter-bar">
-        <button class="filter-btn active" id="allReposFilterBtn" onclick="filterRepos('all', this)">ALL REPOSITORIES (41)</button>
-        <button class="filter-btn" onclick="filterRepos('Embedded', this)">EMBEDDED & ESP32</button>
-        <button class="filter-btn" onclick="filterRepos('RaspberryPi', this)">RASPBERRY PI & LINUX</button>
-        <button class="filter-btn" onclick="filterRepos('Networking', this)">NETWORKING & APIS</button>
-        <button class="filter-btn" onclick="filterRepos('3DPrinting', this)">3D PRINTING & CAD</button>
-        <button class="filter-btn" onclick="filterRepos('Terminal', this)">CLI & TERMINAL</button>
-        <button class="filter-btn" onclick="filterRepos('Web', this)">WEB & SIMULATIONS</button>
+      <div class="repo-controls-wrapper">
+        <div class="repo-search-container">
+          <div class="repo-search-box">
+            <span class="repo-search-icon">&gt;</span>
+            <input type="text" id="repoSearchInput" class="repo-search-input" placeholder="SEARCH REPOSITORIES (e.g. 'onvif', 'esp32', 'svg', 'macOS', 'terminal', 'cad')..." oninput="handleRepoSearch(this.value)" autocomplete="off" spellcheck="false" />
+            <button id="repoSearchClear" class="repo-search-clear" onclick="clearRepoSearch()" style="display: none;">[ESC] CLEAR</button>
+          </div>
+          <div class="repo-search-meta" id="repoSearchMeta">41 NODES INDEXED</div>
+        </div>
+
+        <div class="filter-bar" id="repoFilterBar">
+          <button class="filter-btn active" data-filter="all" onclick="filterRepos('all', this)">ALL REPOSITORIES (41)</button>
+          <button class="filter-btn" data-filter="Streaming" onclick="filterRepos('Streaming', this)">STREAMING &amp; VIDEO (6)</button>
+          <button class="filter-btn" data-filter="DevOps" onclick="filterRepos('DevOps', this)">DEVOPS &amp; SRE (7)</button>
+          <button class="filter-btn" data-filter="Terminal" onclick="filterRepos('Terminal', this)">CLI &amp; TUI (11)</button>
+          <button class="filter-btn" data-filter="IoT" onclick="filterRepos('IoT', this)">IOT &amp; EMBEDDED (5)</button>
+          <button class="filter-btn" data-filter="Fabrication" onclick="filterRepos('Fabrication', this)">3D CAD &amp; WORKSHOP (5)</button>
+          <button class="filter-btn" data-filter="Web" onclick="filterRepos('Web', this)">WEB &amp; SIMULATIONS (7)</button>
+        </div>
       </div>
 
       <div class="cards-grid" id="reposGrid">
@@ -1445,7 +1532,7 @@ smford@mainframe:~$</div>
     const REPOSITORIES = [
       {
         name: "esp32-asyncwebserver-fileupload-example",
-        category: "Embedded",
+        category: "IoT",
         stars: 104,
         forks: 30,
         desc: "High-performance asynchronous web server for ESP32 demonstrating drag-and-drop SPIFFS filesystem uploads with real-time browser progress bar telemetry.",
@@ -1454,7 +1541,7 @@ smford@mainframe:~$</div>
       },
       {
         name: "raspberry-pi-streaming-camera",
-        category: "RaspberryPi",
+        category: "Streaming",
         stars: 83,
         forks: 5,
         desc: "Ultra-low latency RTSP camera feed on Raspberry Pi Zero W with hardware video flip (v4l2rtspserver + Nginx) for real-time laser cutter enclosure monitoring.",
@@ -1463,7 +1550,7 @@ smford@mainframe:~$</div>
       },
       {
         name: "rpi-snmpd-configuration",
-        category: "RaspberryPi",
+        category: "IoT",
         stars: 14,
         forks: 1,
         desc: "Production SNMP daemon configuration for Raspberry Pi exposing hardware CPU core temperatures, system health, and Linux OS telemetry over network monitoring.",
@@ -1472,7 +1559,7 @@ smford@mainframe:~$</div>
       },
       {
         name: "Sunton-ESP32-2432S028R-Case",
-        category: "3DPrinting",
+        category: "Fabrication",
         stars: 12,
         forks: 0,
         desc: "Custom parametric 3D printable enclosure remix for the Sunton ESP32 2.8\" LCD + touch controller, optimized for M3 socket screws and heat-set inserts.",
@@ -1481,7 +1568,7 @@ smford@mainframe:~$</div>
       },
       {
         name: "eeh-esp32-rfid",
-        category: "Embedded",
+        category: "IoT",
         stars: 11,
         forks: 0,
         desc: "Industrial RFID access control and safety interlock system built for East Essex Hackspace to restrict unauthorized power to 3kW workshop tools.",
@@ -1490,7 +1577,7 @@ smford@mainframe:~$</div>
       },
       {
         name: "bambu-poop-chute-magnet-remix",
-        category: "3DPrinting",
+        category: "Fabrication",
         stars: 4,
         forks: 0,
         desc: "Magnetic snap-lock purge chute remix for Bambu Lab 3D printers, featuring recessed neodymium magnet slots for quick filament purge removal.",
@@ -1499,7 +1586,7 @@ smford@mainframe:~$</div>
       },
       {
         name: "esp32-temp-monitor",
-        category: "Embedded",
+        category: "IoT",
         stars: 2,
         forks: 0,
         desc: "ESP32 temperature regulation system with web UI, DS18B20 multi-probes, relay switching, and Pushover alerts (used for tortoise hibernation control).",
@@ -1508,7 +1595,7 @@ smford@mainframe:~$</div>
       },
       {
         name: "dhcp-routeros-tool",
-        category: "Networking",
+        category: "IoT",
         stars: 1,
         forks: 0,
         desc: "Asynchronous CLI tool in Go to query, parse, and export active DHCP lease bindings, hostnames, and IP mappings across MikroTik RouterOS firewalls.",
@@ -1517,7 +1604,7 @@ smford@mainframe:~$</div>
       },
       {
         name: "motioneye-snapshotter",
-        category: "Networking",
+        category: "Streaming",
         stars: 0,
         forks: 0,
         desc: "Event-driven Go microservice providing a REST API to trigger instant, timestamped camera snapshot captures from MotionEye upon IoT sensor triggers.",
@@ -1526,7 +1613,7 @@ smford@mainframe:~$</div>
       },
       {
         name: "pica-dry-pencil-wall-mount",
-        category: "3DPrinting",
+        category: "Fabrication",
         stars: 0,
         forks: 0,
         desc: "3D printable wall-mounted holster remix for Pica Dry deep-hole construction markers with dual countersunk screw fixtures for workshop tool boards.",
@@ -1594,7 +1681,7 @@ smford@mainframe:~$</div>
       },
       {
         name: "vim-html",
-        category: "Terminal",
+        category: "Web",
         stars: 0,
         forks: 0,
         desc: "Authentic in-browser Vim replica and simulated Linux SRE workstation environment featuring hierarchical VFS, GFM markdown rendering, kernel boot simulation, and session export.",
@@ -1604,7 +1691,7 @@ smford@mainframe:~$</div>
       },
       {
         name: "homebrew-tap",
-        category: "Terminal",
+        category: "DevOps",
         stars: 0,
         forks: 0,
         desc: "Official Homebrew tap for smford CLI tools and casks (cam-proxy, chrome-tab-cleaner, cidr-calculator, delim, gh-stats, matrix-rain, matrix-cat, mdee, onvif-camera-simulator, onvif-inspector, osx-traffic-stats, term2svg, termtosvg, video-amplifier) with automated formula packaging, continuous testing, and live web catalog.",
@@ -1634,7 +1721,7 @@ smford@mainframe:~$</div>
       },
       {
         name: "toolsplit",
-        category: "Web",
+        category: "Fabrication",
         stars: 0,
         forks: 0,
         desc: "Power tool promotional discount calculator and prorated return receipt engine optimizing Home Depot BOGO savings for Milwaukee, DeWalt, RIDGID, and Makita tooling.",
@@ -1644,7 +1731,7 @@ smford@mainframe:~$</div>
       },
       {
         name: "rbac-editor",
-        category: "Web",
+        category: "DevOps",
         stars: 0,
         forks: 0,
         desc: "100% client-side in-browser Kubernetes RBAC and YAML security validator, featuring real-time AST traversal, anchor/alias resolution, dead-code analysis, and zero telemetry.",
@@ -1654,7 +1741,7 @@ smford@mainframe:~$</div>
       },
       {
         name: "yaml-web-validator",
-        category: "Web",
+        category: "DevOps",
         stars: 0,
         forks: 0,
         desc: "YAML Clean: Modern client-side YAML IDE and anchor manager for SREs to manage anchors (&), aliases (*), and merge keys (<<), scan for plaintext secrets, and diff dereferenced trees.",
@@ -1683,7 +1770,7 @@ smford@mainframe:~$</div>
       },
       {
         name: "cidr-calculator",
-        category: "Networking",
+        category: "DevOps",
         stars: 0,
         forks: 0,
         desc: "High-performance zero-dependency IPv4/IPv6 CIDR range decomposition engine, route aggregator, collision detector, and capacity planner in Go with interactive web playground and Terraform IaC export.",
@@ -1693,7 +1780,7 @@ smford@mainframe:~$</div>
       },
       {
         name: "emergency-stop-holder",
-        category: "3DPrinting",
+        category: "Fabrication",
         stars: 0,
         forks: 0,
         desc: "Industrial 3D printable wall mount enclosure for standard 22mm mushroom emergency stop switches, featuring tall (92mm) and short (75mm) models with dual 3mm screw fixtures.",
@@ -1702,7 +1789,7 @@ smford@mainframe:~$</div>
       },
       {
         name: "osx-traffic-stats",
-        category: "Networking",
+        category: "Terminal",
         stars: 0,
         forks: 0,
         desc: "Lightweight macOS menu bar utility in Go displaying real-time network upload/download bandwidth and interface throughput telemetry next to the system clock.",
@@ -1712,7 +1799,7 @@ smford@mainframe:~$</div>
       },
       {
         name: "reinvent-2026-finder",
-        category: "Web",
+        category: "DevOps",
         stars: 0,
         forks: 0,
         desc: "Fast, zero-latency transit-aware session explorer, schedule optimizer, and campus planner for AWS re:Invent 2026 in Las Vegas built with React 19 and MiniSearch.",
@@ -1722,7 +1809,7 @@ smford@mainframe:~$</div>
       },
       {
         name: "cam-proxy",
-        category: "Networking",
+        category: "Streaming",
         stars: 0,
         forks: 0,
         desc: "Ultra-lightweight edge gateway in Go (<20MB RAM) for IP security cameras, providing buffered HTTP snapshots, ONVIF PTZ REST control, and MQTT motion alerts.",
@@ -1732,7 +1819,7 @@ smford@mainframe:~$</div>
       },
       {
         name: "gh-stats",
-        category: "Terminal",
+        category: "DevOps",
         stars: 0,
         forks: 0,
         desc: "Production-grade GitHub Action and CLI tool in Go generating deep SRE & developer reliability metrics, blast radius detection, and SARIF v2.1.0 code scanning reports.",
@@ -1742,7 +1829,7 @@ smford@mainframe:~$</div>
       },
       {
         name: "github-auth-test",
-        category: "Web",
+        category: "DevOps",
         stars: 0,
         forks: 0,
         desc: "Architectural demonstration and security analysis of GitHub Pages client-side authentication utilizing GitHub OAuth 2.0 flows and automated CI/CD workflows.",
@@ -1752,7 +1839,7 @@ smford@mainframe:~$</div>
       },
       {
         name: "onvif-camera-simulator",
-        category: "Networking",
+        category: "Streaming",
         stars: 0,
         forks: 0,
         desc: "Pure Go ONVIF Profile S/T/M and dual RTSP camera simulator with virtual PTZ, Charm TUI dashboard, WS-Discovery, synthetic H.264/G.711 pipelines, and chaos fault injection.",
@@ -1762,7 +1849,7 @@ smford@mainframe:~$</div>
       },
       {
         name: "video-amplifier",
-        category: "Networking",
+        category: "Streaming",
         stars: 0,
         forks: 0,
         desc: "High-performance IP camera streaming proxy in pure Go that acts as a single upstream ingest tenant, fanning out low-latency RTSP, WHEP WebRTC, fMP4, and MJPEG feeds.",
@@ -1772,7 +1859,7 @@ smford@mainframe:~$</div>
       },
       {
         name: "onvif-inspector",
-        category: "Networking",
+        category: "Streaming",
         stars: 0,
         forks: 0,
         desc: "Real-time ONVIF IP camera event diagnostic utility and terminal inspector with WS-Discovery, PullPoint subscriptions, XML payload inspector, and embedded web dashboard.",
@@ -2063,8 +2150,86 @@ extend cpu_temp /usr/bin/vcgencmd measure_temp`,
     }
 
     /* ================= REPOSITORIES DECK RENDERING ================= */
-    function renderRepositories(filter = 'all') {
+    const CATEGORY_LABELS = {
+      'streaming': 'STREAMING & VIDEO',
+      'devops': 'DEVOPS & SRE',
+      'terminal': 'CLI & TUI',
+      'iot': 'IOT & EMBEDDED',
+      'fabrication': '3D CAD & WORKSHOP',
+      'web': 'WEB & SIMULATIONS'
+    };
+
+    let currentRepoFilter = 'all';
+    let currentRepoSearch = '';
+
+    function updateFilterCounts() {
+      const counts = { all: REPOSITORIES.length };
+      REPOSITORIES.forEach(r => {
+        const cat = r.category;
+        counts[cat] = (counts[cat] || 0) + 1;
+      });
+
+      const buttons = document.querySelectorAll('#repoFilterBar .filter-btn');
+      buttons.forEach(btn => {
+        const filterKey = btn.getAttribute('data-filter');
+        if (!filterKey) return;
+        const count = filterKey === 'all' ? REPOSITORIES.length : (counts[filterKey] || 0);
+        let baseName = '';
+        switch (filterKey) {
+          case 'all': baseName = 'ALL REPOSITORIES'; break;
+          case 'Streaming': baseName = 'STREAMING & VIDEO'; break;
+          case 'DevOps': baseName = 'DEVOPS & SRE'; break;
+          case 'Terminal': baseName = 'CLI & TUI'; break;
+          case 'IoT': baseName = 'IOT & EMBEDDED'; break;
+          case 'Fabrication': baseName = '3D CAD & WORKSHOP'; break;
+          case 'Web': baseName = 'WEB & SIMULATIONS'; break;
+          default: baseName = filterKey.toUpperCase();
+        }
+        btn.textContent = `${baseName} (${count})`;
+      });
+    }
+
+    function handleRepoSearch(query) {
+      currentRepoSearch = query || '';
+      const clearBtn = document.getElementById('repoSearchClear');
+      if (clearBtn) {
+        clearBtn.style.display = currentRepoSearch ? 'inline-block' : 'none';
+      }
+      renderRepositories();
+    }
+
+    function clearRepoSearch() {
+      currentRepoSearch = '';
+      currentRepoFilter = 'all';
+      const searchInput = document.getElementById('repoSearchInput');
+      if (searchInput) {
+        searchInput.value = '';
+        searchInput.focus();
+      }
+      const clearBtn = document.getElementById('repoSearchClear');
+      if (clearBtn) {
+        clearBtn.style.display = 'none';
+      }
+      document.querySelectorAll('#repoFilterBar .filter-btn').forEach(b => {
+        if (b.getAttribute('data-filter') === 'all') {
+          b.classList.add('active');
+        } else {
+          b.classList.remove('active');
+        }
+      });
+      renderRepositories();
+    }
+
+    function filterRepos(cat, btn) {
+      currentRepoFilter = cat || 'all';
+      document.querySelectorAll('#repoFilterBar .filter-btn').forEach(b => b.classList.remove('active'));
+      if (btn) btn.classList.add('active');
+      renderRepositories();
+    }
+
+    function renderRepositories() {
       const grid = document.getElementById('reposGrid');
+      if (!grid) return;
       grid.innerHTML = '';
 
       const repoBadge = document.getElementById('repoBadgeCount');
@@ -2073,15 +2238,49 @@ extend cpu_temp /usr/bin/vcgencmd measure_temp`,
       const repoTelem = document.getElementById('repoCountTelemetry');
       if (repoTelem) repoTelem.textContent = `${REPOSITORIES.length} DEPLOYED`;
 
+      updateFilterCounts();
+
+      const q = currentRepoSearch.trim().toLowerCase();
+      const filtered = REPOSITORIES.filter(r => {
+        const matchesFilter = currentRepoFilter === 'all' || r.category.toLowerCase() === currentRepoFilter.toLowerCase();
+        if (!matchesFilter) return false;
+        if (!q) return true;
+        const inName = r.name.toLowerCase().includes(q);
+        const inDesc = r.desc.toLowerCase().includes(q);
+        const inTech = r.tech.some(t => t.toLowerCase().includes(q));
+        const catLabel = (CATEGORY_LABELS[r.category.toLowerCase()] || r.category).toLowerCase();
+        const inCat = r.category.toLowerCase().includes(q) || catLabel.includes(q);
+        return inName || inDesc || inTech || inCat;
+      });
+
       const repoRegistryTitle = document.getElementById('repoRegistryTitle');
-      if (repoRegistryTitle) repoRegistryTitle.textContent = `// GITHUB REPOSITORY REGISTRY (${REPOSITORIES.length} NODES)`;
+      if (repoRegistryTitle) {
+        if (q || currentRepoFilter !== 'all') {
+          repoRegistryTitle.textContent = `// GITHUB REPOSITORY REGISTRY (${filtered.length} / ${REPOSITORIES.length} NODES MATCHED)`;
+        } else {
+          repoRegistryTitle.textContent = `// GITHUB REPOSITORY REGISTRY (${REPOSITORIES.length} NODES)`;
+        }
+      }
 
-      const allFilterBtn = document.getElementById('allReposFilterBtn');
-      if (allFilterBtn) allFilterBtn.textContent = `ALL REPOSITORIES (${REPOSITORIES.length})`;
+      const searchMeta = document.getElementById('repoSearchMeta');
+      if (searchMeta) {
+        if (q || currentRepoFilter !== 'all') {
+          searchMeta.textContent = `${filtered.length} OF ${REPOSITORIES.length} NODES VISIBLE`;
+        } else {
+          searchMeta.textContent = `${REPOSITORIES.length} NODES INDEXED`;
+        }
+      }
 
-      const filtered = filter === 'all' 
-        ? REPOSITORIES 
-        : REPOSITORIES.filter(r => r.category.toLowerCase() === filter.toLowerCase());
+      if (filtered.length === 0) {
+        const safeQuery = q.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        grid.innerHTML = `
+          <div class="repo-empty-state" style="grid-column: 1 / -1; padding: 3rem 1.5rem; text-align: center; border: 1px dashed rgba(255, 0, 60, 0.4); background: rgba(255, 0, 60, 0.04); font-family: var(--font-mono);">
+            <div style="color: var(--accent-danger); font-size: 1.1rem; margin-bottom: 0.5rem; letter-spacing: 1px;">// [404] NO NODES MATCHING SEARCH: "${safeQuery}"</div>
+            <div style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 1.25rem;">Try searching for "onvif", "esp32", "svg", "tui", "camera", "macOS", or reset active filters.</div>
+            <button class="chip-btn" onclick="clearRepoSearch()" style="border-color: var(--accent-secondary); color: var(--accent-secondary); padding: 0.4rem 1rem;">RESET SEARCH &amp; FILTERS</button>
+          </div>`;
+        return;
+      }
 
       filtered.forEach((repo) => {
         const card = document.createElement('div');
@@ -2090,6 +2289,7 @@ extend cpu_temp /usr/bin/vcgencmd measure_temp`,
         const techPills = repo.tech.map(t => `<span class="tech-pill">${t}</span>`).join('');
         const globalIdx = REPOSITORIES.indexOf(repo) + 1;
         const numStr = globalIdx.toString().padStart(2, '0');
+        const displayTag = CATEGORY_LABELS[repo.category.toLowerCase()] || repo.category.toUpperCase();
 
         const actionButtons = repo.demo
           ? `
@@ -2109,7 +2309,7 @@ extend cpu_temp /usr/bin/vcgencmd measure_temp`,
         card.innerHTML = `
           <div>
             <div class="card-meta">
-              <span class="card-tag">${repo.category.toUpperCase()}</span>
+              <span class="card-tag">${displayTag}</span>
               <div>
                 <span class="card-stars">★ ${repo.stars}</span>
                 <span style="margin-left: 0.5rem;">REPO #${numStr}</span>
@@ -2125,12 +2325,6 @@ extend cpu_temp /usr/bin/vcgencmd measure_temp`,
         `;
         grid.appendChild(card);
       });
-    }
-
-    function filterRepos(cat, btn) {
-      document.querySelectorAll('#tab-firmware .filter-btn').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      renderRepositories(cat);
     }
 
     /* ================= BUILD LOG RENDERING & FILTERING ================= */
@@ -5404,6 +5598,14 @@ Try 'cidr 192.168.1.10+5' or visit https://stephenford.org/cidr-calculator/`,
     window.addEventListener('DOMContentLoaded', () => {
       renderRepositories();
       renderBuildLogs();
+      const searchInput = document.getElementById('repoSearchInput');
+      if (searchInput) {
+        searchInput.addEventListener('keydown', (e) => {
+          if (e.key === 'Escape') {
+            clearRepoSearch();
+          }
+        });
+      }
       const hash = window.location.hash.replace('#', '');
       if (['overview', 'logs', 'firmware', 'operator'].includes(hash)) {
         switchTab(hash);
